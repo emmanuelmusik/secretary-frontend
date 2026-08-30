@@ -144,7 +144,17 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .pre-record-settings label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; }
 .timer { font-family: 'Space Grotesk'; font-size: 2.4rem; font-weight: 600; margin: 20px 0; font-variant-numeric: tabular-nums; }
 .stop-btn { background: var(--surface-raised); border: 1px solid var(--record); color: var(--record); width: 100%; padding: 16px; border-radius: 50px; font-weight: 600; }
-.live-transcript { text-align: left; margin-top: 28px; background: var(--surface); border-radius: var(--radius); padding: 16px; }
+.stop-btn-floating {
+  position: fixed;
+  left: 20px; right: 20px;
+  bottom: calc(90px + env(safe-area-inset-bottom));
+  width: auto;
+  max-width: 680px;
+  margin: 0 auto;
+  z-index: 15;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+.live-transcript { text-align: left; margin-top: 28px; margin-bottom: 100px; background: var(--surface); border-radius: var(--radius); padding: 16px; }
 .live-transcript h3 { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
 
 /* ---------- Session detail ---------- */
