@@ -179,7 +179,7 @@ export default function RecordPage() {
       {!isRecording ? (
         <button className="record-btn" onClick={startRecording}>Start Recording</button>
       ) : (
-        <button className="stop-btn" onClick={stopRecording}>Stop</button>
+        <button className="stop-btn stop-btn-floating" onClick={stopRecording}>Stop</button>
       )}
 
       {isRecording && (
