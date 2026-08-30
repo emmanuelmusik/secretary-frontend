@@ -52,4 +52,7 @@ export const api = {
   },
   analyzeWithHistory: (id, range) =>
     authedFetch(`/sessions/${id}/analyze-with-history`, { method: 'POST', body: JSON.stringify({ range }) }),
+  translateSession: (id, targetLanguage) =>
+    authedFetch(`/sessions/${id}/translate`, { method: 'POST', body: JSON.stringify({ target_language: targetLanguage }) }),
+  generateInsight: (id) => authedFetch(`/sessions/${id}/insight`, { method: 'POST' }),
 };

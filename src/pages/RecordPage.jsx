@@ -160,6 +160,10 @@ export default function RecordPage() {
               <option value="fr">French</option>
               <option value="de">German</option>
               <option value="es">Spanish</option>
+              <option value="pt">Portuguese</option>
+              <option value="yo">Yoruba</option>
+              <option value="ar">Arabic</option>
+              <option value="zh">Chinese</option>
             </select>
           </label>
         </div>

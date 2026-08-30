@@ -158,6 +158,15 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .history-analysis-trigger select { width: auto; margin: 0; }
 .history-analysis-trigger button { background: var(--accent-dim); color: var(--accent); }
 
+.audio-panel { background: var(--surface); border-radius: var(--radius); padding: 20px; }
+.audio-panel audio { width: 100%; }
+.translate-controls { display: flex; gap: 8px; margin-bottom: 16px; }
+.translate-controls select { width: auto; margin: 0; }
+.translate-controls button { background: var(--accent-dim); color: var(--accent); }
+.empty-panel { background: var(--surface); border-radius: var(--radius); padding: 24px; text-align: center; }
+.empty-panel button { margin-top: 12px; background: var(--accent-dim); color: var(--accent); }
+.insight-header { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+
 /* ---------- Notes ---------- */
 .notes-page .new-note-btn { width: 100%; margin: 10px 0 16px; background: var(--accent-dim); color: var(--accent); }
 .note-editor .note-title { font-family: 'Space Grotesk'; font-size: 1.3rem; font-weight: 600; background: transparent; border: none; padding: 8px 0; }
