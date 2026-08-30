@@ -1,0 +1,19 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: -apple-system, system-ui, sans-serif; background: #0b0b0d; color: #f2f2f2; }
+input, select, textarea { font-family: inherit; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #1a1a1d; color: #fff; width: 100%; margin: 6px 0; }
+button { font-family: inherit; padding: 10px 16px; border-radius: 8px; border: none; background: #2563eb; color: #fff; cursor: pointer; }
+button.active { background: #16a34a; }
+.loading-screen { display: flex; align-items: center; justify-content: center; height: 100vh; }
+.record-btn { background: #dc2626; font-size: 1.2em; padding: 16px 32px; border-radius: 50px; }
+.stop-btn { background: #7f1d1d; }
+.error { color: #f87171; }
+.warning { color: #fbbf24; }
+.timer { font-size: 2em; text-align: center; margin: 16px 0; }
+.tabs { display: flex; gap: 8px; margin: 16px 0; }
+.tabs button { background: #27272a; }
+.tabs button.active { background: #2563eb; }
+.transcript { white-space: pre-wrap; background: #18181b; padding: 16px; border-radius: 8px; }
+.session-row, .note-row, .folder-row { display: flex; justify-content: space-between; padding: 12px; background: #18181b; border-radius: 8px; margin: 6px 0; text-decoration: none; color: inherit; }
+.note-body { width: 100%; min-height: 300px; }
+.note-title { font-size: 1.4em; font-weight: bold; background: transparent; border: none; }
+.note-toolbar { display: flex; gap: 8px; margin: 8px 0; }
