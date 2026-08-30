@@ -16,10 +16,6 @@ export default function HomePage() {
     <div className="home-page">
       <header>
         <h1>Secretary</h1>
-        <nav>
-          <Link to="/folders">Folders</Link>
-          <Link to="/notes">Notepad</Link>
-        </nav>
       </header>
 
       <div className="mode-selector">

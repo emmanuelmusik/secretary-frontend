@@ -1,19 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #121214;
+  --surface: #1b1c1f;
+  --surface-raised: #232427;
+  --border: #2c2d31;
+  --text: #f5f4f0;
+  --text-muted: #9a9ba3;
+  --accent: #2dd4bf;      /* teal — interactive / active states */
+  --accent-dim: #1a3a37;
+  --record: #ff6b57;      /* coral — reserved for recording state only */
+  --record-dim: #3a1f1a;
+  --danger: #f87171;
+  --radius: 12px;
+}
+
 * { box-sizing: border-box; }
-body { margin: 0; font-family: -apple-system, system-ui, sans-serif; background: #0b0b0d; color: #f2f2f2; }
-input, select, textarea { font-family: inherit; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #1a1a1d; color: #fff; width: 100%; margin: 6px 0; }
-button { font-family: inherit; padding: 10px 16px; border-radius: 8px; border: none; background: #2563eb; color: #fff; cursor: pointer; }
-button.active { background: #16a34a; }
-.loading-screen { display: flex; align-items: center; justify-content: center; height: 100vh; }
-.record-btn { background: #dc2626; font-size: 1.2em; padding: 16px 32px; border-radius: 50px; }
-.stop-btn { background: #7f1d1d; }
-.error { color: #f87171; }
-.warning { color: #fbbf24; }
-.timer { font-size: 2em; text-align: center; margin: 16px 0; }
-.tabs { display: flex; gap: 8px; margin: 16px 0; }
-.tabs button { background: #27272a; }
-.tabs button.active { background: #2563eb; }
-.transcript { white-space: pre-wrap; background: #18181b; padding: 16px; border-radius: 8px; }
-.session-row, .note-row, .folder-row { display: flex; justify-content: space-between; padding: 12px; background: #18181b; border-radius: 8px; margin: 6px 0; text-decoration: none; color: inherit; }
-.note-body { width: 100%; min-height: 300px; }
-.note-title { font-size: 1.4em; font-weight: bold; background: transparent; border: none; }
-.note-toolbar { display: flex; gap: 8px; margin: 8px 0; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+a { color: var(--accent); }
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+  margin: 6px 0;
+}
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+button {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 11px 18px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--surface-raised);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+button:hover { background: var(--border); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.active { background: var(--accent-dim); color: var(--accent); }
+
+.loading-screen { display: flex; align-items: center; justify-content: center; height: 100vh; color: var(--text-muted); }
+.error { color: var(--danger); font-size: 0.85rem; }
+.warning { color: #fbbf24; font-size: 0.85rem; }
+
+/* ---------- App Shell (top bar + bottom tab nav) ---------- */
+.app-shell { display: flex; flex-direction: column; min-height: 100vh; }
+
+.app-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--ink); z-index: 10;
+}
+.app-topbar-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; }
+.app-topbar-signout { background: transparent; color: var(--text-muted); padding: 6px 10px; font-size: 0.8rem; }
+.app-topbar-signout:hover { background: var(--surface); color: var(--text); }
+
+.app-content { flex: 1; padding: 20px; padding-bottom: 96px; max-width: 720px; margin: 0 auto; width: 100%; }
+
+.app-tabbar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: space-around;
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  z-index: 20;
+}
+.tab-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  text-decoration: none; color: var(--text-muted);
+  font-size: 0.68rem; padding: 4px 10px; border-radius: 10px;
+  background: transparent;
+}
+.tab-item.active { color: var(--accent); }
+
+.tab-record-btn {
+  width: 58px; height: 58px; border-radius: 50%;
+  background: var(--record);
+  display: flex; align-items: center; justify-content: center;
+  margin-top: -28px;
+  box-shadow: 0 0 0 4px var(--ink), 0 4px 14px rgba(255, 107, 87, 0.4);
+  padding: 0;
+}
+.tab-record-btn:hover { background: var(--record); filter: brightness(1.08); }
+.tab-record-dot { width: 18px; height: 18px; border-radius: 50%; background: #fff; }
+
+/* ---------- Auth / static pages ---------- */
+.auth-page, .static-page { max-width: 420px; margin: 60px auto; padding: 0 20px; }
+.auth-page p { color: var(--text-muted); margin-bottom: 24px; }
+.oauth-buttons { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+.link-btn { background: transparent; color: var(--accent); width: 100%; }
+.footer-links { display: flex; gap: 16px; margin-top: 24px; font-size: 0.85rem; }
+
+/* ---------- Home ---------- */
+.home-page header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.home-page header nav { display: none; } /* superseded by AppShell tab bar */
+.mode-selector { display: flex; gap: 8px; margin: 20px 0; }
+.mode-selector button { flex: 1; }
+.record-btn { background: var(--record); color: #fff; font-family: 'Space Grotesk'; font-weight: 600; font-size: 1.05rem; padding: 16px; border-radius: 50px; width: 100%; }
+.record-btn:hover { background: var(--record); filter: brightness(1.08); }
+.upload-btn { width: 100%; margin-top: 10px; background: var(--surface); border: 1px solid var(--border); }
+.recent-sessions { margin-top: 32px; }
+.recent-sessions h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+
+/* ---------- Rows (sessions / notes / folders) ---------- */
+.session-row, .note-row, .folder-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); margin: 8px 0; text-decoration: none; color: inherit;
+}
+.session-row span, .note-row span { color: var(--text-muted); font-size: 0.8rem; }
+
+/* ---------- Record page ---------- */
+.record-page { text-align: center; }
+.pre-record-settings { text-align: left; margin-bottom: 24px; }
+.pre-record-settings label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; }
+.timer { font-family: 'Space Grotesk'; font-size: 2.4rem; font-weight: 600; margin: 20px 0; font-variant-numeric: tabular-nums; }
+.stop-btn { background: var(--surface-raised); border: 1px solid var(--record); color: var(--record); width: 100%; padding: 16px; border-radius: 50px; font-weight: 600; }
+.live-transcript { text-align: left; margin-top: 28px; background: var(--surface); border-radius: var(--radius); padding: 16px; }
+.live-transcript h3 { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
+
+/* ---------- Session detail ---------- */
+.meta { color: var(--text-muted); font-size: 0.85rem; }
+.tabs { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
+.tabs button { background: var(--surface); border: 1px solid var(--border); }
+.tabs button.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+.transcript { white-space: pre-wrap; background: var(--surface); padding: 18px; border-radius: var(--radius); line-height: 1.6; font-size: 0.92rem; }
+.analysis h3 { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-top: 20px; }
+.history-analysis-trigger { display: flex; gap: 8px; margin-top: 24px; }
+.history-analysis-trigger select { width: auto; margin: 0; }
+.history-analysis-trigger button { background: var(--accent-dim); color: var(--accent); }
+
+/* ---------- Notes ---------- */
+.notes-page .new-note-btn { width: 100%; margin: 10px 0 16px; background: var(--accent-dim); color: var(--accent); }
+.note-editor .note-title { font-family: 'Space Grotesk'; font-size: 1.3rem; font-weight: 600; background: transparent; border: none; padding: 8px 0; }
+.note-toolbar { display: flex; gap: 8px; margin: 8px 0 16px; }
+.note-toolbar button.active { background: var(--record-dim); color: var(--record); }
+.note-body { width: 100%; min-height: 320px; line-height: 1.6; font-size: 0.95rem; resize: vertical; }
+.note-preview { background: var(--surface); border-radius: var(--radius); padding: 16px; min-height: 320px; line-height: 1.6; }
+.linked-session { color: var(--text-muted); font-size: 0.8rem; margin-top: 12px; }
+
+/* ---------- Folders ---------- */
+.new-folder { display: flex; gap: 8px; margin-bottom: 16px; }
+.new-folder input { margin: 0; }
+
+/* ---------- Save screen ---------- */
+.save-page label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 16px; }
+.save-btn { width: 100%; background: var(--accent-dim); color: var(--accent); margin-top: 20px; padding: 14px; }
