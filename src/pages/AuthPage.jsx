@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
+import authBackground from '../assets/auth-background.jpg';
 
 export default function AuthPage() {
   const { signUp, signIn, signInWithGoogle, signInWithApple } = useAuth();
@@ -29,7 +30,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="auth-page">
+    <div className="auth-page" style={{ backgroundImage: `url(${authBackground})` }}>
       <h1>Secretary</h1>
       <p>Your AI-powered meeting, class, and voice notes assistant.</p>
 
