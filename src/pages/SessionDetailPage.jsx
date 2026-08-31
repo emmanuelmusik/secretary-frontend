@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { getLocalAudioUrl } from '../lib/localAudio.js';
 
@@ -16,6 +16,7 @@ const LANGUAGES = [
 
 export default function SessionDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [session, setSession] = useState(null);
   const [tab, setTab] = useState('transcript'); // transcript | insight | translation | history | audio
 
@@ -94,11 +95,20 @@ export default function SessionDetailPage() {
     }
   }
 
+  async function handleDeleteSession() {
+    if (!confirm('Delete this recording permanently? This cannot be undone.')) return;
+    await api.deleteSession(id);
+    navigate('/');
+  }
+
   if (!session) return <div className="loading-screen">Loading…</div>;
 
   return (
     <div className="session-detail">
-      <h1>{session.name}</h1>
+      <div className="session-detail-header">
+        <h1>{session.name}</h1>
+        <button className="danger-btn-sm" onClick={handleDeleteSession}>Delete</button>
+      </div>
       <p className="meta">
         {new Date(session.created_at).toLocaleString()} · {formatDuration(session.duration_seconds)}
         {session.source_language && ` · Detected: ${session.source_language}`}
@@ -174,7 +184,11 @@ export default function SessionDetailPage() {
             </button>
           </div>
           {session.translated_transcript ? (
-            <pre className="transcript">{session.translated_transcript}</pre>
+            <>
+              <pre className="transcript">{session.translated_transcript}</pre>
+              <p className="original-label">Original ({session.source_language || 'detected language'})</p>
+              <pre className="transcript original-transcript">{session.raw_transcript}</pre>
+            </>
           ) : (
             <p className="meta">Pick a language above and translate this transcript.</p>
           )}

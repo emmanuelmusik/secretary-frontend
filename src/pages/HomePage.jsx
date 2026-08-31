@@ -12,6 +12,14 @@ export default function HomePage() {
     api.getSessions().then(setSessions).catch(console.error).finally(() => setLoading(false));
   }, []);
 
+  async function handleDelete(e, sessionId) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!confirm('Delete this recording permanently? This cannot be undone.')) return;
+    await api.deleteSession(sessionId);
+    setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+  }
+
   return (
     <div className="home-page">
       <header>
@@ -42,7 +50,10 @@ export default function HomePage() {
         {sessions.map((s) => (
           <Link key={s.id} to={`/sessions/${s.id}`} className="session-row">
             <strong>{s.name}</strong>
-            <span>{new Date(s.created_at).toLocaleDateString()}</span>
+            <span className="session-row-right">
+              {new Date(s.created_at).toLocaleDateString()}
+              <button className="danger-btn-sm" onClick={(e) => handleDelete(e, s.id)}>Delete</button>
+            </span>
           </Link>
         ))}
       </section>

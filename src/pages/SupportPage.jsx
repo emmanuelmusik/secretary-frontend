@@ -5,7 +5,7 @@ export default function SupportPage() {
     <div className="static-page">
       <Link to="/auth">&larr; Back</Link>
       <h1>Support Center</h1>
-      <p>Need help? Reach us at support@johmacos.com.</p>
+      <p>Need help? Reach us at emmanuelmusik7@gmail.com.</p>
       <h2>Frequently Asked Questions</h2>
       <ul>
         <li>How do I record a meeting or class?</li>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { supabase } from '../lib/supabase.js';
 import { api } from '../lib/api.js';
@@ -8,6 +8,7 @@ const WS_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:3000').repla
 
 export default function NoteEditorPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [note, setNote] = useState(null);
   const [preview, setPreview] = useState(false);
   const [isDictating, setIsDictating] = useState(false);
@@ -81,6 +82,12 @@ export default function NoteEditorPage() {
     scheduleSave({ body: (note.body || '') + '\n- [ ] ' });
   }
 
+  async function handleDeleteNote() {
+    if (!confirm('Delete this note permanently? This cannot be undone.')) return;
+    await api.deleteNote(id);
+    navigate('/notes');
+  }
+
   if (!note) return <div className="loading-screen">Loading…</div>;
 
   return (
@@ -97,6 +104,7 @@ export default function NoteEditorPage() {
         </button>
         <button onClick={insertChecklistItem}>+ Checklist item</button>
         <button onClick={() => setPreview((p) => !p)}>{preview ? 'Edit' : 'Preview'}</button>
+        <button className="danger-btn-sm" onClick={handleDeleteNote}>Delete</button>
       </div>
 
       {preview ? (
