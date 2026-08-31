@@ -9,7 +9,10 @@ export default function AppShell({ children }) {
     <div className="app-shell">
       <header className="app-topbar">
         <span className="app-topbar-logo">Secretary</span>
-        <button className="app-topbar-signout" onClick={() => signOut()}>Sign out</button>
+        <div className="app-topbar-actions">
+          <NavLink to="/account" className="app-topbar-account">Account</NavLink>
+          <button className="app-topbar-signout" onClick={() => signOut()}>Sign out</button>
+        </div>
       </header>
 
       <main className="app-content">{children}</main>
