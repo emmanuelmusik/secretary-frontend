@@ -127,7 +127,19 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .tab-record-dot { width: 18px; height: 18px; border-radius: 50%; background: #fff; }
 
 /* ---------- Auth / static pages ---------- */
-.auth-page, .static-page { max-width: 420px; margin: 60px auto; padding: 0 20px; }
+.auth-page {
+  max-width: 420px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 60px 20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.static-page { max-width: 420px; margin: 60px auto; padding: 0 20px; }
 .auth-page p { color: var(--text-muted); margin-bottom: 24px; }
 .oauth-buttons { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
 .link-btn { background: transparent; color: var(--accent); width: 100%; }
