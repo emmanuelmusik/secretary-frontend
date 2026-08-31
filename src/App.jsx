@@ -12,6 +12,7 @@ import SessionDetailPage from './pages/SessionDetailPage.jsx';
 import FoldersPage from './pages/FoldersPage.jsx';
 import NotesPage from './pages/NotesPage.jsx';
 import NoteEditorPage from './pages/NoteEditorPage.jsx';
+import AccountPage from './pages/AccountPage.jsx';
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/folders" element={<RequireAuth><FoldersPage /></RequireAuth>} />
           <Route path="/notes" element={<RequireAuth><NotesPage /></RequireAuth>} />
           <Route path="/notes/:id" element={<RequireAuth><NoteEditorPage /></RequireAuth>} />
+          <Route path="/account" element={<RequireAuth><AccountPage /></RequireAuth>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

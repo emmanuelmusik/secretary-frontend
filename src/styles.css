@@ -81,8 +81,22 @@ button.active { background: var(--accent-dim); color: var(--accent); }
   position: sticky; top: 0; background: var(--ink); z-index: 10;
 }
 .app-topbar-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; }
+.app-topbar-actions { display: flex; align-items: center; gap: 14px; }
+.app-topbar-account { color: var(--text-muted); font-size: 0.85rem; text-decoration: none; }
+.app-topbar-account:hover { color: var(--text); }
 .app-topbar-signout { background: transparent; color: var(--text-muted); padding: 6px 10px; font-size: 0.8rem; }
 .app-topbar-signout:hover { background: var(--surface); color: var(--text); }
+
+.danger-btn-sm { background: transparent; border: 1px solid var(--danger); color: var(--danger); font-size: 0.75rem; padding: 5px 10px; }
+.danger-btn-sm:hover { background: var(--record-dim); }
+.danger-btn { background: var(--danger); color: #fff; width: 100%; padding: 14px; margin-top: 16px; }
+.danger-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.session-detail-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.session-row-right { display: flex; align-items: center; gap: 10px; }
+
+.account-page .danger-zone { margin-top: 32px; border: 1px solid var(--danger); border-radius: var(--radius); padding: 20px; }
+.account-page .danger-zone h2 { color: var(--danger); font-size: 1rem; }
 
 .app-content { flex: 1; padding: 20px; padding-bottom: 96px; max-width: 720px; margin: 0 auto; width: 100%; }
 
@@ -176,6 +190,8 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .empty-panel { background: var(--surface); border-radius: var(--radius); padding: 24px; text-align: center; }
 .empty-panel button { margin-top: 12px; background: var(--accent-dim); color: var(--accent); }
 .insight-header { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+.original-label { margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.original-transcript { font-style: italic; color: var(--text-muted); font-size: 0.85rem; background: transparent; border: 1px solid var(--border); }
 
 /* ---------- Notes ---------- */
 .notes-page .new-note-btn { width: 100%; margin: 10px 0 16px; background: var(--accent-dim); color: var(--accent); }
