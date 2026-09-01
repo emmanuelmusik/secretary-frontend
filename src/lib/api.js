@@ -55,4 +55,7 @@ export const api = {
   translateSession: (id, targetLanguage) =>
     authedFetch(`/sessions/${id}/translate`, { method: 'POST', body: JSON.stringify({ target_language: targetLanguage }) }),
   generateInsight: (id) => authedFetch(`/sessions/${id}/insight`, { method: 'POST' }),
+
+  // Account
+  deleteAccount: () => authedFetch('/account', { method: 'DELETE' }),
 };

@@ -17,6 +17,7 @@ export default function RecordPage() {
   const [targetLanguage, setTargetLanguage] = useState('en');
 
   const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [liveTranscript, setLiveTranscript] = useState('');
   const [error, setError] = useState('');
@@ -48,12 +49,10 @@ export default function RecordPage() {
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) audioChunksRef.current.push(e.data);
-      };
-
       // 3. Open WS to backend for live transcription (separate from local recording —
-      //    if this drops, local audio keeps recording regardless)
+      //    if this drops, local audio keeps recording regardless). If target_language
+      //    is set, the backend translates each line on the fly before sending it back,
+      //    so the live view shows the chosen language even if that's not what's spoken.
       const { data: { session: authSession } } = await supabase.auth.getSession();
       const ws = new WebSocket(
         `${WS_BASE}/ws/live-transcription?sessionId=${session.id}&token=${authSession.access_token}`
@@ -71,7 +70,6 @@ export default function RecordPage() {
 
       ws.onerror = () => setError('Live transcript connection lost — audio is still recording locally.');
 
-      // Stream audio chunks to the backend over WS as they're captured
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) {
           audioChunksRef.current.push(e.data);
@@ -81,6 +79,7 @@ export default function RecordPage() {
 
       mediaRecorder.start(1000); // 1s chunks
       setIsRecording(true);
+      setIsPaused(false);
 
       timerRef.current = setInterval(() => {
         setElapsed((prev) => {
@@ -96,11 +95,32 @@ export default function RecordPage() {
     }
   }
 
+  function pauseRecording() {
+    mediaRecorderRef.current?.pause();
+    clearInterval(timerRef.current);
+    setIsPaused(true);
+  }
+
+  function resumeRecording() {
+    mediaRecorderRef.current?.resume();
+    setIsPaused(false);
+    timerRef.current = setInterval(() => {
+      setElapsed((prev) => {
+        const next = prev + 1;
+        if (next >= MAX_DURATION_SECONDS) {
+          stopRecording();
+        }
+        return next;
+      });
+    }, 1000);
+  }
+
   async function stopRecording() {
     clearInterval(timerRef.current);
     mediaRecorderRef.current?.stop();
     wsRef.current?.close();
     setIsRecording(false);
+    setIsPaused(false);
 
     // Save audio locally on-device (Capacitor Filesystem). Audio never
     // leaves the device — only the transcript goes to Supabase.
@@ -131,6 +151,7 @@ export default function RecordPage() {
 
   const remaining = MAX_DURATION_SECONDS - elapsed;
   const nearingCap = remaining <= 5 * 60; // last 5 minutes
+  const showingTranslatedLive = targetLanguage && targetLanguage !== 'none';
 
   return (
     <div className="record-page">
@@ -153,9 +174,9 @@ export default function RecordPage() {
             />
           )}
           <label>
-            Translate To
+            Live Transcript / Translate To
             <select value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)}>
-              <option value="none">None</option>
+              <option value="none">None (show original language)</option>
               <option value="en">English</option>
               <option value="fr">French</option>
               <option value="de">German</option>
@@ -166,6 +187,12 @@ export default function RecordPage() {
               <option value="zh">Chinese</option>
             </select>
           </label>
+          {showingTranslatedLive && (
+            <p className="meta">
+              The live transcript below will be shown in this language, even if you're speaking a
+              different one. The saved transcript still keeps the original language too.
+            </p>
+          )}
         </div>
       )}
 
@@ -174,18 +201,28 @@ export default function RecordPage() {
       <div className="timer">
         {formatTime(elapsed)} {isRecording && <span> / 3:00:00</span>}
       </div>
-      {nearingCap && isRecording && <p className="warning">Approaching 3-hour limit — recording will auto-stop.</p>}
+      {nearingCap && isRecording && !isPaused && <p className="warning">Approaching 3-hour limit — recording will auto-stop.</p>}
+      {isPaused && <p className="warning">Paused — tap Resume to continue.</p>}
 
-      {!isRecording ? (
+      {!isRecording && (
         <button className="record-btn" onClick={startRecording}>Start Recording</button>
-      ) : (
-        <button className="stop-btn stop-btn-floating" onClick={stopRecording}>Stop</button>
+      )}
+
+      {isRecording && (
+        <div className="recording-controls-floating">
+          {!isPaused ? (
+            <button className="pause-btn" onClick={pauseRecording}>Pause</button>
+          ) : (
+            <button className="resume-btn" onClick={resumeRecording}>Resume</button>
+          )}
+          <button className="stop-btn" onClick={stopRecording}>Stop</button>
+        </div>
       )}
 
       {isRecording && (
         <div className="live-transcript">
-          <h3>Live Transcript</h3>
-          <p>{liveTranscript || 'Listening…'}</p>
+          <h3>Live Transcript{showingTranslatedLive && ` (${targetLanguage.toUpperCase()})`}</h3>
+          <p>{liveTranscript || (isPaused ? 'Paused…' : 'Listening…')}</p>
         </div>
       )}
     </div>
