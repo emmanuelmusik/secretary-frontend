@@ -1,18 +1,13 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth.jsx';
 
 export default function AppShell({ children }) {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
 
   return (
     <div className="app-shell">
       <header className="app-topbar">
         <span className="app-topbar-logo">Secretary</span>
-        <div className="app-topbar-actions">
-          <NavLink to="/account" className="app-topbar-account">Account</NavLink>
-          <button className="app-topbar-signout" onClick={() => signOut()}>Sign out</button>
-        </div>
+        <NavLink to="/account" className="app-topbar-account">Account</NavLink>
       </header>
 
       <main className="app-content">{children}</main>
@@ -37,9 +32,9 @@ export default function AppShell({ children }) {
           <span>Notes</span>
         </NavLink>
 
-        <NavLink to="/support" className={({ isActive }) => `tab-item ${isActive ? 'active' : ''}`}>
+        <NavLink to="/account" className={({ isActive }) => `tab-item ${isActive ? 'active' : ''}`}>
           <TabIcon name="help" />
-          <span>Support</span>
+          <span>Account</span>
         </NavLink>
       </nav>
     </div>

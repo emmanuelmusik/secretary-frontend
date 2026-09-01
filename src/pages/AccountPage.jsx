@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { api } from '../lib/api.js';
 
@@ -24,10 +24,22 @@ export default function AccountPage() {
     }
   }
 
+  async function handleSignOut() {
+    await signOut();
+    navigate('/auth');
+  }
+
   return (
     <div className="account-page">
       <h1>Account</h1>
       <p className="meta">Signed in as {user?.email}</p>
+
+      <div className="account-links">
+        <Link to="/support">Support Center</Link>
+        <Link to="/privacy">Privacy Policy</Link>
+      </div>
+
+      <button className="signout-btn" onClick={handleSignOut}>Sign out</button>
 
       <div className="danger-zone">
         <h2>Delete Account</h2>

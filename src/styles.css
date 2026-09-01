@@ -81,11 +81,13 @@ button.active { background: var(--accent-dim); color: var(--accent); }
   position: sticky; top: 0; background: var(--ink); z-index: 10;
 }
 .app-topbar-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; }
-.app-topbar-actions { display: flex; align-items: center; gap: 14px; }
 .app-topbar-account { color: var(--text-muted); font-size: 0.85rem; text-decoration: none; }
 .app-topbar-account:hover { color: var(--text); }
-.app-topbar-signout { background: transparent; color: var(--text-muted); padding: 6px 10px; font-size: 0.8rem; }
-.app-topbar-signout:hover { background: var(--surface); color: var(--text); }
+
+.account-links { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+.account-links a { color: var(--text); text-decoration: none; padding: 12px 14px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); }
+.account-links a:hover { background: var(--surface-raised); }
+.signout-btn { width: 100%; background: var(--surface); border: 1px solid var(--border); }
 
 .danger-btn-sm { background: transparent; border: 1px solid var(--danger); color: var(--danger); font-size: 0.75rem; padding: 5px 10px; }
 .danger-btn-sm:hover { background: var(--record-dim); }
@@ -280,6 +282,7 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 
 .audio-panel { background: var(--surface); border-radius: var(--radius); padding: 20px; }
 .audio-panel audio { width: 100%; }
+.share-btn { width: 100%; margin-top: 14px; background: var(--accent-dim); color: var(--accent); }
 .translate-controls { display: flex; gap: 8px; margin-bottom: 16px; }
 .translate-controls select { width: auto; margin: 0; }
 .translate-controls button { background: var(--accent-dim); color: var(--accent); }

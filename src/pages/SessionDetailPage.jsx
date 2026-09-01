@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
-import { getLocalAudioUrl } from '../lib/localAudio.js';
+import { getLocalAudioUrl, shareLocalAudio } from '../lib/localAudio.js';
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },
@@ -30,6 +30,7 @@ export default function SessionDetailPage() {
 
   const [audioUrl, setAudioUrl] = useState(null);
   const [audioMissing, setAudioMissing] = useState(false);
+  const [sharing, setSharing] = useState(false);
   const audioObjectUrl = useRef(null);
 
   useEffect(() => { load(); }, [id]);
@@ -54,6 +55,17 @@ export default function SessionDetailPage() {
   function openAudioTab() {
     setTab('audio');
     if (!audioUrl && !audioMissing) loadAudio();
+  }
+
+  async function handleShareAudio() {
+    setSharing(true);
+    try {
+      await shareLocalAudio(session.local_audio_path, session.name);
+    } catch (err) {
+      if (err?.message !== 'Share canceled') alert(err.message || 'Could not share this recording');
+    } finally {
+      setSharing(false);
+    }
   }
 
   async function handleAnalyzeWithHistory() {
@@ -127,7 +139,12 @@ export default function SessionDetailPage() {
       {tab === 'audio' && (
         <div className="audio-panel">
           {audioUrl && (
-            <audio controls src={audioUrl} style={{ width: '100%' }} />
+            <>
+              <audio controls src={audioUrl} style={{ width: '100%' }} />
+              <button className="share-btn" onClick={handleShareAudio} disabled={sharing}>
+                {sharing ? 'Preparing…' : 'Share Recording'}
+              </button>
+            </>
           )}
           {!audioUrl && audioMissing && (
             <p className="meta">
