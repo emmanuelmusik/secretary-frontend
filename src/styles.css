@@ -308,3 +308,16 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 /* ---------- Save screen ---------- */
 .save-page label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 16px; }
 .save-btn { width: 100%; background: var(--accent-dim); color: var(--accent); margin-top: 20px; padding: 14px; }
+
+.upload-page .file-drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+.upload-page .file-drop-zone:hover { border-color: var(--accent); color: var(--text); }
+.checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text); margin-top: 16px; }
+.checkbox-label input { width: auto; margin: 0; }
