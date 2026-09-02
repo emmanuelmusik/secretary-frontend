@@ -1,0 +1,10 @@
+{
+  "appId": "com.johmacos.secretary",
+  "appName": "Secretary",
+  "webDir": "dist",
+  "server": {
+    "url": "https://secretary-frontend.vercel.app",
+    "cleartext": false,
+    "androidScheme": "https"
+  }
+}
