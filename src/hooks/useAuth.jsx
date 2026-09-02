@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { SignInWithApple } from '@capacitor-community/apple-sign-in';
 import { supabase } from '../lib/supabase.js';
-import { generateNonce } from '../lib/nonce.js';
 
 const AuthContext = createContext(null);
 
@@ -16,24 +15,24 @@ async function signInWithApple() {
     return supabase.auth.signInWithOAuth({ provider: 'apple' });
   }
 
-  const { rawNonce, hashedNonce } = await generateNonce();
-
   const result = await SignInWithApple.authorize({
     clientId: 'com.johmacos.secretary',
     redirectURI: 'https://secretary-frontend.vercel.app/auth',
     scopes: 'email name',
     state: crypto.randomUUID(),
-    nonce: hashedNonce,
   });
 
-  const identityToken = result.response.identityToken;
-  if (!identityToken) throw new Error('Apple sign-in did not return an identity token');
+  const identityToken = result?.response?.identityToken;
+  if (!identityToken) {
+    throw new Error('Apple did not return an identity token — sign-in was cancelled or failed on the native side.');
+  }
 
-  return supabase.auth.signInWithIdToken({
+  const { error } = await supabase.auth.signInWithIdToken({
     provider: 'apple',
     token: identityToken,
-    nonce: rawNonce,
   });
+
+  return { error };
 }
 
 export function AuthProvider({ children }) {
