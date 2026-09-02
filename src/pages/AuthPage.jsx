@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 
 export default function AuthPage() {
-  const { signUp, signIn, signInWithGoogle, signInWithApple } = useAuth();
+  const { signUp, signIn, signInWithGoogle, signInWithApple, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [mode, setMode] = useState('signup'); // 'signup' | 'login'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Catches Google/Apple sign-in success — those don't navigate manually,
+  // so without this the screen just sits there even after a real login.
+  useEffect(() => {
+    if (isAuthenticated) navigate('/');
+  }, [isAuthenticated, navigate]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -23,6 +29,20 @@ export default function AuthPage() {
       navigate('/');
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleOAuth(fn) {
+    setError('');
+    setLoading(true);
+    try {
+      const { error } = await fn();
+      if (error) throw error;
+      navigate('/');
+    } catch (err) {
+      setError(err.message || 'Sign-in failed');
     } finally {
       setLoading(false);
     }
@@ -60,13 +80,13 @@ export default function AuthPage() {
           </button>
         </form>
 
-        <button className="oauth-btn" onClick={signInWithGoogle}>
+        <button className="oauth-btn" onClick={() => handleOAuth(signInWithGoogle)} disabled={loading}>
           <GoogleIcon /> Continue with Google
         </button>
 
         <div className="auth-divider"><span>OR CONTINUE WITH</span></div>
 
-        <button className="oauth-btn" onClick={signInWithApple}>
+        <button className="oauth-btn" onClick={() => handleOAuth(signInWithApple)} disabled={loading}>
           <AppleIcon /> Continue with Apple
         </button>
 
