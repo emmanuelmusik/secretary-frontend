@@ -14,7 +14,7 @@ export default function RecordPage() {
 
   const [sourceLanguageMode, setSourceLanguageMode] = useState('auto');
   const [sourceLanguage, setSourceLanguage] = useState('');
-  const [targetLanguage, setTargetLanguage] = useState('en');
+  const [targetLanguage, setTargetLanguage] = useState('none');
 
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
