@@ -7,6 +7,7 @@ import SupportPage from './pages/SupportPage.jsx';
 import PrivacyPage from './pages/PrivacyPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import RecordPage from './pages/RecordPage.jsx';
+import UploadPage from './pages/UploadPage.jsx';
 import SaveSessionPage from './pages/SaveSessionPage.jsx';
 import SessionDetailPage from './pages/SessionDetailPage.jsx';
 import FoldersPage from './pages/FoldersPage.jsx';
@@ -27,6 +28,7 @@ export default function App() {
           {/* Everything else requires signup */}
           <Route path="/" element={<RequireAuth><HomePage /></RequireAuth>} />
           <Route path="/record" element={<RequireAuth><RecordPage /></RequireAuth>} />
+          <Route path="/upload" element={<RequireAuth><UploadPage /></RequireAuth>} />
           <Route path="/sessions/:id/save" element={<RequireAuth><SaveSessionPage /></RequireAuth>} />
           <Route path="/sessions/:id" element={<RequireAuth><SessionDetailPage /></RequireAuth>} />
           <Route path="/folders" element={<RequireAuth><FoldersPage /></RequireAuth>} />
