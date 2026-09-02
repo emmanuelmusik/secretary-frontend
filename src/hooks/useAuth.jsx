@@ -1,77 +1,39 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
-import { Browser } from '@capacitor/browser';
-import { App as CapacitorApp } from '@capacitor/app';
+import { SignInWithApple } from '@capacitor-community/apple-sign-in';
 import { supabase } from '../lib/supabase.js';
+import { generateNonce } from '../lib/nonce.js';
 
 const AuthContext = createContext(null);
 
-// Custom URL scheme the native app listens for — Apple/Google send the
-// user back here after they finish signing in in the in-app browser.
-const NATIVE_REDIRECT = 'com.johmacos.secretary://auth/callback';
-
 /**
- * Native OAuth via in-app browser + deep link — reuses the exact same,
- * already-working web OAuth flow instead of a separate native plugin.
- * Opens the provider's sign-in page in an in-app browser tab; when it
- * redirects back to our custom URL scheme, the app catches that redirect,
- * hands the resulting code/tokens to Supabase, and closes the browser.
+ * On a real iOS device (via Capacitor), uses native Sign in with Apple —
+ * the actual Face ID system sheet, not a browser page.
+ * In a browser, falls back to the standard web OAuth redirect.
  */
-function signInWithProviderNative(provider) {
-  return new Promise(async (resolve, reject) => {
-    let listenerHandle;
+async function signInWithApple() {
+  if (!Capacitor.isNativePlatform()) {
+    return supabase.auth.signInWithOAuth({ provider: 'apple' });
+  }
 
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: { redirectTo: NATIVE_REDIRECT, skipBrowserRedirect: true },
-      });
-      if (error) throw error;
+  const { rawNonce, hashedNonce } = await generateNonce();
 
-      listenerHandle = await CapacitorApp.addListener('appUrlOpen', async ({ url }) => {
-        if (!url.startsWith(NATIVE_REDIRECT)) return;
-
-        try {
-          const result = await completeSessionFromRedirectUrl(url);
-          await Browser.close();
-          listenerHandle.remove();
-          resolve(result);
-        } catch (err) {
-          await Browser.close();
-          listenerHandle.remove();
-          reject(err);
-        }
-      });
-
-      await Browser.open({ url: data.url });
-    } catch (err) {
-      listenerHandle?.remove();
-      reject(err);
-    }
+  const result = await SignInWithApple.authorize({
+    clientId: 'com.johmacos.secretary',
+    redirectURI: 'https://secretary-frontend.vercel.app/auth',
+    scopes: 'email name',
+    state: crypto.randomUUID(),
+    nonce: hashedNonce,
   });
-}
 
-/** Handles both possible OAuth response shapes Supabase might send back. */
-async function completeSessionFromRedirectUrl(url) {
-  const urlObj = new URL(url);
+  const identityToken = result.response.identityToken;
+  if (!identityToken) throw new Error('Apple sign-in did not return an identity token');
 
-  const code = urlObj.searchParams.get('code');
-  if (code) {
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (error) throw error;
-    return { error: null };
-  }
-
-  const hashParams = new URLSearchParams(urlObj.hash.replace(/^#/, ''));
-  const access_token = hashParams.get('access_token');
-  const refresh_token = hashParams.get('refresh_token');
-  if (access_token && refresh_token) {
-    const { error } = await supabase.auth.setSession({ access_token, refresh_token });
-    if (error) throw error;
-    return { error: null };
-  }
-
-  throw new Error('Sign-in did not return a valid session');
+  return supabase.auth.signInWithIdToken({
+    provider: 'apple',
+    token: identityToken,
+    nonce: rawNonce,
+  });
 }
 
 export function AuthProvider({ children }) {
@@ -94,14 +56,8 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!session,
     signUp: (email, password) => supabase.auth.signUp({ email, password }),
     signIn: (email, password) => supabase.auth.signInWithPassword({ email, password }),
-    signInWithGoogle: () =>
-      Capacitor.isNativePlatform()
-        ? signInWithProviderNative('google')
-        : supabase.auth.signInWithOAuth({ provider: 'google' }),
-    signInWithApple: () =>
-      Capacitor.isNativePlatform()
-        ? signInWithProviderNative('apple')
-        : supabase.auth.signInWithOAuth({ provider: 'apple' }),
+    signInWithGoogle: () => supabase.auth.signInWithOAuth({ provider: 'google' }),
+    signInWithApple: signInWithApple,
     signOut: () => supabase.auth.signOut(),
   };
 
