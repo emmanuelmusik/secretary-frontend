@@ -122,7 +122,7 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!session,
     signUp: (email, password) => supabase.auth.signUp({ email, password }),
     signIn: (email, password) => supabase.auth.signInWithPassword({ email, password }),
-    signInWithGoogle: signInWithGoogle,
+    signInWithGoogle: () => supabase.auth.signInWithOAuth({ provider: 'google' }),
     signInWithApple: signInWithApple,
     signOut: () => supabase.auth.signOut(),
   };
