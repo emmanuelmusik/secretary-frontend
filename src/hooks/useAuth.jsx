@@ -59,6 +59,9 @@ function signInWithGoogle() {
         options: { redirectTo: NATIVE_REDIRECT, skipBrowserRedirect: true },
       });
       if (error) throw error;
+      if (!data?.url) {
+        throw new Error('Supabase did not return a sign-in URL. Response: ' + JSON.stringify(data));
+      }
 
       listenerHandle = await CapacitorApp.addListener('appUrlOpen', async ({ url }) => {
         if (!url.startsWith(NATIVE_REDIRECT)) return;
