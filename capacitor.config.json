@@ -5,6 +5,12 @@
   "server": {
     "url": "https://secretary-frontend.vercel.app",
     "cleartext": false,
-    "androidScheme": "https"
+    "androidScheme": "https",
+    "allowNavigation": [
+      "accounts.google.com",
+      "*.google.com",
+      "dotaawqwptjrhjofdcpd.supabase.co",
+      "appleid.apple.com"
+    ]
   }
 }
