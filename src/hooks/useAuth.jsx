@@ -5,6 +5,8 @@ import { supabase } from '../lib/supabase.js';
 
 const AuthContext = createContext(null);
 
+const GOOGLE_REDIRECT = 'com.johmacos.secretary://auth-callback';
+
 /**
  * On a real iOS device (via Capacitor), uses native Sign in with Apple —
  * the actual Face ID system sheet, not a browser page.
@@ -36,31 +38,74 @@ async function signInWithApple() {
 }
 
 /**
- * Google sign-in, matching Guardian's proven approach: on native, navigate
- * the app's own WebView to Google's sign-in page (not a separate browser
- * app, not a separate sheet) and redirect back to the site's own address.
- * Since the app already loads live from that same address (server mode),
- * landing back there just reloads the app — and detectSessionInUrl on the
- * Supabase client automatically finishes the sign-in from the URL, no
- * extra plugin or deep-link handling required.
+ * Google sign-in on native: Google blocks OAuth sign-in from inside a
+ * plain embedded WebView (a documented Google security policy), so we
+ * open it in a real in-app Safari sheet instead, then catch the redirect
+ * back via a custom URL scheme. Matches Guardian's proven working method,
+ * including accessing plugins via window.Capacitor.Plugins directly.
  */
-async function signInWithGoogle() {
+function signInWithGoogle() {
   if (!Capacitor.isNativePlatform()) {
     return supabase.auth.signInWithOAuth({ provider: 'google' });
   }
 
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: window.location.origin,
-      skipBrowserRedirect: true,
-    },
-  });
-  if (error) throw error;
-  if (!data?.url) throw new Error('Supabase did not return a sign-in URL.');
+  const Browser = window.Capacitor?.Plugins?.Browser;
+  const App = window.Capacitor?.Plugins?.App;
 
-  window.location.href = data.url;
-  // Page navigates away here — nothing after this line runs.
+  return new Promise(async (resolve, reject) => {
+    let listenerHandle;
+    try {
+      if (!Browser || !App) {
+        throw new Error('Required native plugins are not available on this build.');
+      }
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: GOOGLE_REDIRECT, skipBrowserRedirect: true },
+      });
+      if (error) throw error;
+      if (!data?.url) throw new Error('Supabase did not return a sign-in URL.');
+
+      listenerHandle = await App.addListener('appUrlOpen', async ({ url }) => {
+        if (!url.startsWith(GOOGLE_REDIRECT)) return;
+        try {
+          const result = await completeSessionFromRedirectUrl(url);
+          await Browser.close();
+          listenerHandle.remove();
+          resolve(result);
+        } catch (err) {
+          await Browser.close();
+          listenerHandle.remove();
+          reject(err);
+        }
+      });
+
+      await Browser.open({ url: data.url });
+    } catch (err) {
+      listenerHandle?.remove();
+      reject(err);
+    }
+  });
+}
+
+async function completeSessionFromRedirectUrl(url) {
+  const urlObj = new URL(url);
+
+  const code = urlObj.searchParams.get('code');
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    return { error };
+  }
+
+  const hashParams = new URLSearchParams(urlObj.hash.replace(/^#/, ''));
+  const access_token = hashParams.get('access_token');
+  const refresh_token = hashParams.get('refresh_token');
+  if (access_token && refresh_token) {
+    const { error } = await supabase.auth.setSession({ access_token, refresh_token });
+    return { error };
+  }
+
+  throw new Error('Sign-in did not return a valid session');
 }
 
 export function AuthProvider({ children }) {
