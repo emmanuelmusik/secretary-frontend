@@ -6,6 +6,7 @@
     "url": "https://secretary-frontend.vercel.app",
     "cleartext": false,
     "androidScheme": "https",
+    "iosScheme": "https",
     "allowNavigation": [
       "accounts.google.com",
       "*.google.com",
