@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
-import { Browser } from '@capacitor/browser';
 import { App } from '@capacitor/app';
 import { SignInWithApple } from '@capacitor-community/apple-sign-in';
 import { supabase } from '../lib/supabase.js';
@@ -34,9 +33,11 @@ async function signInWithApple() {
   return { error };
 }
 
-// Google on native: open Google's sign-in in a real Safari sheet (Google
-// blocks sign-in inside plain WebViews), then catch the redirect back to
-// our custom URL scheme, finish the session, and close the sheet.
+// Google on native: launch the actual Safari app (not an in-app sheet,
+// not the app's own WebView), and catch the return via a custom URL
+// scheme. This is the simplest of the compliant options — Google
+// requires leaving the WebView, and this is the most basic, reliable
+// way to do that on iOS (window.open with target '_system').
 function signInWithGoogle() {
   if (!Capacitor.isNativePlatform()) {
     return supabase.auth.signInWithOAuth({ provider: 'google' });
@@ -58,17 +59,15 @@ function signInWithGoogle() {
           const code = new URL(url).searchParams.get('code');
           if (!code) throw new Error('No code returned from Google sign-in.');
           const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-          await Browser.close();
           listener.remove();
           resolve({ error: exchangeError });
         } catch (err) {
-          await Browser.close();
           listener.remove();
           reject(err);
         }
       });
 
-      await Browser.open({ url: data.url, windowName: '_self' });
+      window.open(data.url, '_system');
     } catch (err) {
       listener?.remove();
       reject(err);
