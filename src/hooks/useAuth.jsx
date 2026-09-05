@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
+import { Browser } from '@capacitor/browser';
 import { App } from '@capacitor/app';
 import { SignInWithApple } from '@capacitor-community/apple-sign-in';
 import { supabase } from '../lib/supabase.js';
@@ -33,11 +34,8 @@ async function signInWithApple() {
   return { error };
 }
 
-// Google on native: launch the actual Safari app (not an in-app sheet,
-// not the app's own WebView), and catch the return via a custom URL
-// scheme. This is the simplest of the compliant options — Google
-// requires leaving the WebView, and this is the most basic, reliable
-// way to do that on iOS (window.open with target '_system').
+// Google on native: Capacitor's own docs confirm Browser.open() (an
+// in-app Safari sheet) is the officially compliant method for OAuth.
 function signInWithGoogle() {
   if (!Capacitor.isNativePlatform()) {
     return supabase.auth.signInWithOAuth({ provider: 'google' });
@@ -53,21 +51,31 @@ function signInWithGoogle() {
       if (error) throw error;
       if (!data?.url) throw new Error('Supabase did not return a sign-in URL.');
 
+      // DIAGNOSTIC: show the exact URL before opening it.
+      alert('DEBUG - URL being opened:\n\n' + data.url);
+
       listener = await App.addListener('appUrlOpen', async ({ url }) => {
         if (!url.startsWith(GOOGLE_REDIRECT)) return;
         try {
           const code = new URL(url).searchParams.get('code');
           if (!code) throw new Error('No code returned from Google sign-in.');
           const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+          await Browser.close();
           listener.remove();
           resolve({ error: exchangeError });
         } catch (err) {
+          await Browser.close();
           listener.remove();
           reject(err);
         }
       });
 
-      window.open(data.url, '_system');
+      try {
+        await Browser.open({ url: data.url });
+      } catch (browserErr) {
+        alert('DEBUG - Browser.open() itself threw:\n\n' + (browserErr?.message || JSON.stringify(browserErr)));
+        throw browserErr;
+      }
     } catch (err) {
       listener?.remove();
       reject(err);
