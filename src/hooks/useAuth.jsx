@@ -1,15 +1,14 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
+import { Browser } from '@capacitor/browser';
+import { App } from '@capacitor/app';
 import { SignInWithApple } from '@capacitor-community/apple-sign-in';
 import { supabase } from '../lib/supabase.js';
 
 const AuthContext = createContext(null);
 
-/**
- * On a real iOS device (via Capacitor), uses native Sign in with Apple —
- * the actual Face ID system sheet, not a browser page.
- * In a browser, falls back to the standard web OAuth redirect.
- */
+const GOOGLE_REDIRECT = 'com.johmacos.secretary://auth-callback';
+
 async function signInWithApple() {
   if (!Capacitor.isNativePlatform()) {
     return supabase.auth.signInWithOAuth({ provider: 'apple' });
@@ -35,6 +34,48 @@ async function signInWithApple() {
   return { error };
 }
 
+function signInWithGoogle() {
+  if (!Capacitor.isNativePlatform()) {
+    return supabase.auth.signInWithOAuth({ provider: 'google' });
+  }
+
+  return new Promise(async (resolve, reject) => {
+    let listener;
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: GOOGLE_REDIRECT, skipBrowserRedirect: true },
+      });
+      if (error) throw error;
+      if (!data?.url) throw new Error('Supabase did not return a sign-in URL.');
+
+      listener = await App.addListener('appUrlOpen', async ({ url }) => {
+        if (!url.startsWith(GOOGLE_REDIRECT)) return;
+        Browser.close(); // dismiss immediately, don't wait
+        try {
+          const code = new URL(url).searchParams.get('code');
+          if (!code) throw new Error('No code returned from Google sign-in.');
+          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+          listener.remove();
+          resolve({ error: exchangeError });
+        } catch (err) {
+          listener.remove();
+          reject(err);
+        }
+      });
+
+      try {
+        await Browser.open({ url: data.url });
+      } catch (browserErr) {
+        throw browserErr;
+      }
+    } catch (err) {
+      listener?.remove();
+      reject(err);
+    }
+  });
+}
+
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(undefined);
 
@@ -55,7 +96,7 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!session,
     signUp: (email, password) => supabase.auth.signUp({ email, password }),
     signIn: (email, password) => supabase.auth.signInWithPassword({ email, password }),
-    signInWithGoogle: () => supabase.auth.signInWithOAuth({ provider: 'google' }),
+    signInWithGoogle,
     signInWithApple,
     signOut: () => supabase.auth.signOut(),
   };
