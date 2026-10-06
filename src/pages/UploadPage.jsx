@@ -3,11 +3,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { api } from '../lib/api.js';
 import { useAiConsent } from '../components/AiConsent.jsx';
+import { useI18n, TRANSLATION_LANGUAGES } from '../i18n/index.jsx';
 
 export default function UploadPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { ensureConsent } = useAiConsent();
+  const { t, langName } = useI18n();
   const mode = state?.mode || 'conversation';
 
   const [file, setFile] = useState(null);
@@ -58,14 +60,14 @@ export default function UploadPage() {
 
       navigate(`/sessions/${session.id}/save`);
     } catch (err) {
-      setError(err.message || 'Upload failed');
+      setError(err.message || t('upload.failed'));
       setUploading(false);
     }
   }
 
   return (
     <div className="upload-page">
-      <h1>Upload Audio File</h1>
+      <h1>{t('upload.title')}</h1>
 
       <div
         className="file-drop-zone"
@@ -74,7 +76,7 @@ export default function UploadPage() {
         {file ? (
           <p>{file.name}</p>
         ) : (
-          <p>Tap to choose an audio file from your device</p>
+          <p>{t('upload.tap')}</p>
         )}
         <input
           ref={fileInputRef}
@@ -87,43 +89,38 @@ export default function UploadPage() {
 
       <div className="pre-record-settings">
         <label>
-          Spoken Language
+          {t('record.spoken_language')}
           <select value={sourceLanguageMode} onChange={(e) => setSourceLanguageMode(e.target.value)}>
-            <option value="auto">Auto-detect</option>
-            <option value="manual">I know the language</option>
+            <option value="auto">{t('record.auto')}</option>
+            <option value="manual">{t('record.manual')}</option>
           </select>
         </label>
         {sourceLanguageMode === 'manual' && (
           <input
-            placeholder="Language code (e.g. fr, de, yo)"
+            placeholder={t('record.code_placeholder')}
             value={sourceLanguage}
             onChange={(e) => setSourceLanguage(e.target.value)}
           />
         )}
         <label>
-          Translate To
+          {t('upload.translate_to')}
           <select value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)}>
-            <option value="none">None (show original language)</option>
-            <option value="en">English</option>
-            <option value="fr">French</option>
-            <option value="de">German</option>
-            <option value="es">Spanish</option>
-            <option value="pt">Portuguese</option>
-            <option value="yo">Yoruba</option>
-            <option value="ar">Arabic</option>
-            <option value="zh">Chinese</option>
+            <option value="none">{t('record.none')}</option>
+            {TRANSLATION_LANGUAGES.map((c) => (
+              <option key={c} value={c}>{langName(c)}</option>
+            ))}
           </select>
         </label>
         <label className="checkbox-label">
           <input type="checkbox" checked={wantsInsight} onChange={(e) => setWantsInsight(e.target.checked)} />
-          Generate AI insight (summary, action items, key points)
+          {t('upload.insight')}
         </label>
       </div>
 
       {error && <p className="error">{error}</p>}
 
       <button className="record-btn" onClick={handleUpload} disabled={!file || uploading}>
-        {uploading ? 'Uploading…' : 'Transcribe This File'}
+        {uploading ? t('upload.uploading') : t('upload.transcribe')}
       </button>
     </div>
   );

@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
+import { useI18n } from '../i18n/index.jsx';
+import LanguageMenu from '../components/LanguageMenu.jsx';
 
 export default function AuthPage() {
   const { signUp, signIn, signInWithGoogle, signInWithApple, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [mode, setMode] = useState('signup'); // 'signup' | 'login'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,7 +45,7 @@ export default function AuthPage() {
       if (error) throw error;
       navigate('/');
     } catch (err) {
-      setError(err.message || 'Sign-in failed');
+      setError(err.message || t('auth.failed'));
     } finally {
       setLoading(false);
     }
@@ -51,24 +54,25 @@ export default function AuthPage() {
   return (
     <div className="auth-page">
       <div className="auth-glow" aria-hidden="true" />
+      <LanguageMenu />
 
       <div className="auth-hero">
         <h1 className="auth-title">Secretary</h1>
-        <p>Your AI-powered meeting, class, and voice notes assistant.</p>
+        <p>{t('auth.tagline')}</p>
       </div>
 
       <div className="auth-card">
         <form onSubmit={handleSubmit}>
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t('auth.email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder={t('auth.password')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -76,33 +80,33 @@ export default function AuthPage() {
           />
           {error && <p className="error">{error}</p>}
           <button type="submit" className="auth-primary-btn" disabled={loading}>
-            {loading ? 'Please wait…' : mode === 'signup' ? 'Sign Up' : 'Log In'}
+            {loading ? t('auth.wait') : mode === 'signup' ? t('auth.signup') : t('auth.login')}
           </button>
         </form>
 
         <button className="oauth-btn" onClick={() => handleOAuth(signInWithGoogle)} disabled={loading}>
-          <GoogleIcon /> Continue with Google
+          <GoogleIcon /> {t('auth.google')}
         </button>
 
-        <div className="auth-divider"><span>OR CONTINUE WITH</span></div>
+        <div className="auth-divider"><span>{t('auth.or')}</span></div>
 
         <button className="oauth-btn" onClick={() => handleOAuth(signInWithApple)} disabled={loading}>
-          <AppleIcon /> Continue with Apple
+          <AppleIcon /> {t('auth.apple')}
         </button>
 
         <button className="link-btn" onClick={() => setMode(mode === 'signup' ? 'login' : 'signup')}>
           {mode === 'signup' ? (
-            <>Already have an account? <span className="link-accent">Log in</span></>
+            <>{t('auth.have_account')} <span className="link-accent">{t('auth.login_link')}</span></>
           ) : (
-            <>Don't have an account? <span className="link-accent">Sign up</span></>
+            <>{t('auth.no_account')} <span className="link-accent">{t('auth.signup_link')}</span></>
           )}
         </button>
       </div>
 
       <div className="footer-links">
-        <Link to="/support">Support Center</Link>
+        <Link to="/support">{t('nav.support')}</Link>
         <span>|</span>
-        <Link to="/privacy">Privacy Policy</Link>
+        <Link to="/privacy">{t('nav.privacy')}</Link>
       </div>
     </div>
   );

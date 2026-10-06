@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth.jsx';
 import { RequireAuth } from './components/RequireAuth.jsx';
+import { LanguageProvider } from './i18n/index.jsx';
 
 import AuthPage from './pages/AuthPage.jsx';
 import SupportPage from './pages/SupportPage.jsx';
@@ -21,6 +22,7 @@ import ScanCardPage from './pages/ScanCardPage.jsx';
 export default function App() {
   return (
     <AuthProvider>
+      <LanguageProvider>
       <BrowserRouter>
         <Routes>
           {/* Public — no signup required */}
@@ -46,6 +48,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
+      </LanguageProvider>
     </AuthProvider>
   );
 }

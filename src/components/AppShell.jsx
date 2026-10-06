@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
+import { useI18n } from '../i18n/index.jsx';
+import LanguageMenu from './LanguageMenu.jsx';
 
 export default function AppShell({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const closeRef = useRef(null);
   const openerRef = useRef(null);
@@ -44,15 +47,16 @@ export default function AppShell({ children }) {
           type="button"
           className="menu-btn"
           onClick={() => setMenuOpen(true)}
-          aria-label="Open menu"
+          aria-label={t('menu.open')}
           aria-expanded={menuOpen}
         >
           <MenuIcon />
         </button>
-        <NavLink to="/" className="app-brand" aria-label="Secretary home">
+        <NavLink to="/" className="app-brand" aria-label={t('nav.home_aria')}>
           <img src="/favicon.png" alt="" width="30" height="30" />
           <span>Secretary</span>
         </NavLink>
+        <LanguageMenu />
       </header>
 
       <div className={`menu-overlay ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(false)} aria-hidden="true" />
@@ -60,7 +64,7 @@ export default function AppShell({ children }) {
         className={`menu-drawer ${menuOpen ? 'open' : ''}`}
         role="dialog"
         aria-modal="true"
-        aria-label="Menu"
+        aria-label={t('menu.title')}
         aria-hidden={!menuOpen}
         inert={menuOpen ? undefined : ''}
       >
@@ -69,7 +73,7 @@ export default function AppShell({ children }) {
             <img src="/favicon.png" alt="" width="30" height="30" />
             <span>Secretary</span>
           </div>
-          <button ref={closeRef} type="button" className="menu-btn" onClick={() => setMenuOpen(false)} aria-label="Close menu">
+          <button ref={closeRef} type="button" className="menu-btn" onClick={() => setMenuOpen(false)} aria-label={t('menu.close')}>
             <CloseIcon />
           </button>
         </div>
@@ -77,22 +81,22 @@ export default function AppShell({ children }) {
         {user?.email && <p className="menu-user">{user.email}</p>}
 
         <nav className="menu-list">
-          <MenuLink to="/" end icon="home">Home</MenuLink>
-          <MenuLink to="/folders" icon="folder">Folders</MenuLink>
-          <MenuLink to="/notes" icon="note">Notes</MenuLink>
-          <MenuLink to="/cards" icon="card">Cards</MenuLink>
+          <MenuLink to="/" end icon="home">{t('nav.home')}</MenuLink>
+          <MenuLink to="/folders" icon="folder">{t('nav.folders')}</MenuLink>
+          <MenuLink to="/notes" icon="note">{t('nav.notes')}</MenuLink>
+          <MenuLink to="/cards" icon="card">{t('nav.cards')}</MenuLink>
 
           <div className="menu-divider" />
 
-          <MenuLink to="/account" icon="settings">Settings</MenuLink>
-          <MenuLink to="/support" icon="help">Support Center</MenuLink>
-          <MenuLink to="/privacy" icon="shield">Privacy Policy</MenuLink>
+          <MenuLink to="/account" icon="settings">{t('nav.settings')}</MenuLink>
+          <MenuLink to="/support" icon="help">{t('nav.support')}</MenuLink>
+          <MenuLink to="/privacy" icon="shield">{t('nav.privacy')}</MenuLink>
 
           <div className="menu-divider" />
 
           <button type="button" className="menu-item menu-signout" onClick={handleSignOut}>
             <TabIcon name="logout" />
-            <span>Log out</span>
+            <span>{t('nav.logout')}</span>
           </button>
         </nav>
       </aside>
@@ -102,26 +106,26 @@ export default function AppShell({ children }) {
       <nav className="app-tabbar">
         <NavLink to="/" end className={({ isActive }) => `tab-item ${isActive ? 'active' : ''}`}>
           <TabIcon name="home" />
-          <span>Home</span>
+          <span>{t('nav.home')}</span>
         </NavLink>
 
         <NavLink to="/folders" className={({ isActive }) => `tab-item ${isActive ? 'active' : ''}`}>
           <TabIcon name="folder" />
-          <span>Folders</span>
+          <span>{t('nav.folders')}</span>
         </NavLink>
 
-        <button className="tab-record-btn" onClick={() => navigate('/record')} aria-label="Record">
+        <button className="tab-record-btn" onClick={() => navigate('/record')} aria-label={t('nav.record')}>
           <span className="tab-record-dot" />
         </button>
 
         <NavLink to="/notes" className={({ isActive }) => `tab-item ${isActive ? 'active' : ''}`}>
           <TabIcon name="note" />
-          <span>Notes</span>
+          <span>{t('nav.notes')}</span>
         </NavLink>
 
         <NavLink to="/cards" className={({ isActive }) => `tab-item ${isActive ? 'active' : ''}`}>
           <TabIcon name="card" />
-          <span>Cards</span>
+          <span>{t('nav.cards')}</span>
         </NavLink>
       </nav>
     </div>

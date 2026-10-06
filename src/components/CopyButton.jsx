@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { copyText } from '../lib/clipboard.js';
+import { useI18n } from '../i18n/index.jsx';
 
 /**
  * Small clipboard icon button. Shows a check mark for ~1.5s after copying.
  * `text` can be a string or a function returning a string (evaluated on click).
  */
-export default function CopyButton({ text, label = 'Copy', className = '' }) {
+export default function CopyButton({ text, label, className = '' }) {
+  const { t } = useI18n();
   const [state, setState] = useState('idle'); // idle | copied | failed
   const timer = useRef(null);
 
@@ -19,7 +21,7 @@ export default function CopyButton({ text, label = 'Copy', className = '' }) {
     timer.current = setTimeout(() => setState('idle'), 1500);
   }
 
-  const title = state === 'copied' ? 'Copied' : state === 'failed' ? 'Copy failed' : label;
+  const title = state === 'copied' ? t('copy.copied') : state === 'failed' ? t('copy.failed') : (label || t('copy.default'));
 
   return (
     <button
@@ -39,7 +41,7 @@ export default function CopyButton({ text, label = 'Copy', className = '' }) {
           <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
         </svg>
       )}
-      <span className="copy-btn-text">{state === 'copied' ? 'Copied' : state === 'failed' ? 'Failed' : ''}</span>
+      <span className="copy-btn-text">{state === 'copied' ? t('copy.copied') : state === 'failed' ? t('copy.failed_short') : ''}</span>
     </button>
   );
 }

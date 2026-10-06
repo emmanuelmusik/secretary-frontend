@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { api } from '../lib/api.js';
+import { useI18n } from '../i18n/index.jsx';
 
 export default function AccountPage() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { t, lang, setLang, languages } = useI18n();
   const [confirmText, setConfirmText] = useState('');
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState('');
@@ -19,7 +21,7 @@ export default function AccountPage() {
       await signOut();
       navigate('/auth');
     } catch (err) {
-      setError(err.message || 'Could not delete account');
+      setError(err.message || t('settings.delete_failed'));
       setDeleting(false);
     }
   }
@@ -31,26 +33,31 @@ export default function AccountPage() {
 
   return (
     <div className="account-page">
-      <h1>Settings</h1>
-      <p className="meta">Signed in as {user?.email}</p>
+      <h1>{t('settings.title')}</h1>
+      <p className="meta">{t('settings.signed_in', { email: user?.email })}</p>
+
+      <label className="lang-setting">
+        {t('settings.language')}
+        <select value={lang} onChange={(e) => setLang(e.target.value)}>
+          {languages.map((l) => (
+            <option key={l.code} value={l.code}>{l.native}</option>
+          ))}
+        </select>
+      </label>
 
       <div className="account-links">
-        <Link to="/support">Support Center</Link>
-        <Link to="/privacy">Privacy Policy</Link>
+        <Link to="/support">{t('support.title')}</Link>
+        <Link to="/privacy">{t('nav.privacy')}</Link>
       </div>
 
-      <button className="signout-btn" onClick={handleSignOut}>Sign out</button>
+      <button className="signout-btn" onClick={handleSignOut}>{t('settings.signout')}</button>
 
       <div className="danger-zone">
-        <h2>Delete Account</h2>
-        <p className="meta">
-          This permanently deletes your account and every folder, session, transcript, and note
-          associated with it. This cannot be undone. Audio saved on your device is not affected
-          by this — you'd need to remove that separately.
-        </p>
+        <h2>{t('settings.delete_title')}</h2>
+        <p className="meta">{t('settings.delete_desc')}</p>
 
         <label>
-          Type DELETE to confirm
+          {t('settings.type_delete', { word: 'DELETE' })}
           <input value={confirmText} onChange={(e) => setConfirmText(e.target.value)} placeholder="DELETE" />
         </label>
 
@@ -61,7 +68,7 @@ export default function AccountPage() {
           disabled={confirmText !== 'DELETE' || deleting}
           onClick={handleDelete}
         >
-          {deleting ? 'Deleting…' : 'Permanently Delete My Account'}
+          {deleting ? t('settings.deleting') : t('settings.delete_btn')}
         </button>
       </div>
     </div>

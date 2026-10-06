@@ -3,9 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { resizeImage } from '../lib/image.js';
 import { useAiConsent } from '../components/AiConsent.jsx';
+import { useI18n } from '../i18n/index.jsx';
 
 export default function CardsPage() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { ensureConsent } = useAiConsent();
   const libraryRef = useRef(null);
   const [cards, setCards] = useState(null);
@@ -15,7 +17,7 @@ export default function CardsPage() {
 
   useEffect(() => {
     api.getCards().then(setCards).catch((e) => {
-      setError('Cards is not available right now. Please try again in a few minutes.');
+      setError(t('cards.unavailable'));
       setErrorDetail(e?.message || '');
       setCards([]);
     });
@@ -42,39 +44,39 @@ export default function CardsPage() {
       const firstPhoto = await resizeImage(file, 1600, 0.85);
       navigate('/cards/scan', { state: { firstPhoto } });
     } catch (err) {
-      setError(err.message || 'Could not open that photo.');
+      setError(err.message || t('cards.photo_failed'));
     }
   }
 
   return (
     <div className="cards-page">
-      <h1>Cards</h1>
+      <h1>{t('cards.title')}</h1>
 
       <div className="scan-actions">
-        <button className="scan-btn" onClick={() => navigate('/cards/scan')}>Scan a card</button>
-        <button className="scan-btn-secondary" onClick={openLibrary}>From photos</button>
+        <button className="scan-btn" onClick={() => navigate('/cards/scan')}>{t('cards.scan')}</button>
+        <button className="scan-btn-secondary" onClick={openLibrary}>{t('cards.upload')}</button>
         <input ref={libraryRef} type="file" accept="image/*" hidden onChange={handleLibraryFile} />
       </div>
 
       {error && <p className="form-error">{error}</p>}
-      {error && errorDetail && <p className="meta error-detail">Detail: {errorDetail}</p>}
+      {error && errorDetail && <p className="meta error-detail">{t('cards.detail', { detail: errorDetail })}</p>}
 
       {cards && cards.length > 0 && (
         <input
           className="card-search"
           type="search"
-          placeholder="Search name, company, email, phone…"
+          placeholder={t('cards.search')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
       )}
 
-      {cards === null && <p className="meta">Loading…</p>}
+      {cards === null && <p className="meta">{t('common.loading')}</p>}
 
       {cards && cards.length === 0 && !error && (
         <div className="empty-panel">
-          <p className="meta">No cards yet. Scan a business card and its details will be saved here.</p>
-          <Link className="link-accent" to="/cards/new">or add one by hand</Link>
+          <p className="meta">{t('cards.empty')}</p>
+          <Link className="link-accent" to="/cards/new">{t('cards.add_manual')}</Link>
         </div>
       )}
 
@@ -84,13 +86,13 @@ export default function CardsPage() {
             ? <img className="card-thumb" src={c.image_thumb} alt="" />
             : <div className="card-thumb card-thumb-empty">{(c.name || c.company || '?').charAt(0).toUpperCase()}</div>}
           <div className="card-row-text">
-            <strong>{c.name || c.company || 'Unnamed card'}</strong>
+            <strong>{c.name || c.company || t('cards.unnamed')}</strong>
             <span>{[c.job_title, c.company && c.name ? c.company : ''].filter(Boolean).join(' · ') || (c.emails?.[0] ?? '')}</span>
           </div>
         </Link>
       ))}
 
-      {cards && cards.length > 0 && filtered.length === 0 && <p className="meta">No cards match “{query}”.</p>}
+      {cards && cards.length > 0 && filtered.length === 0 && <p className="meta">{t('cards.no_match', { query })}</p>}
     </div>
   );
 }

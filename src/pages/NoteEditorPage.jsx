@@ -3,12 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { supabase } from '../lib/supabase.js';
 import { api } from '../lib/api.js';
+import { useI18n } from '../i18n/index.jsx';
 
 const WS_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:3000').replace(/^http/, 'ws');
 
 export default function NoteEditorPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [note, setNote] = useState(null);
   const [preview, setPreview] = useState(false);
   const [isDictating, setIsDictating] = useState(false);
@@ -83,12 +85,12 @@ export default function NoteEditorPage() {
   }
 
   async function handleDeleteNote() {
-    if (!confirm('Delete this note permanently? This cannot be undone.')) return;
+    if (!confirm(t('notes.delete_confirm'))) return;
     await api.deleteNote(id);
     navigate('/notes');
   }
 
-  if (!note) return <div className="loading-screen">Loading…</div>;
+  if (!note) return <div className="loading-screen">{t('common.loading')}</div>;
 
   return (
     <div className="note-editor">
@@ -100,11 +102,11 @@ export default function NoteEditorPage() {
 
       <div className="note-toolbar">
         <button onClick={toggleDictation} className={isDictating ? 'active' : ''}>
-          {isDictating ? '⏹ Stop Dictation' : '🎙 Dictate'}
+          {isDictating ? `⏹ ${t('notes.stop_dictation')}` : `🎙 ${t('notes.dictate')}`}
         </button>
-        <button onClick={insertChecklistItem}>+ Checklist item</button>
-        <button onClick={() => setPreview((p) => !p)}>{preview ? 'Edit' : 'Preview'}</button>
-        <button className="danger-btn-sm" onClick={handleDeleteNote}>Delete</button>
+        <button onClick={insertChecklistItem}>{t('notes.checklist')}</button>
+        <button onClick={() => setPreview((p) => !p)}>{preview ? t('common.edit') : t('notes.preview')}</button>
+        <button className="danger-btn-sm" onClick={handleDeleteNote}>{t('common.delete')}</button>
       </div>
 
       {preview ? (
@@ -114,12 +116,12 @@ export default function NoteEditorPage() {
           className="note-body"
           value={note.body}
           onChange={(e) => scheduleSave({ body: e.target.value })}
-          placeholder="Start typing… (Markdown supported: **bold**, - bullet, - [ ] checklist)"
+          placeholder={t('notes.placeholder')}
         />
       )}
 
       {note.linked_session_id && (
-        <p className="linked-session">Linked to a recorded session</p>
+        <p className="linked-session">{t('notes.linked')}</p>
       )}
     </div>
   );

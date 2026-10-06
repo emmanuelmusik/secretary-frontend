@@ -4,21 +4,12 @@ import { api } from '../lib/api.js';
 import { getLocalAudioUrl, shareLocalAudio } from '../lib/localAudio.js';
 import { insightToText } from '../lib/clipboard.js';
 import CopyButton from '../components/CopyButton.jsx';
-
-const LANGUAGES = [
-  { code: 'en', label: 'English' },
-  { code: 'fr', label: 'French' },
-  { code: 'de', label: 'German' },
-  { code: 'es', label: 'Spanish' },
-  { code: 'pt', label: 'Portuguese' },
-  { code: 'yo', label: 'Yoruba' },
-  { code: 'ar', label: 'Arabic' },
-  { code: 'zh', label: 'Chinese' },
-];
+import { useI18n, TRANSLATION_LANGUAGES } from '../i18n/index.jsx';
 
 export default function SessionDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t, langName, formatDateTime } = useI18n();
   const [session, setSession] = useState(null);
   const [tab, setTab] = useState('transcript'); // transcript | insight | translation | history | audio
 
@@ -64,7 +55,7 @@ export default function SessionDetailPage() {
     try {
       await shareLocalAudio(session.local_audio_path, session.name);
     } catch (err) {
-      if (err?.message !== 'Share canceled') alert(err.message || 'Could not share this recording');
+      if (err?.message !== 'Share canceled') alert(err.message || t('audio.share_failed'));
     } finally {
       setSharing(false);
     }
@@ -110,36 +101,36 @@ export default function SessionDetailPage() {
   }
 
   async function handleDeleteSession() {
-    if (!confirm('Delete this recording permanently? This cannot be undone.')) return;
+    if (!confirm(t('session.delete_confirm'))) return;
     await api.deleteSession(id);
     navigate('/');
   }
 
-  if (!session) return <div className="loading-screen">Loading…</div>;
+  if (!session) return <div className="loading-screen">{t('common.loading')}</div>;
 
   return (
     <div className="session-detail">
       <div className="session-detail-header">
         <h1>{session.name}</h1>
-        <button className="danger-btn-sm" onClick={handleDeleteSession}>Delete</button>
+        <button className="danger-btn-sm" onClick={handleDeleteSession}>{t('common.delete')}</button>
       </div>
       <p className="meta">
-        {new Date(session.created_at).toLocaleString()} · {formatDuration(session.duration_seconds)}
-        {session.source_language && ` · Detected: ${session.source_language}`}
+        {formatDateTime(session.created_at)} · {formatDuration(session.duration_seconds, t)}
+        {session.source_language && ` · ${t('session.detected', { lang: session.source_language })}`}
       </p>
 
       <div className="tabs">
-        <button className={tab === 'transcript' ? 'active' : ''} onClick={() => setTab('transcript')}>Transcript</button>
-        <button className={tab === 'insight' ? 'active' : ''} onClick={() => setTab('insight')}>Insight</button>
-        <button className={tab === 'translation' ? 'active' : ''} onClick={() => setTab('translation')}>Translation</button>
-        {session.history_analysis && <button className={tab === 'history' ? 'active' : ''} onClick={() => setTab('history')}>History Insight</button>}
-        <button className={tab === 'audio' ? 'active' : ''} onClick={openAudioTab}>Audio</button>
+        <button className={tab === 'transcript' ? 'active' : ''} onClick={() => setTab('transcript')}>{t('tab.transcript')}</button>
+        <button className={tab === 'insight' ? 'active' : ''} onClick={() => setTab('insight')}>{t('tab.insight')}</button>
+        <button className={tab === 'translation' ? 'active' : ''} onClick={() => setTab('translation')}>{t('tab.translation')}</button>
+        {session.history_analysis && <button className={tab === 'history' ? 'active' : ''} onClick={() => setTab('history')}>{t('tab.history')}</button>}
+        <button className={tab === 'audio' ? 'active' : ''} onClick={openAudioTab}>{t('tab.audio')}</button>
       </div>
 
       {tab === 'transcript' && (
         <div className="copyable">
           <div className="copy-row">
-            <CopyButton text={session.raw_transcript} label="Copy transcript" />
+            <CopyButton text={session.raw_transcript} label={t('copy.transcript')} />
           </div>
           <pre className="transcript">{session.raw_transcript}</pre>
         </div>
@@ -151,17 +142,14 @@ export default function SessionDetailPage() {
             <>
               <audio controls src={audioUrl} style={{ width: '100%' }} />
               <button className="share-btn" onClick={handleShareAudio} disabled={sharing}>
-                {sharing ? 'Preparing…' : 'Share Recording'}
+                {sharing ? t('audio.preparing') : t('audio.share')}
               </button>
             </>
           )}
           {!audioUrl && audioMissing && (
-            <p className="meta">
-              This recording isn't available on this device. Audio is saved locally only, on the
-              device it was recorded on — it doesn't sync between devices or survive an app reinstall.
-            </p>
+            <p className="meta">{t('audio.missing')}</p>
           )}
-          {!audioUrl && !audioMissing && <p className="meta">Loading audio…</p>}
+          {!audioUrl && !audioMissing && <p className="meta">{t('audio.loading')}</p>}
         </div>
       )}
 
@@ -169,31 +157,31 @@ export default function SessionDetailPage() {
         <div className="analysis">
           {!session.analysis && (
             <div className="empty-panel">
-              <p className="meta">No insight has been generated for this recording yet.</p>
+              <p className="meta">{t('insight.none')}</p>
               <button onClick={handleGenerateInsight} disabled={generatingInsight}>
-                {generatingInsight ? 'Generating…' : 'Generate Insight'}
+                {generatingInsight ? t('insight.generating') : t('insight.generate')}
               </button>
             </div>
           )}
           {session.analysis && (
             <>
               <div className="insight-header">
-                <CopyButton text={() => insightToText(session.analysis)} label="Copy insight" />
+                <CopyButton text={() => insightToText(session.analysis, t)} label={t('copy.insight')} />
                 <button onClick={handleGenerateInsight} disabled={generatingInsight}>
-                  {generatingInsight ? 'Regenerating…' : 'Regenerate'}
+                  {generatingInsight ? t('insight.regenerating') : t('insight.regenerate')}
                 </button>
               </div>
-              <h3>Summary</h3>
+              <h3>{t('insight.summary')}</h3>
               <p>{session.analysis.summary}</p>
-              <h3>Key Points</h3>
+              <h3>{t('insight.key_points')}</h3>
               <ul>{session.analysis.key_points?.map((p, i) => <li key={i}>{p}</li>)}</ul>
-              <h3>Action Items</h3>
+              <h3>{t('insight.action_items')}</h3>
               <ul>{session.analysis.action_items?.map((a, i) => <li key={i}>{a.item} {a.owner && `— ${a.owner}`}</li>)}</ul>
-              <h3>Decisions</h3>
+              <h3>{t('insight.decisions')}</h3>
               <ul>{session.analysis.decisions?.map((d, i) => <li key={i}>{d}</li>)}</ul>
               {session.analysis.quotes?.length > 0 && (
                 <>
-                  <h3>Quotable Quotes</h3>
+                  <h3>{t('insight.quotes')}</h3>
                   <div className="quote-list">
                     {session.analysis.quotes.map((q, i) => (
                       <blockquote className="quote-card" key={i}>
@@ -202,7 +190,7 @@ export default function SessionDetailPage() {
                           <span className="quote-speaker">{q.speaker ? `— ${q.speaker}` : ''}</span>
                           <CopyButton
                             text={`"${q.quote}"${q.speaker ? ` — ${q.speaker}` : ''}`}
-                            label="Copy quote"
+                            label={t('copy.quote')}
                           />
                         </div>
                       </blockquote>
@@ -210,7 +198,7 @@ export default function SessionDetailPage() {
                   </div>
                 </>
               )}
-              <h3>Questions Raised</h3>
+              <h3>{t('insight.questions')}</h3>
               <ul>{session.analysis.questions_raised?.map((q, i) => <li key={i}>{q}</li>)}</ul>
             </>
           )}
@@ -221,28 +209,28 @@ export default function SessionDetailPage() {
         <div>
           <div className="translate-controls">
             <select value={translateTarget} onChange={(e) => setTranslateTarget(e.target.value)}>
-              {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code}>{l.label}</option>
+              {TRANSLATION_LANGUAGES.map((c) => (
+                <option key={c} value={c}>{langName(c)}</option>
               ))}
             </select>
             <button onClick={handleTranslate} disabled={translating}>
-              {translating ? 'Translating…' : 'Translate'}
+              {translating ? t('translation.translating') : t('translation.translate')}
             </button>
           </div>
           {session.translated_transcript ? (
             <>
               <div className="copy-row">
-                <CopyButton text={session.translated_transcript} label="Copy translation" />
+                <CopyButton text={session.translated_transcript} label={t('copy.translation')} />
               </div>
               <pre className="transcript">{session.translated_transcript}</pre>
               <div className="copy-row original-row">
-                <p className="original-label">Original ({session.source_language || 'detected language'})</p>
-                <CopyButton text={session.raw_transcript} label="Copy original" />
+                <p className="original-label">{t('translation.original', { lang: session.source_language || t('translation.original_default') })}</p>
+                <CopyButton text={session.raw_transcript} label={t('copy.original')} />
               </div>
               <pre className="transcript original-transcript">{session.raw_transcript}</pre>
             </>
           ) : (
-            <p className="meta">Pick a language above and translate this transcript.</p>
+            <p className="meta">{t('translation.hint')}</p>
           )}
         </div>
       )}
@@ -250,15 +238,15 @@ export default function SessionDetailPage() {
       {tab === 'history' && session.history_analysis && (
         <div className="analysis">
           <div className="insight-header">
-            <CopyButton text={() => historyToText(session.history_analysis)} label="Copy history insight" />
+            <CopyButton text={() => historyToText(session.history_analysis, t)} label={t('copy.history')} />
           </div>
-          <h3>Recurring Themes</h3>
-          <ul>{session.history_analysis.recurring_themes?.map((t, i) => <li key={i}>{t}</li>)}</ul>
-          <h3>Progress Notes</h3>
+          <h3>{t('history.themes')}</h3>
+          <ul>{session.history_analysis.recurring_themes?.map((x, i) => <li key={i}>{x}</li>)}</ul>
+          <h3>{t('history.progress')}</h3>
           <p>{session.history_analysis.progress_notes}</p>
-          <h3>Outstanding Action Items</h3>
+          <h3>{t('history.outstanding')}</h3>
           <ul>{session.history_analysis.outstanding_action_items?.map((a, i) => <li key={i}>{a}</li>)}</ul>
-          <h3>Pattern Observations</h3>
+          <h3>{t('history.patterns')}</h3>
           <p>{session.history_analysis.pattern_observations}</p>
         </div>
       )}
@@ -266,12 +254,12 @@ export default function SessionDetailPage() {
       {session.folder_id && (
         <div className="history-analysis-trigger">
           <select value={historyRange} onChange={(e) => setHistoryRange(e.target.value)}>
-            <option value="last_5">Last 5 sessions</option>
-            <option value="last_20">Last 20 sessions</option>
-            <option value="all">All sessions in folder</option>
+            <option value="last_5">{t('history.last5')}</option>
+            <option value="last_20">{t('history.last20')}</option>
+            <option value="all">{t('history.all')}</option>
           </select>
           <button onClick={handleAnalyzeWithHistory} disabled={analyzingHistory}>
-            {analyzingHistory ? 'Analyzing…' : 'Analyze with History'}
+            {analyzingHistory ? t('history.analyzing') : t('history.analyze')}
           </button>
         </div>
       )}
@@ -279,19 +267,19 @@ export default function SessionDetailPage() {
   );
 }
 
-function historyToText(h) {
+function historyToText(h, t) {
   if (!h) return '';
   const list = (items) => (items || []).map((x) => `- ${x}`).join('\n');
   return [
-    `RECURRING THEMES\n${list(h.recurring_themes)}`,
-    `PROGRESS NOTES\n${h.progress_notes || ''}`,
-    `OUTSTANDING ACTION ITEMS\n${list(h.outstanding_action_items)}`,
-    `PATTERN OBSERVATIONS\n${h.pattern_observations || ''}`,
+    `${t('history.themes').toUpperCase()}\n${list(h.recurring_themes)}`,
+    `${t('history.progress').toUpperCase()}\n${h.progress_notes || ''}`,
+    `${t('history.outstanding').toUpperCase()}\n${list(h.outstanding_action_items)}`,
+    `${t('history.patterns').toUpperCase()}\n${h.pattern_observations || ''}`,
   ].join('\n\n');
 }
 
-function formatDuration(seconds) {
+function formatDuration(seconds, t) {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
-  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+  return h > 0 ? t('duration.hm', { h, m }) : t('duration.m', { m });
 }

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../lib/api.js';
+import { useI18n } from '../i18n/index.jsx';
 
 export default function SaveSessionPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t, formatDate } = useI18n();
   const [name, setName] = useState('');
   const [folders, setFolders] = useState([]);
   const [folderId, setFolderId] = useState('');
@@ -17,7 +19,7 @@ export default function SaveSessionPage() {
   }, [id]);
 
   function defaultName() {
-    return `Session – ${new Date().toLocaleDateString()}`;
+    return t('save.default_name', { date: formatDate(new Date()) });
   }
 
   async function handleSave() {
@@ -34,38 +36,38 @@ export default function SaveSessionPage() {
 
   return (
     <div className="save-page">
-      <h1>Save Session</h1>
+      <h1>{t('save.title')}</h1>
 
       <label>
-        Name
+        {t('save.name')}
         <input value={name} onChange={(e) => setName(e.target.value)} />
       </label>
 
       <label>
-        Folder
+        {t('save.folder')}
         {!creatingFolder ? (
           <>
             <select value={folderId} onChange={(e) => setFolderId(e.target.value)}>
-              <option value="">Unfiled</option>
+              <option value="">{t('save.unfiled')}</option>
               {folders.map((f) => (
                 <option key={f.id} value={f.id}>{f.name}</option>
               ))}
             </select>
-            <button type="button" onClick={() => setCreatingFolder(true)}>+ New Folder</button>
+            <button type="button" onClick={() => setCreatingFolder(true)}>{t('save.new_folder')}</button>
           </>
         ) : (
           <>
             <input
-              placeholder="New folder name"
+              placeholder={t('save.new_folder_placeholder')}
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
             />
-            <button type="button" onClick={() => setCreatingFolder(false)}>Cancel</button>
+            <button type="button" onClick={() => setCreatingFolder(false)}>{t('common.cancel')}</button>
           </>
         )}
       </label>
 
-      <button className="save-btn" onClick={handleSave}>Save</button>
+      <button className="save-btn" onClick={handleSave}>{t('common.save')}</button>
     </div>
   );
 }

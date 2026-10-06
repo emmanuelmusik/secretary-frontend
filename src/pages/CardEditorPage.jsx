@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams, Link } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { shareVCard } from '../lib/vcard.js';
 import CopyButton from '../components/CopyButton.jsx';
+import { useI18n } from '../i18n/index.jsx';
 
 const EMPTY = { name: '', job_title: '', company: '', emails: [], phones: [], website: '', address: '', notes: '' };
 const toLines = (arr) => (arr || []).join('\n');
@@ -19,6 +20,7 @@ export default function CardEditorPage() {
   const { id } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const isNew = !id;
 
   const [form, setForm] = useState(() => {
@@ -63,17 +65,17 @@ export default function CardEditorPage() {
   }
 
   async function handleDelete() {
-    if (!confirm('Delete this card permanently?')) return;
+    if (!confirm(t('card.delete_confirm'))) return;
     await api.deleteCard(id);
     navigate('/cards');
   }
 
   async function handleContacts() {
     try { await shareVCard(payload()); }
-    catch (err) { if (err?.message !== 'Share canceled') setError(err.message || 'Could not share this contact.'); }
+    catch (err) { if (err?.message !== 'Share canceled') setError(err.message || t('card.share_failed')); }
   }
 
-  if (loading) return <div className="loading-screen">Loading…</div>;
+  if (loading) return <div className="loading-screen">{t('common.loading')}</div>;
 
   const firstPhone = fromLines(form.phones)[0];
   const firstEmail = fromLines(form.emails)[0];
@@ -82,54 +84,54 @@ export default function CardEditorPage() {
   return (
     <div className="card-editor">
       <div className="session-detail-header">
-        <h1>{isNew ? (state?.card ? 'Review card' : 'New card') : 'Card'}</h1>
-        {!isNew && <button className="danger-btn-sm" onClick={handleDelete}>Delete</button>}
+        <h1>{isNew ? (state?.card ? t('card.title_review') : t('card.title_new')) : t('card.title')}</h1>
+        {!isNew && <button className="danger-btn-sm" onClick={handleDelete}>{t('common.delete')}</button>}
       </div>
 
       {isNew && state?.card && (
-        <p className="meta">Check the details below, fix anything that was misread, then save.</p>
+        <p className="meta">{t('card.review_hint')}</p>
       )}
 
       {duplicate && (
         <div className="duplicate-note">
-          You may already have this person saved: <Link to={`/cards/${duplicate.id}`}>{duplicate.name || duplicate.company || 'open card'}</Link>.
+          {t('card.duplicate')} <Link to={`/cards/${duplicate.id}`}>{duplicate.name || duplicate.company || t('card.duplicate_open')}</Link>.
         </div>
       )}
 
       {(thumb || thumbBack) && (
         <div className="card-photos">
-          {thumb && <img className="card-photo" src={thumb} alt="Front of the card" />}
-          {thumbBack && <img className="card-photo" src={thumbBack} alt="Back of the card" />}
+          {thumb && <img className="card-photo" src={thumb} alt={t('card.front')} />}
+          {thumbBack && <img className="card-photo" src={thumbBack} alt={t('card.back')} />}
         </div>
       )}
 
       {!isNew && (
         <div className="card-actions">
-          {firstPhone && <a className="action-chip" href={`tel:${firstPhone.replace(/[^\d+]/g, '')}`}>Call</a>}
-          {firstEmail && <a className="action-chip" href={`mailto:${firstEmail}`}>Email</a>}
-          {site && <a className="action-chip" href={site} target="_blank" rel="noreferrer">Website</a>}
-          <button className="action-chip" onClick={handleContacts}>Add to Contacts</button>
-          <CopyButton text={() => cardText(form)} label="Copy details" />
+          {firstPhone && <a className="action-chip" href={`tel:${firstPhone.replace(/[^\d+]/g, '')}`}>{t('card.call')}</a>}
+          {firstEmail && <a className="action-chip" href={`mailto:${firstEmail}`}>{t('card.email')}</a>}
+          {site && <a className="action-chip" href={site} target="_blank" rel="noreferrer">{t('card.website')}</a>}
+          <button className="action-chip" onClick={handleContacts}>{t('card.contacts')}</button>
+          <CopyButton text={() => cardText(form)} label={t('copy.details')} />
         </div>
       )}
 
-      <label>Name<input value={form.name} onChange={set('name')} autoComplete="off" /></label>
-      <label>Job title<input value={form.job_title} onChange={set('job_title')} autoComplete="off" /></label>
-      <label>Company<input value={form.company} onChange={set('company')} autoComplete="off" /></label>
-      <label>Phone numbers <small>(one per line)</small>
+      <label>{t('card.name')}<input value={form.name} onChange={set('name')} autoComplete="off" /></label>
+      <label>{t('card.job')}<input value={form.job_title} onChange={set('job_title')} autoComplete="off" /></label>
+      <label>{t('card.company')}<input value={form.company} onChange={set('company')} autoComplete="off" /></label>
+      <label>{t('card.phones')} <small>{t('card.one_per_line')}</small>
         <textarea rows={2} value={form.phones} onChange={set('phones')} />
       </label>
-      <label>Emails <small>(one per line)</small>
+      <label>{t('card.emails')} <small>{t('card.one_per_line')}</small>
         <textarea rows={2} value={form.emails} onChange={set('emails')} />
       </label>
-      <label>Website<input value={form.website} onChange={set('website')} autoCapitalize="none" autoComplete="off" /></label>
-      <label>Address<textarea rows={2} value={form.address} onChange={set('address')} /></label>
-      <label>Notes<textarea rows={3} value={form.notes} onChange={set('notes')} /></label>
+      <label>{t('card.website')}<input value={form.website} onChange={set('website')} autoCapitalize="none" autoComplete="off" /></label>
+      <label>{t('card.address')}<textarea rows={2} value={form.address} onChange={set('address')} /></label>
+      <label>{t('card.notes')}<textarea rows={3} value={form.notes} onChange={set('notes')} /></label>
 
       {error && <p className="form-error">{error}</p>}
 
       <button className="save-btn" onClick={handleSave} disabled={saving}>
-        {saving ? 'Saving…' : isNew ? 'Save card' : 'Save changes'}
+        {saving ? t('card.saving') : isNew ? t('card.save_new') : t('card.save_changes')}
       </button>
     </div>
   );

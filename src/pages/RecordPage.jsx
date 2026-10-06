@@ -4,6 +4,7 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
 import { supabase } from '../lib/supabase.js';
 import { api } from '../lib/api.js';
 import { useAiConsent } from '../components/AiConsent.jsx';
+import { useI18n, TRANSLATION_LANGUAGES } from '../i18n/index.jsx';
 
 const MAX_DURATION_SECONDS = 3 * 60 * 60; // 3-hour cap
 const WS_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:3000').replace(/^http/, 'ws');
@@ -12,6 +13,7 @@ export default function RecordPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { ensureConsent } = useAiConsent();
+  const { t, langName } = useI18n();
   const mode = state?.mode || 'conversation';
 
   const [sourceLanguageMode, setSourceLanguageMode] = useState('auto');
@@ -71,7 +73,7 @@ export default function RecordPage() {
         }
       };
 
-      ws.onerror = () => setError('Live transcript connection lost — audio is still recording locally.');
+      ws.onerror = () => setError(t('record.err_ws'));
 
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) {
@@ -94,7 +96,7 @@ export default function RecordPage() {
         });
       }, 1000);
     } catch (err) {
-      setError(err.message || 'Could not start recording');
+      setError(err.message || t('record.err_start'));
     }
   }
 
@@ -135,7 +137,7 @@ export default function RecordPage() {
       await Filesystem.writeFile({ path: fileName, data: base64, directory: Directory.Data });
     } catch (err) {
       console.error('[record] local audio save failed', err);
-      setError('Could not save audio locally — transcript is still safe.');
+      setError(t('record.err_save_audio'));
     }
 
     const session = await api.stopSession(sessionIdRef.current, {
@@ -158,43 +160,35 @@ export default function RecordPage() {
 
   return (
     <div className="record-page">
-      <h1>{mode === 'quick_capture' ? 'Quick Capture' : 'Recording'}</h1>
+      <h1>{mode === 'quick_capture' ? t('record.title_quick') : t('record.title')}</h1>
 
       {!isRecording && (
         <div className="pre-record-settings">
           <label>
-            Spoken Language
+            {t('record.spoken_language')}
             <select value={sourceLanguageMode} onChange={(e) => setSourceLanguageMode(e.target.value)}>
-              <option value="auto">Auto-detect</option>
-              <option value="manual">I know the language</option>
+              <option value="auto">{t('record.auto')}</option>
+              <option value="manual">{t('record.manual')}</option>
             </select>
           </label>
           {sourceLanguageMode === 'manual' && (
             <input
-              placeholder="Language code (e.g. fr, de, yo)"
+              placeholder={t('record.code_placeholder')}
               value={sourceLanguage}
               onChange={(e) => setSourceLanguage(e.target.value)}
             />
           )}
           <label>
-            Live Transcript / Translate To
+            {t('record.live_translate')}
             <select value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)}>
-              <option value="none">None (show original language)</option>
-              <option value="en">English</option>
-              <option value="fr">French</option>
-              <option value="de">German</option>
-              <option value="es">Spanish</option>
-              <option value="pt">Portuguese</option>
-              <option value="yo">Yoruba</option>
-              <option value="ar">Arabic</option>
-              <option value="zh">Chinese</option>
+              <option value="none">{t('record.none')}</option>
+              {TRANSLATION_LANGUAGES.map((c) => (
+                <option key={c} value={c}>{langName(c)}</option>
+              ))}
             </select>
           </label>
           {showingTranslatedLive && (
-            <p className="meta">
-              The live transcript below will be shown in this language, even if you're speaking a
-              different one. The saved transcript still keeps the original language too.
-            </p>
+            <p className="meta">{t('record.live_note')}</p>
           )}
         </div>
       )}
@@ -204,28 +198,28 @@ export default function RecordPage() {
       <div className="timer">
         {formatTime(elapsed)} {isRecording && <span> / 3:00:00</span>}
       </div>
-      {nearingCap && isRecording && !isPaused && <p className="warning">Approaching 3-hour limit — recording will auto-stop.</p>}
-      {isPaused && <p className="warning">Paused — tap Resume to continue.</p>}
+      {nearingCap && isRecording && !isPaused && <p className="warning">{t('record.cap_warning')}</p>}
+      {isPaused && <p className="warning">{t('record.paused_warning')}</p>}
 
       {!isRecording && (
-        <button className="record-btn" onClick={startRecording}>Start Recording</button>
+        <button className="record-btn" onClick={startRecording}>{t('record.start')}</button>
       )}
 
       {isRecording && (
         <div className="recording-controls-floating">
           {!isPaused ? (
-            <button className="pause-btn" onClick={pauseRecording}>Pause</button>
+            <button className="pause-btn" onClick={pauseRecording}>{t('record.pause')}</button>
           ) : (
-            <button className="resume-btn" onClick={resumeRecording}>Resume</button>
+            <button className="resume-btn" onClick={resumeRecording}>{t('record.resume')}</button>
           )}
-          <button className="stop-btn" onClick={stopRecording}>Stop</button>
+          <button className="stop-btn" onClick={stopRecording}>{t('record.stop')}</button>
         </div>
       )}
 
       {isRecording && (
         <div className="live-transcript">
-          <h3>Live Transcript{showingTranslatedLive && ` (${targetLanguage.toUpperCase()})`}</h3>
-          <p>{liveTranscript || (isPaused ? 'Paused…' : 'Listening…')}</p>
+          <h3>{t('record.live_title')}{showingTranslatedLive && ` (${targetLanguage.toUpperCase()})`}</h3>
+          <p>{liveTranscript || (isPaused ? t('record.paused_dots') : t('record.listening'))}</p>
         </div>
       )}
     </div>

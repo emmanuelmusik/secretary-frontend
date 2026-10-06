@@ -28,23 +28,23 @@ export async function copyText(text) {
 }
 
 // Plain-text version of an insight, for the "copy all" button.
-export function insightToText(a) {
+export function insightToText(a, t = (k) => k) {
   if (!a) return '';
   const list = (items) => (items || []).map((x) => `- ${x}`).join('\n');
   const parts = [];
-  if (a.summary) parts.push(`SUMMARY\n${a.summary}`);
-  if (a.key_points?.length) parts.push(`KEY POINTS\n${list(a.key_points)}`);
+  if (a.summary) parts.push(`${t('insight.summary').toUpperCase()}\n${a.summary}`);
+  if (a.key_points?.length) parts.push(`${t('insight.key_points').toUpperCase()}\n${list(a.key_points)}`);
   if (a.action_items?.length) {
-    parts.push(`ACTION ITEMS\n${a.action_items
-      .map((i) => `- ${i.item}${i.owner ? ` — ${i.owner}` : ''}${i.due ? ` (due ${i.due})` : ''}`)
+    parts.push(`${t('insight.action_items').toUpperCase()}\n${a.action_items
+      .map((i) => `- ${i.item}${i.owner ? ` — ${i.owner}` : ''}${i.due ? ` (${i.due})` : ''}`)
       .join('\n')}`);
   }
-  if (a.decisions?.length) parts.push(`DECISIONS\n${list(a.decisions)}`);
+  if (a.decisions?.length) parts.push(`${t('insight.decisions').toUpperCase()}\n${list(a.decisions)}`);
   if (a.quotes?.length) {
-    parts.push(`QUOTABLE QUOTES\n${a.quotes
+    parts.push(`${t('insight.quotes').toUpperCase()}\n${a.quotes
       .map((q) => `- "${q.quote}"${q.speaker ? ` — ${q.speaker}` : ''}`)
       .join('\n')}`);
   }
-  if (a.questions_raised?.length) parts.push(`QUESTIONS RAISED\n${list(a.questions_raised)}`);
+  if (a.questions_raised?.length) parts.push(`${t('insight.questions').toUpperCase()}\n${list(a.questions_raised)}`);
   return parts.join('\n\n');
 }

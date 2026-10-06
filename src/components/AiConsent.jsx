@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useRef, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase.js';
 import { useAuth } from '../hooks/useAuth.jsx';
+import { useI18n, renderBold } from '../i18n/index.jsx';
 
 const CONSENT_KEY = 'secretary_ai_consent_v1';
 const ConsentContext = createContext(null);
@@ -18,6 +19,7 @@ function hasLocalConsent() {
  */
 export function AiConsentProvider({ children }) {
   const { user } = useAuth();
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const resolver = useRef(null);
 
@@ -46,26 +48,24 @@ export function AiConsentProvider({ children }) {
       {open && (
         <div className="consent-overlay" role="dialog" aria-modal="true" aria-labelledby="consent-title">
           <div className="consent-card">
-            <h2 id="consent-title">Before you start</h2>
-            <p>
-              Secretary uses third-party AI services to do its job. With your permission, this is what gets sent:
-            </p>
+            <h2 id="consent-title">{t('consent.title')}</h2>
+            <p>{t('consent.intro')}</p>
             <ul>
-              <li>The <strong>audio</strong> you record or upload is sent to an AI service that turns it into text.</li>
-              <li>The <strong>transcript text</strong> is sent to an AI service that writes insights and translations.</li>
-              <li><strong>Photos of business cards</strong> are sent to an AI service that reads the details on them.</li>
+              <li>{renderBold(t('consent.audio'))}</li>
+              <li>{renderBold(t('consent.text'))}</li>
+              <li>{renderBold(t('consent.cards'))}</li>
             </ul>
-            <p>
-              These services process your data only to give the result back to you. Your recordings are not stored on our servers.
-              Business cards contain other people's details, so only scan cards you are entitled to keep.
-            </p>
+            <p>{t('consent.body')}</p>
             <p className="consent-small">
-              You can change your mind at any time by deleting your data or your account in Settings. Details are in
-              our <Link to="/privacy" onClick={() => setOpen(false)}>Privacy Policy</Link>.
+              {t('consent.small', { link: '\u0000' }).split('\u0000').flatMap((part, i, arr) => (
+                i < arr.length - 1
+                  ? [part, <Link key={i} to="/privacy" onClick={() => setOpen(false)}>{t('nav.privacy')}</Link>]
+                  : [part]
+              ))}
             </p>
             <div className="consent-actions">
-              <button type="button" className="consent-accept" onClick={() => finish(true)}>Agree and continue</button>
-              <button type="button" className="consent-decline" onClick={() => finish(false)}>Not now</button>
+              <button type="button" className="consent-accept" onClick={() => finish(true)}>{t('consent.agree')}</button>
+              <button type="button" className="consent-decline" onClick={() => finish(false)}>{t('consent.decline')}</button>
             </div>
           </div>
         </div>

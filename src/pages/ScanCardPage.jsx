@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { resizeImage, shrinkDataUrl } from '../lib/image.js';
 import { useAiConsent } from '../components/AiConsent.jsx';
+import { useI18n } from '../i18n/index.jsx';
 
 const GUIDE_RATIO = 1.65;   // card width / height
 const CROP_MARGIN = 1.06;   // keep a little around the guide so edges are never cut off
@@ -21,6 +22,7 @@ function guideRect(cw, ch, portrait) {
 export default function ScanCardPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const { t } = useI18n();
   const { ensureConsent } = useAiConsent();
 
   const [allowed, setAllowed] = useState(false);
@@ -52,7 +54,7 @@ export default function ScanCardPage() {
   }, []);
 
   function stopCamera() {
-    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current?.getTracks().forEach((tr) => tr.stop());
     streamRef.current = null;
   }
 
@@ -63,7 +65,7 @@ export default function ScanCardPage() {
     setCameraError('');
     (async () => {
       if (!navigator.mediaDevices?.getUserMedia) {
-        setCameraError('The camera is not available here. You can choose a photo instead.');
+        setCameraError(t('scan.err_nocam'));
         return;
       }
       try {
@@ -71,12 +73,12 @@ export default function ScanCardPage() {
           video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } },
           audio: false,
         });
-        if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
+        if (cancelled) { stream.getTracks().forEach((tr) => tr.stop()); return; }
         streamRef.current = stream;
         const v = videoRef.current;
         if (v) { v.srcObject = stream; await v.play().catch(() => {}); }
       } catch {
-        if (!cancelled) setCameraError('Could not open the camera. Check that camera access is allowed for Secretary in your phone settings, or choose a photo instead.');
+        if (!cancelled) setCameraError(t('scan.err_cam'));
       }
     })();
     return () => { cancelled = true; stopCamera(); };
@@ -156,15 +158,15 @@ export default function ScanCardPage() {
       const thumbBack = back ? await shrinkDataUrl(back, 640, 0.6) : null;
       navigate('/cards/new', { replace: true, state: { card, duplicate, thumb, thumbBack } });
     } catch (err) {
-      setError(err.message || 'Could not read the card.');
+      setError(err.message || t('scan.err_read'));
       setReading(false);
     }
   }
 
-  if (!allowed) return <div className="scan-screen scan-center"><p className="meta">Loading…</p></div>;
+  if (!allowed) return <div className="scan-screen scan-center"><p className="meta">{t('common.loading')}</p></div>;
 
   const g = guideRect(stage.w, stage.h, portrait);
-  const title = side === 'front' ? 'Front of card' : 'Back of card';
+  const title = side === 'front' ? t('scan.front') : t('scan.back');
 
   return (
     <div className="scan-screen">
@@ -173,9 +175,9 @@ export default function ScanCardPage() {
       {step === 'capture' && (
         <>
           <div className="scan-top">
-            <button type="button" className="scan-icon-btn" onClick={() => (front ? setStep('summary') : navigate('/cards'))} aria-label="Close">✕</button>
+            <button type="button" className="scan-icon-btn" onClick={() => (front ? setStep('summary') : navigate('/cards'))} aria-label={t('scan.close')}>✕</button>
             <span className="scan-title">{title}</span>
-            <button type="button" className={`scan-icon-btn ${portrait ? 'on' : ''}`} onClick={() => setPortrait((p) => !p)} aria-label="Switch frame between horizontal and vertical" title="Rotate frame">⟳</button>
+            <button type="button" className={`scan-icon-btn ${portrait ? 'on' : ''}`} onClick={() => setPortrait((p) => !p)} aria-label={t('scan.rotate')} title={t('scan.rotate')}>⟳</button>
           </div>
 
           <div className="scan-stage" ref={stageRef}>
@@ -187,12 +189,12 @@ export default function ScanCardPage() {
             )}
             {cameraError
               ? <p className="scan-hint scan-hint-error">{cameraError}</p>
-              : <p className="scan-hint">Fit the card inside the frame</p>}
+              : <p className="scan-hint">{t('scan.hint')}</p>}
           </div>
 
           <div className="scan-bottom">
-            <button type="button" className="scan-side-btn" onClick={() => fileRef.current?.click()}>Photos</button>
-            <button type="button" className="scan-shutter" onClick={capture} disabled={!!cameraError} aria-label="Take photo" />
+            <button type="button" className="scan-side-btn" onClick={() => fileRef.current?.click()}>{t('scan.photos')}</button>
+            <button type="button" className="scan-shutter" onClick={capture} disabled={!!cameraError} aria-label={t('scan.take')} />
             <span className="scan-side-btn scan-spacer" />
           </div>
         </>
@@ -201,10 +203,10 @@ export default function ScanCardPage() {
       {step === 'confirm' && (
         <>
           <div className="scan-top"><span /><span className="scan-title">{title}</span><span /></div>
-          <div className="scan-stage scan-review"><img src={pending} alt={`${title} preview`} /></div>
+          <div className="scan-stage scan-review"><img src={pending} alt={title} /></div>
           <div className="scan-bottom">
-            <button type="button" className="scan-side-btn" onClick={() => retake(side)}>Retake</button>
-            <button type="button" className="scan-primary" onClick={usePhoto}>Use photo</button>
+            <button type="button" className="scan-side-btn" onClick={() => retake(side)}>{t('scan.retake')}</button>
+            <button type="button" className="scan-primary" onClick={usePhoto}>{t('scan.use')}</button>
           </div>
         </>
       )}
@@ -212,31 +214,31 @@ export default function ScanCardPage() {
       {step === 'summary' && (
         <>
           <div className="scan-top">
-            <button type="button" className="scan-icon-btn" onClick={() => navigate('/cards')} aria-label="Cancel">✕</button>
-            <span className="scan-title">Your card</span>
+            <button type="button" className="scan-icon-btn" onClick={() => navigate('/cards')} aria-label={t('common.cancel')}>✕</button>
+            <span className="scan-title">{t('scan.your_card')}</span>
             <span />
           </div>
           <div className="scan-summary">
             <figure>
-              <img src={front} alt="Front of card" />
-              <figcaption>Front <button type="button" onClick={() => retake('front')}>Retake</button></figcaption>
+              <img src={front} alt={t('scan.front')} />
+              <figcaption>{t('scan.front')} <button type="button" onClick={() => retake('front')}>{t('scan.retake')}</button></figcaption>
             </figure>
             {back ? (
               <figure>
-                <img src={back} alt="Back of card" />
+                <img src={back} alt={t('scan.back')} />
                 <figcaption>
-                  Back <button type="button" onClick={() => retake('back')}>Retake</button>{' '}
-                  <button type="button" onClick={() => setBack(null)}>Remove</button>
+                  {t('scan.back')} <button type="button" onClick={() => retake('back')}>{t('scan.retake')}</button>{' '}
+                  <button type="button" onClick={() => setBack(null)}>{t('scan.remove')}</button>
                 </figcaption>
               </figure>
             ) : (
-              <button type="button" className="scan-add-back" onClick={() => retake('back')}>+ Add the back of the card</button>
+              <button type="button" className="scan-add-back" onClick={() => retake('back')}>{t('scan.add_back')}</button>
             )}
             {error && <p className="form-error">{error}</p>}
           </div>
           <div className="scan-bottom">
             <button type="button" className="scan-primary" onClick={readCard} disabled={reading}>
-              {reading ? 'Reading card…' : 'Read card'}
+              {reading ? t('scan.reading') : t('scan.read')}
             </button>
           </div>
         </>

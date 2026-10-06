@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
+import { useI18n } from '../i18n/index.jsx';
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { t, formatDate } = useI18n();
   const [mode, setMode] = useState('conversation'); // 'conversation' | 'quick_capture'
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +17,7 @@ export default function HomePage() {
   async function handleDelete(e, sessionId) {
     e.preventDefault();
     e.stopPropagation();
-    if (!confirm('Delete this recording permanently? This cannot be undone.')) return;
+    if (!confirm(t('session.delete_confirm'))) return;
     await api.deleteSession(sessionId);
     setSessions((prev) => prev.filter((s) => s.id !== sessionId));
   }
@@ -28,31 +30,31 @@ export default function HomePage() {
 
       <div className="mode-selector">
         <button className={mode === 'conversation' ? 'active' : ''} onClick={() => setMode('conversation')}>
-          Meeting / Classroom
+          {t('home.mode_meeting')}
         </button>
         <button className={mode === 'quick_capture' ? 'active' : ''} onClick={() => setMode('quick_capture')}>
-          Quick Capture
+          {t('home.mode_quick')}
         </button>
       </div>
 
       <button className="record-btn" onClick={() => navigate('/record', { state: { mode } })}>
-        Record
+        {t('home.record')}
       </button>
 
       <button className="upload-btn" onClick={() => navigate('/upload', { state: { mode } })}>
-        Upload Audio File
+        {t('home.upload')}
       </button>
 
       <section className="recent-sessions">
-        <h2>Recent</h2>
-        {loading && <p>Loading…</p>}
-        {!loading && sessions.length === 0 && <p>No sessions yet. Tap Record to get started.</p>}
+        <h2>{t('home.recent')}</h2>
+        {loading && <p>{t('common.loading')}</p>}
+        {!loading && sessions.length === 0 && <p>{t('home.empty')}</p>}
         {sessions.map((s) => (
           <Link key={s.id} to={`/sessions/${s.id}`} className="session-row">
             <strong>{s.name}</strong>
             <span className="session-row-right">
-              {new Date(s.created_at).toLocaleDateString()}
-              <button className="danger-btn-sm" onClick={(e) => handleDelete(e, s.id)}>Delete</button>
+              {formatDate(s.created_at)}
+              <button className="danger-btn-sm" onClick={(e) => handleDelete(e, s.id)}>{t('common.delete')}</button>
             </span>
           </Link>
         ))}

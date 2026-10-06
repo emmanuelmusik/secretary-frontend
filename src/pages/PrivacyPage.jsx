@@ -1,12 +1,16 @@
 import { useNavigate } from 'react-router-dom';
+import { useI18n } from '../i18n/index.jsx';
 
 export default function PrivacyPage() {
   const navigate = useNavigate();
+  const { t, lang } = useI18n();
   const goBack = () => (window.history.length > 1 ? navigate(-1) : navigate('/auth'));
   return (
     <div className="static-page legal">
-      <button type="button" className="back-link" onClick={goBack}>&larr; Back</button>
-      <h1>Privacy Policy</h1>
+      <button type="button" className="back-link" onClick={goBack}><span className="back-arrow">←</span> {t('common.back')}</button>
+      <h1>{t('nav.privacy')}</h1>
+      {lang !== 'en' && <p className="meta legal-notice">{t('privacy.notice')}</p>}
+      <div lang="en" dir="ltr">
       <p className="meta">Secretary – Live Transcriber · Last updated 6 October 2026</p>
 
       <p>
@@ -71,6 +75,7 @@ export default function PrivacyPage() {
 
       <h2>Changes</h2>
       <p>If we change this policy in a meaningful way we will update the date above and, where appropriate, tell you in the app.</p>
+      </div>
     </div>
   );
 }
