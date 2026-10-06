@@ -17,10 +17,11 @@ export const LANGUAGES = [
   { code: 'ja', native: '日本語', dir: 'ltr' },
   { code: 'ko', native: '한국어', dir: 'ltr' },
   { code: 'id', native: 'Bahasa Indonesia', dir: 'ltr' },
+  { code: 'ig', native: 'Igbo', dir: 'ltr' },
 ];
 
 // Languages a recording can be spoken in / translated into (a separate list from the app's own language).
-export const TRANSLATION_LANGUAGES = ['en', 'es', 'fr', 'de', 'pt', 'it', 'ru', 'ar', 'hi', 'ja', 'ko', 'id', 'yo', 'zh'];
+export const TRANSLATION_LANGUAGES = ['en', 'es', 'fr', 'de', 'pt', 'it', 'ru', 'ar', 'hi', 'ja', 'ko', 'id', 'ig', 'yo', 'zh'];
 
 const STORAGE_KEY = 'secretary_lang';
 const SUPPORTED = new Set(LANGUAGES.map((l) => l.code));
