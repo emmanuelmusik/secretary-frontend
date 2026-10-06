@@ -31,7 +31,7 @@ export default function AccountPage() {
 
   return (
     <div className="account-page">
-      <h1>Account</h1>
+      <h1>Settings</h1>
       <p className="meta">Signed in as {user?.email}</p>
 
       <div className="account-links">
