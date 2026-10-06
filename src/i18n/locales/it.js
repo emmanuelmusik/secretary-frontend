@@ -153,6 +153,8 @@ export default {
   'settings.title': 'Impostazioni',
   'settings.signed_in': 'Accesso eseguito come {email}',
   'settings.language': 'Lingua',
+  'settings.keep_awake': "Mantieni lo schermo acceso durante la registrazione",
+  'settings.keep_awake_hint': "Impedisce che lo schermo si blocchi da solo durante una registrazione. Premendo il tasto di accensione il telefono si blocca comunque e la registrazione si interrompe.",
   'settings.signout': 'Esci',
   'settings.delete_title': 'Elimina Account',
   'settings.delete_desc': "Questo elimina definitivamente il tuo account e ogni cartella, sessione, trascrizione, nota e biglietto associato. Questa azione non può essere annullata. L'audio salvato sul tuo dispositivo non è interessato — dovrai rimuoverlo separatamente.",

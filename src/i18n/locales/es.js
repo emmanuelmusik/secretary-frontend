@@ -164,6 +164,8 @@ export default {
   'settings.title': 'Ajustes',
   'settings.signed_in': 'Sesión iniciada como {email}',
   'settings.language': 'Idioma',
+  'settings.keep_awake': "Mantener la pantalla encendida al grabar",
+  'settings.keep_awake_hint': "Evita que la pantalla se bloquee sola durante una grabación. Si pulsas el botón de encendido, el teléfono se bloquea y la grabación se detiene.",
   'settings.signout': 'Cerrar sesión',
   'settings.delete_title': 'Eliminar cuenta',
   'settings.delete_desc': 'Esto elimina de forma permanente tu cuenta y todas las carpetas, sesiones, transcripciones, notas y tarjetas asociadas. No se puede deshacer. El audio guardado en tu dispositivo no se ve afectado: tendrás que eliminarlo por separado.',

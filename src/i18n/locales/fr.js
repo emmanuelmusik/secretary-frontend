@@ -164,6 +164,8 @@ export default {
   'settings.title': 'Réglages',
   'settings.signed_in': 'Connecté en tant que {email}',
   'settings.language': 'Langue',
+  'settings.keep_awake': "Garder l’écran allumé pendant l’enregistrement",
+  'settings.keep_awake_hint': "Empêche l’écran de se verrouiller tout seul pendant un enregistrement. Appuyer sur le bouton d’alimentation verrouille quand même le téléphone et arrête l’enregistrement.",
   'settings.signout': 'Se déconnecter',
   'settings.delete_title': 'Supprimer le compte',
   'settings.delete_desc': "Cette action supprime définitivement votre compte ainsi que tous les dossiers, sessions, transcriptions, notes et cartes qui y sont associés. Elle est irréversible. L'audio enregistré sur votre appareil n'est pas concerné : vous devrez le supprimer séparément.",

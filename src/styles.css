@@ -500,3 +500,9 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 [dir="rtl"] input[type="email"], [dir="rtl"] input[type="password"], [dir="rtl"] input[type="url"] { direction: ltr; text-align: right; }
 .auth-divider { text-transform: uppercase; }
 :lang(ar) *, :lang(hi) *, :lang(ja) *, :lang(ko) * { letter-spacing: 0 !important; }
+
+/* Keep-screen-on switch in Settings */
+.keep-awake-setting { display: flex; align-items: flex-start; gap: 12px; margin: 16px 0; cursor: pointer; }
+.keep-awake-setting input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: var(--accent, #2dd4bf); }
+.keep-awake-setting span { display: flex; flex-direction: column; gap: 4px; text-align: start; }
+.keep-awake-setting small { opacity: .7; font-size: .8rem; line-height: 1.35; }

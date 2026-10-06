@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
+import { getKeepAwakePref, setKeepAwakePref } from '../lib/keepAwake.js';
 
 export default function AccountPage() {
   const { user, signOut } = useAuth();
@@ -11,6 +12,7 @@ export default function AccountPage() {
   const [confirmText, setConfirmText] = useState('');
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState('');
+  const [keepAwake, setKeepAwake] = useState(getKeepAwakePref);
 
   async function handleDelete() {
     if (confirmText !== 'DELETE') return;
@@ -43,6 +45,18 @@ export default function AccountPage() {
             <option key={l.code} value={l.code}>{l.native}</option>
           ))}
         </select>
+      </label>
+
+      <label className="keep-awake-setting">
+        <input
+          type="checkbox"
+          checked={keepAwake}
+          onChange={(e) => { setKeepAwake(e.target.checked); setKeepAwakePref(e.target.checked); }}
+        />
+        <span>
+          {t('settings.keep_awake')}
+          <small>{t('settings.keep_awake_hint')}</small>
+        </span>
       </label>
 
       <div className="account-links">

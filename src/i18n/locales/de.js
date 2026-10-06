@@ -164,6 +164,8 @@ export default {
   'settings.title': 'Einstellungen',
   'settings.signed_in': 'Angemeldet als {email}',
   'settings.language': 'Sprache',
+  'settings.keep_awake': "Bildschirm bei Aufnahme eingeschaltet lassen",
+  'settings.keep_awake_hint': "Verhindert, dass sich der Bildschirm während einer Aufnahme von selbst sperrt. Wenn Sie die Seitentaste drücken, wird das Telefon trotzdem gesperrt und die Aufnahme stoppt.",
   'settings.signout': 'Abmelden',
   'settings.delete_title': 'Konto löschen',
   'settings.delete_desc': 'Dadurch werden Ihr Konto sowie alle zugehörigen Ordner, Sitzungen, Transkripte, Notizen und Karten endgültig gelöscht. Das kann nicht rückgängig gemacht werden. Auf Ihrem Gerät gespeichertes Audio ist davon nicht betroffen – dieses müssen Sie separat entfernen.',

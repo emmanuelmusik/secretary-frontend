@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { supabase } from '../lib/supabase.js';
 import { api } from '../lib/api.js';
+import { startKeepAwake, stopKeepAwake } from '../lib/keepAwake.js';
 import { useAiConsent } from '../components/AiConsent.jsx';
 import { useI18n, TRANSLATION_LANGUAGES } from '../i18n/index.jsx';
 
@@ -83,6 +84,7 @@ export default function RecordPage() {
       };
 
       mediaRecorder.start(1000); // 1s chunks
+      startKeepAwake();
       setIsRecording(true);
       setIsPaused(false);
 
@@ -122,6 +124,7 @@ export default function RecordPage() {
 
   async function stopRecording() {
     clearInterval(timerRef.current);
+    stopKeepAwake();
     mediaRecorderRef.current?.stop();
     wsRef.current?.close();
     setIsRecording(false);
@@ -150,6 +153,7 @@ export default function RecordPage() {
 
   function cleanup() {
     clearInterval(timerRef.current);
+    stopKeepAwake();
     wsRef.current?.close();
     mediaRecorderRef.current?.stream?.getTracks().forEach((t) => t.stop());
   }

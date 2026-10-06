@@ -153,6 +153,8 @@ export default {
   'settings.title': '설정',
   'settings.signed_in': '{email} 계정으로 로그인됨',
   'settings.language': '언어',
+  'settings.keep_awake': "녹음 중 화면 켜 두기",
+  'settings.keep_awake_hint': "녹음하는 동안 화면이 저절로 잠기지 않게 합니다. 전원 버튼을 누르면 휴대전화가 잠기고 녹음이 중지됩니다.",
   'settings.signout': '로그아웃',
   'settings.delete_title': '계정 삭제',
   'settings.delete_desc': '계정과 연결된 모든 폴더, 세션, 스크립트, 노트, 명함이 영구적으로 삭제돼요. 되돌릴 수 없어요. 기기에 저장된 오디오는 영향을 받지 않으므로 따로 삭제해야 해요.',

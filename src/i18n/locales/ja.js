@@ -153,6 +153,8 @@ export default {
   'settings.title': '設定',
   'settings.signed_in': '{email} でログイン中',
   'settings.language': '言語',
+  'settings.keep_awake': "録音中は画面をオンのままにする",
+  'settings.keep_awake_hint': "録音中に画面が自動でロックされないようにします。電源ボタンを押すと、スマートフォンはロックされ、録音は停止します。",
   'settings.signout': 'ログアウト',
   'settings.delete_title': 'アカウントを削除',
   'settings.delete_desc': 'アカウントと、それに紐づくすべてのフォルダ、セッション、文字起こし、ノート、カードが完全に削除されます。この操作は元に戻せません。端末に保存された音声は影響を受けません。必要な場合は別途削除してください。',

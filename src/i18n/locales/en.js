@@ -165,6 +165,8 @@ export default {
   'settings.title': 'Settings',
   'settings.signed_in': 'Signed in as {email}',
   'settings.language': 'Language',
+  'settings.keep_awake': "Keep screen on while recording",
+  'settings.keep_awake_hint': "Stops the screen from locking by itself during a recording. Pressing the power button still locks the phone and stops the recording.",
   'settings.signout': 'Sign out',
   'settings.delete_title': 'Delete Account',
   'settings.delete_desc': "This permanently deletes your account and every folder, session, transcript, note and card associated with it. This cannot be undone. Audio saved on your device is not affected by this — you'd need to remove that separately.",

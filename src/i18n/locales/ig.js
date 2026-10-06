@@ -163,6 +163,8 @@ export default {
   'settings.title': 'Ntọala',
   'settings.signed_in': 'Ị banyere dị ka {email}',
   'settings.language': 'Asụsụ',
+  'settings.keep_awake': "Hapụ ihuenyo ka ọ na-agbanye mgbe a na-edekọ",
+  'settings.keep_awake_hint': "Ọ na-egbochi ihuenyo ịmechi onwe ya n’oge ndekọ. Ọ bụrụ na ị pịa bọtịnụ ọkụ, ekwentị ahụ ga-emechi ma ndekọ ga-akwụsị.",
   'settings.signout': 'Pụọ',
   'settings.delete_title': 'Hichapụ Akaụntụ',
   'settings.delete_desc': 'Nke a na-ehichapụ akaụntụ gị na folda, nnọkọ, ederede, nọtụ na kaadị niile jikọtara ya ruo mgbe ebighị ebi. Enweghị ike ịmeghachi ya. Ụda echekwara n’ekwentị gị anaghị emetụta — ị ga-ehichapụ ya n’ụzọ ọzọ.',

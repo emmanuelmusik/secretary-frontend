@@ -153,6 +153,8 @@ export default {
   'settings.title': 'Pengaturan',
   'settings.signed_in': 'Masuk sebagai {email}',
   'settings.language': 'Bahasa',
+  'settings.keep_awake': "Biarkan layar tetap menyala saat merekam",
+  'settings.keep_awake_hint': "Mencegah layar terkunci sendiri selama perekaman. Jika tombol daya ditekan, ponsel tetap terkunci dan perekaman berhenti.",
   'settings.signout': 'Keluar',
   'settings.delete_title': 'Hapus Akun',
   'settings.delete_desc': 'Tindakan ini menghapus akun Anda secara permanen beserta semua folder, sesi, transkrip, catatan, dan kartu yang terkait. Tindakan ini tidak dapat dibatalkan. Audio yang tersimpan di perangkat Anda tidak terpengaruh — Anda perlu menghapusnya secara terpisah.',

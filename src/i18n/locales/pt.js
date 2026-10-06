@@ -153,6 +153,8 @@ export default {
   'settings.title': 'Ajustes',
   'settings.signed_in': 'Conectado como {email}',
   'settings.language': 'Idioma',
+  'settings.keep_awake': "Manter a tela ligada durante a gravação",
+  'settings.keep_awake_hint': "Impede que a tela bloqueie sozinha durante uma gravação. Se você apertar o botão de energia, o telefone ainda bloqueia e a gravação para.",
   'settings.signout': 'Sair',
   'settings.delete_title': 'Excluir Conta',
   'settings.delete_desc': 'Isso exclui permanentemente sua conta e todas as pastas, sessões, transcrições, notas e cartões associados a ela. Esta ação não pode ser desfeita. O áudio salvo no seu dispositivo não é afetado — você precisará removê-lo separadamente.',
