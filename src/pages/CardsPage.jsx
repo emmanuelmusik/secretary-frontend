@@ -13,7 +13,10 @@ export default function CardsPage() {
   const libraryRef = useRef(null);
 
   useEffect(() => {
-    api.getCards().then(setCards).catch((e) => { setError(e.message); setCards([]); });
+    api.getCards().then(setCards).catch(() => {
+      setError('Cards is not available right now. Please try again in a few minutes.');
+      setCards([]);
+    });
   }, []);
 
   const filtered = useMemo(() => {
