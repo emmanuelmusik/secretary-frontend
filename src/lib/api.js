@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js';
+import { getInstallId } from './install.js';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
@@ -11,13 +12,17 @@ async function authedFetch(path, options = {}) {
     headers: {
       ...(options.body && !(options.body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(getInstallId() ? { 'X-Install-Id': getInstallId() } : {}),
       ...options.headers,
     },
   });
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(err.error || 'Request failed');
+    const failure = new Error(err.error || 'Request failed');
+    failure.status = res.status;
+    failure.usage = err.usage;
+    throw failure;
   }
 
   if (res.status === 204) return null;
@@ -55,6 +60,9 @@ export const api = {
   translateSession: (id, targetLanguage) =>
     authedFetch(`/sessions/${id}/translate`, { method: 'POST', body: JSON.stringify({ target_language: targetLanguage }) }),
   generateInsight: (id) => authedFetch(`/sessions/${id}/insight`, { method: 'POST' }),
+
+  // Plan and monthly usage
+  getUsage: () => authedFetch('/billing/usage'),
 
   // Business cards
   scanCard: (images) => authedFetch('/cards/scan', { method: 'POST', body: JSON.stringify({ images }) }),

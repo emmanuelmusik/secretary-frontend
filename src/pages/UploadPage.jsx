@@ -32,9 +32,10 @@ export default function UploadPage() {
     setUploading(true);
     setError('');
 
+    let session = null;
     try {
       // 1. Create the session row with the chosen settings
-      const session = await api.createSession({
+      session = await api.createSession({
         mode,
         diarization_enabled: mode !== 'quick_capture',
         source_language_mode: sourceLanguageMode,
@@ -60,6 +61,12 @@ export default function UploadPage() {
 
       navigate(`/sessions/${session.id}/save`);
     } catch (err) {
+      if (err.status === 402) {
+        // Out of time this month: remove the empty session and show the upgrade screen.
+        if (session) api.deleteSession(session.id).catch(() => {});
+        navigate('/paywall', { state: { limitReached: true, usage: err.usage } });
+        return;
+      }
       setError(err.message || t('upload.failed'));
       setUploading(false);
     }

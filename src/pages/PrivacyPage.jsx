@@ -25,6 +25,7 @@ export default function PrivacyPage() {
         <li><strong>Recordings you make or upload:</strong> the audio is processed to produce a transcript. We do not keep a copy of your audio on our servers. A recording you make in the app is saved on your own device only.</li>
         <li><strong>Content in your account:</strong> transcripts, translations, insights, folders and notes.</li>
         <li><strong>Business cards you scan:</strong> the details read from the card (name, job title, company, emails, phone numbers, website, address, notes) and a small thumbnail of the card photo, so you can see the card later. These are other people's details; please only scan cards you are entitled to keep.</li>
+        <li><strong>Plan and usage:</strong> whether you have a Pro subscription and how many minutes you have recorded or transcribed each month, so that we can apply the limits of your plan. The app also creates a random install ID (not linked to your device hardware or to other apps) so that the free monthly allowance is applied once per phone.</li>
         <li><strong>Technical logs:</strong> our servers keep short-lived operational logs (for example error messages) to keep the service running.</li>
       </ul>
       <p>We do not use advertising, we do not track you across other apps or websites, and we do not use third-party analytics.</p>
@@ -34,6 +35,7 @@ export default function PrivacyPage() {
       <ul>
         <li><strong>Deepgram</strong> – receives the audio you record or upload, to convert speech to text.</li>
         <li><strong>xAI (Grok)</strong> – receives transcript text to write insights and translations, and receives photos of business cards to read the details on them.</li>
+        <li><strong>RevenueCat</strong> – manages subscription purchases made through Apple. It receives your account ID and the status of your purchases. Apple processes the payment; we never see your payment details.</li>
         <li><strong>Supabase</strong> – stores your account and the content described above in a database.</li>
         <li><strong>Railway and Vercel</strong> – host our server and our web app, so your data passes through them in transit.</li>
       </ul>

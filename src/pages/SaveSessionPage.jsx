@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 
 export default function SaveSessionPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { state } = useLocation();
   const { t, formatDate } = useI18n();
   const [name, setName] = useState('');
   const [folders, setFolders] = useState([]);
@@ -37,6 +38,12 @@ export default function SaveSessionPage() {
   return (
     <div className="save-page">
       <h1>{t('save.title')}</h1>
+      {state?.limitReached && (
+        <div className="warning limit-banner">
+          <p>{t('limit.banner')}</p>
+          <button type="button" className="link-button" onClick={() => navigate('/paywall', { state: { limitReached: true } })}>{t('usage.upgrade')}</button>
+        </div>
+      )}
 
       <label>
         {t('save.name')}

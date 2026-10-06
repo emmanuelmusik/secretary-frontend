@@ -506,3 +506,28 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .keep-awake-setting input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: var(--accent, #2dd4bf); }
 .keep-awake-setting span { display: flex; flex-direction: column; gap: 4px; text-align: start; }
 .keep-awake-setting small { opacity: .7; font-size: .8rem; line-height: 1.35; }
+
+/* Plans, usage and paywall */
+.usage-meter { margin: 12px 0 16px; }
+.usage-bar { height: 10px; border-radius: 999px; background: var(--surface-raised, #26262b); overflow: hidden; }
+.usage-bar span { display: block; height: 100%; border-radius: 999px; background: var(--accent, #2dd4bf); transition: width .3s; }
+.usage-bar span.full { background: #f87171; }
+.usage-text { margin: 8px 0 2px; font-weight: 600; }
+.plan-section { margin: 16px 0; padding: 16px; border-radius: 14px; background: var(--surface, #1c1c20); }
+.plan-section h2 { margin: 0 0 4px; font-size: 1.05rem; }
+.plan-name-line { margin: 0; opacity: .8; }
+.plan-section .save-btn { width: 100%; margin-top: 4px; }
+.paywall-page { padding-bottom: 32px; }
+.paywall-tagline { font-size: 1.05rem; margin: 4px 0 12px; }
+.plan-list { display: grid; gap: 10px; margin: 16px 0; }
+.plan-card { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; text-align: start; padding: 14px 16px; border-radius: 14px; border: 2px solid transparent; background: var(--surface, #1c1c20); color: inherit; cursor: pointer; }
+.plan-card.selected { border-color: var(--accent, #2dd4bf); }
+.plan-name { font-weight: 700; }
+.plan-price { font-size: 1.15rem; }
+.paywall-page .save-btn { width: 100%; }
+.link-button { background: none; border: 0; color: var(--accent, #2dd4bf); padding: 10px 0; font: inherit; cursor: pointer; text-decoration: underline; }
+.paywall-legal { font-size: .75rem; opacity: .65; line-height: 1.45; margin-top: 16px; }
+.paywall-links { font-size: .85rem; }
+.paywall-links a { color: var(--accent, #2dd4bf); }
+.limit-banner { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.limit-banner p { margin: 0; }

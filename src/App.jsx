@@ -15,6 +15,7 @@ import FoldersPage from './pages/FoldersPage.jsx';
 import NotesPage from './pages/NotesPage.jsx';
 import NoteEditorPage from './pages/NoteEditorPage.jsx';
 import AccountPage from './pages/AccountPage.jsx';
+import PaywallPage from './pages/PaywallPage.jsx';
 import CardsPage from './pages/CardsPage.jsx';
 import CardEditorPage from './pages/CardEditorPage.jsx';
 import ScanCardPage from './pages/ScanCardPage.jsx';
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="/cards/new" element={<RequireAuth><CardEditorPage /></RequireAuth>} />
           <Route path="/cards/:id" element={<RequireAuth><CardEditorPage /></RequireAuth>} />
           <Route path="/account" element={<RequireAuth><AccountPage /></RequireAuth>} />
+          <Route path="/paywall" element={<RequireAuth><PaywallPage /></RequireAuth>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

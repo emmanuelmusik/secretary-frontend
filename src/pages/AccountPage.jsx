@@ -1,18 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { getKeepAwakePref, setKeepAwakePref } from '../lib/keepAwake.js';
+import UsageMeter from '../components/UsageMeter.jsx';
 
 export default function AccountPage() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const { t, lang, setLang, languages } = useI18n();
+  const { t, lang, setLang, languages, formatDate } = useI18n();
   const [confirmText, setConfirmText] = useState('');
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState('');
   const [keepAwake, setKeepAwake] = useState(getKeepAwakePref);
+  const [usage, setUsage] = useState(null);
+
+  useEffect(() => { api.getUsage().then(setUsage).catch(() => {}); }, []);
 
   async function handleDelete() {
     if (confirmText !== 'DELETE') return;
@@ -37,6 +41,17 @@ export default function AccountPage() {
     <div className="account-page">
       <h1>{t('settings.title')}</h1>
       <p className="meta">{t('settings.signed_in', { email: user?.email })}</p>
+
+      {usage && (
+        <section className="plan-section">
+          <h2>{t('usage.title')}</h2>
+          <p className="plan-name-line">{usage.plan === 'pro' ? t('usage.pro') : t('usage.free')}{usage.renews_at && ` · ${t('usage.renews', { date: formatDate(usage.renews_at) })}`}</p>
+          <UsageMeter usage={usage} />
+          <button type="button" className="save-btn" onClick={() => navigate('/paywall')}>
+            {usage.plan === 'pro' ? t('paywall.manage') : t('usage.upgrade')}
+          </button>
+        </section>
+      )}
 
       <label className="lang-setting">
         {t('settings.language')}

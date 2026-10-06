@@ -4,6 +4,7 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
 import { supabase } from '../lib/supabase.js';
 import { api } from '../lib/api.js';
 import { startKeepAwake, stopKeepAwake } from '../lib/keepAwake.js';
+import { getInstallId } from '../lib/install.js';
 import { useAiConsent } from '../components/AiConsent.jsx';
 import { useI18n, TRANSLATION_LANGUAGES } from '../i18n/index.jsx';
 
@@ -32,6 +33,9 @@ export default function RecordPage() {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const timerRef = useRef(null);
+  const limitHitRef = useRef(false);
+  const elapsedRef = useRef(0);
+  elapsedRef.current = elapsed; // always the latest value, even inside callbacks created earlier
 
   useEffect(() => () => cleanup(), []);
 
@@ -61,7 +65,7 @@ export default function RecordPage() {
       //    so the live view shows the chosen language even if that's not what's spoken.
       const { data: { session: authSession } } = await supabase.auth.getSession();
       const ws = new WebSocket(
-        `${WS_BASE}/ws/live-transcription?sessionId=${session.id}&token=${authSession.access_token}`
+        `${WS_BASE}/ws/live-transcription?sessionId=${session.id}&token=${authSession.access_token}&installId=${encodeURIComponent(getInstallId() || '')}`
       );
       wsRef.current = ws;
 
@@ -69,6 +73,10 @@ export default function RecordPage() {
         const data = JSON.parse(event.data);
         if (data.type === 'transcript' && data.is_final) {
           setLiveTranscript((prev) => prev + data.text + ' ');
+        } else if (data.type === 'limit') {
+          // The monthly allowance ran out: keep what was recorded and save it.
+          limitHitRef.current = true;
+          if (mediaRecorderRef.current?.state !== 'inactive') stopRecording();
         } else if (data.type === 'error') {
           setError(data.message);
         }
@@ -98,6 +106,10 @@ export default function RecordPage() {
         });
       }, 1000);
     } catch (err) {
+      if (err.status === 402) {
+        navigate('/paywall', { state: { limitReached: true, usage: err.usage } });
+        return;
+      }
       setError(err.message || t('record.err_start'));
     }
   }
@@ -144,11 +156,11 @@ export default function RecordPage() {
     }
 
     const session = await api.stopSession(sessionIdRef.current, {
-      duration_seconds: elapsed,
+      duration_seconds: elapsedRef.current,
       local_audio_path: fileName,
     });
 
-    navigate(`/sessions/${session.id}/save`);
+    navigate(`/sessions/${session.id}/save`, { state: { limitReached: limitHitRef.current } });
   }
 
   function cleanup() {
