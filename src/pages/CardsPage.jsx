@@ -2,9 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { resizeImage } from '../lib/image.js';
+import { useAiConsent } from '../components/AiConsent.jsx';
 
 export default function CardsPage() {
   const navigate = useNavigate();
+  const { ensureConsent } = useAiConsent();
   const [cards, setCards] = useState(null);
   const [query, setQuery] = useState('');
   const [scanning, setScanning] = useState(false);
@@ -27,6 +29,10 @@ export default function CardsPage() {
       [c.name, c.job_title, c.company, c.website, c.address, c.notes, ...(c.emails || []), ...(c.phones || [])]
         .join(' ').toLowerCase().includes(q));
   }, [cards, query]);
+
+  async function openPicker(ref) {
+    if (await ensureConsent()) ref.current?.click();
+  }
 
   async function handleFile(e) {
     const file = e.target.files?.[0];
@@ -51,10 +57,10 @@ export default function CardsPage() {
       <h1>Cards</h1>
 
       <div className="scan-actions">
-        <button className="scan-btn" onClick={() => cameraRef.current?.click()} disabled={scanning}>
+        <button className="scan-btn" onClick={() => openPicker(cameraRef)} disabled={scanning}>
           {scanning ? 'Reading card…' : 'Scan a card'}
         </button>
-        <button className="scan-btn-secondary" onClick={() => libraryRef.current?.click()} disabled={scanning}>
+        <button className="scan-btn-secondary" onClick={() => openPicker(libraryRef)} disabled={scanning}>
           From photos
         </button>
         <input ref={cameraRef} type="file" accept="image/*" capture="environment" hidden onChange={handleFile} />

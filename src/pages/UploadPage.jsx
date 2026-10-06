@@ -2,10 +2,12 @@ import { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { api } from '../lib/api.js';
+import { useAiConsent } from '../components/AiConsent.jsx';
 
 export default function UploadPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { ensureConsent } = useAiConsent();
   const mode = state?.mode || 'conversation';
 
   const [file, setFile] = useState(null);
@@ -23,6 +25,7 @@ export default function UploadPage() {
   }
 
   async function handleUpload() {
+    if (!(await ensureConsent())) return;
     if (!file) return;
     setUploading(true);
     setError('');

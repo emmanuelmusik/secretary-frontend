@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { supabase } from '../lib/supabase.js';
 import { api } from '../lib/api.js';
+import { useAiConsent } from '../components/AiConsent.jsx';
 
 const MAX_DURATION_SECONDS = 3 * 60 * 60; // 3-hour cap
 const WS_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:3000').replace(/^http/, 'ws');
@@ -10,6 +11,7 @@ const WS_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:3000').repla
 export default function RecordPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { ensureConsent } = useAiConsent();
   const mode = state?.mode || 'conversation';
 
   const [sourceLanguageMode, setSourceLanguageMode] = useState('auto');
@@ -31,6 +33,7 @@ export default function RecordPage() {
   useEffect(() => () => cleanup(), []);
 
   async function startRecording() {
+    if (!(await ensureConsent())) return;
     setError('');
     try {
       // 1. Create the session row first
