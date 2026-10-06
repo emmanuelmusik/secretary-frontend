@@ -20,7 +20,7 @@ const FAQ = [
   ['How do I delete my data or my account?',
     'Delete a recording, note or card from its own page. To delete your whole account and everything in it, open the menu, choose Settings, then Delete Account.'],
   ['Which services see my data?',
-    'Audio goes to Deepgram for transcription. Transcript text and card photos go to xAI for insights, translations and reading cards. The app asks your permission first. Full details are in the Privacy Policy.'],
+    'Audio, transcript text and business-card photos are sent to third-party AI services to transcribe, summarise, translate and read them. The app asks your permission first. The Privacy Policy lists exactly who receives what.'],
 ];
 
 export default function SupportPage() {

@@ -48,14 +48,15 @@ export function AiConsentProvider({ children }) {
           <div className="consent-card">
             <h2 id="consent-title">Before you start</h2>
             <p>
-              Secretary uses two outside AI services to do its job. With your permission, this is what gets sent:
+              Secretary uses third-party AI services to do its job. With your permission, this is what gets sent:
             </p>
             <ul>
-              <li><strong>Deepgram</strong> receives the audio you record or upload, to turn it into text.</li>
-              <li><strong>xAI (Grok)</strong> receives transcript text, to write insights and translations, and photos of business cards, to read the details on them.</li>
+              <li>The <strong>audio</strong> you record or upload is sent to an AI service that turns it into text.</li>
+              <li>The <strong>transcript text</strong> is sent to an AI service that writes insights and translations.</li>
+              <li><strong>Photos of business cards</strong> are sent to an AI service that reads the details on them.</li>
             </ul>
             <p>
-              Each service processes your data to give the result back to you. Your recordings are not stored on our servers.
+              These services process your data only to give the result back to you. Your recordings are not stored on our servers.
               Business cards contain other people's details, so only scan cards you are entitled to keep.
             </p>
             <p className="consent-small">
