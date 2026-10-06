@@ -321,3 +321,24 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .upload-page .file-drop-zone:hover { border-color: var(--accent); color: var(--text); }
 .checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text); margin-top: 16px; }
 .checkbox-label input { width: auto; margin: 0; }
+
+/* ---- Copy buttons & quotable quotes ---- */
+.copy-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent; border: 1px solid var(--border, rgba(255,255,255,0.14));
+  color: var(--text-muted); padding: 6px 9px; border-radius: 8px; min-height: 32px;
+}
+.copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+.copy-btn.copied { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+.copy-btn.failed { color: #ff6b57; border-color: #ff6b57; }
+.copy-btn-text { font-size: 0.75rem; }
+.copy-btn-text:empty { display: none; }
+.copy-row { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 8px; }
+.copy-row.original-row { justify-content: space-between; margin-top: 20px; }
+.copy-row.original-row .original-label { margin: 0; }
+.insight-header { gap: 10px; align-items: center; }
+.quote-list { display: grid; gap: 10px; }
+.quote-card { margin: 0; padding: 14px 16px; background: var(--surface); border-left: 3px solid var(--accent); border-radius: var(--radius); }
+.quote-card p { margin: 0 0 8px; font-style: italic; line-height: 1.55; }
+.quote-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.quote-speaker { font-size: 0.8rem; color: var(--text-muted); }

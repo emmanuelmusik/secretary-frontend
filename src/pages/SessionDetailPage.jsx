@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { getLocalAudioUrl, shareLocalAudio } from '../lib/localAudio.js';
+import { insightToText } from '../lib/clipboard.js';
+import CopyButton from '../components/CopyButton.jsx';
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },
@@ -134,7 +136,14 @@ export default function SessionDetailPage() {
         <button className={tab === 'audio' ? 'active' : ''} onClick={openAudioTab}>Audio</button>
       </div>
 
-      {tab === 'transcript' && <pre className="transcript">{session.raw_transcript}</pre>}
+      {tab === 'transcript' && (
+        <div className="copyable">
+          <div className="copy-row">
+            <CopyButton text={session.raw_transcript} label="Copy transcript" />
+          </div>
+          <pre className="transcript">{session.raw_transcript}</pre>
+        </div>
+      )}
 
       {tab === 'audio' && (
         <div className="audio-panel">
@@ -169,6 +178,7 @@ export default function SessionDetailPage() {
           {session.analysis && (
             <>
               <div className="insight-header">
+                <CopyButton text={() => insightToText(session.analysis)} label="Copy insight" />
                 <button onClick={handleGenerateInsight} disabled={generatingInsight}>
                   {generatingInsight ? 'Regenerating…' : 'Regenerate'}
                 </button>
@@ -181,6 +191,25 @@ export default function SessionDetailPage() {
               <ul>{session.analysis.action_items?.map((a, i) => <li key={i}>{a.item} {a.owner && `— ${a.owner}`}</li>)}</ul>
               <h3>Decisions</h3>
               <ul>{session.analysis.decisions?.map((d, i) => <li key={i}>{d}</li>)}</ul>
+              {session.analysis.quotes?.length > 0 && (
+                <>
+                  <h3>Quotable Quotes</h3>
+                  <div className="quote-list">
+                    {session.analysis.quotes.map((q, i) => (
+                      <blockquote className="quote-card" key={i}>
+                        <p>“{q.quote}”</p>
+                        <div className="quote-foot">
+                          <span className="quote-speaker">{q.speaker ? `— ${q.speaker}` : ''}</span>
+                          <CopyButton
+                            text={`"${q.quote}"${q.speaker ? ` — ${q.speaker}` : ''}`}
+                            label="Copy quote"
+                          />
+                        </div>
+                      </blockquote>
+                    ))}
+                  </div>
+                </>
+              )}
               <h3>Questions Raised</h3>
               <ul>{session.analysis.questions_raised?.map((q, i) => <li key={i}>{q}</li>)}</ul>
             </>
@@ -202,8 +231,14 @@ export default function SessionDetailPage() {
           </div>
           {session.translated_transcript ? (
             <>
+              <div className="copy-row">
+                <CopyButton text={session.translated_transcript} label="Copy translation" />
+              </div>
               <pre className="transcript">{session.translated_transcript}</pre>
-              <p className="original-label">Original ({session.source_language || 'detected language'})</p>
+              <div className="copy-row original-row">
+                <p className="original-label">Original ({session.source_language || 'detected language'})</p>
+                <CopyButton text={session.raw_transcript} label="Copy original" />
+              </div>
               <pre className="transcript original-transcript">{session.raw_transcript}</pre>
             </>
           ) : (
@@ -214,6 +249,9 @@ export default function SessionDetailPage() {
 
       {tab === 'history' && session.history_analysis && (
         <div className="analysis">
+          <div className="insight-header">
+            <CopyButton text={() => historyToText(session.history_analysis)} label="Copy history insight" />
+          </div>
           <h3>Recurring Themes</h3>
           <ul>{session.history_analysis.recurring_themes?.map((t, i) => <li key={i}>{t}</li>)}</ul>
           <h3>Progress Notes</h3>
@@ -239,6 +277,17 @@ export default function SessionDetailPage() {
       )}
     </div>
   );
+}
+
+function historyToText(h) {
+  if (!h) return '';
+  const list = (items) => (items || []).map((x) => `- ${x}`).join('\n');
+  return [
+    `RECURRING THEMES\n${list(h.recurring_themes)}`,
+    `PROGRESS NOTES\n${h.progress_notes || ''}`,
+    `OUTSTANDING ACTION ITEMS\n${list(h.outstanding_action_items)}`,
+    `PATTERN OBSERVATIONS\n${h.pattern_observations || ''}`,
+  ].join('\n\n');
 }
 
 function formatDuration(seconds) {
