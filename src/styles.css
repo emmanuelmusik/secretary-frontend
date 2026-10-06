@@ -342,3 +342,32 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .quote-card p { margin: 0 0 8px; font-style: italic; line-height: 1.55; }
 .quote-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .quote-speaker { font-size: 0.8rem; color: var(--text-muted); }
+
+/* ---- Business cards ---- */
+.scan-actions { display: flex; gap: 10px; margin: 12px 0 16px; }
+.scan-btn { flex: 2; padding: 14px; font-weight: 600; background: var(--accent); color: var(--ink); }
+.scan-btn:hover { background: var(--accent); filter: brightness(1.07); }
+.scan-btn-secondary { flex: 1; padding: 14px; background: var(--accent-dim); color: var(--accent); }
+.scan-actions button:disabled { opacity: 0.6; }
+.card-search { margin-bottom: 8px; }
+.card-row {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); margin: 8px 0; text-decoration: none; color: inherit;
+}
+.card-thumb { width: 64px; height: 42px; object-fit: cover; border-radius: 6px; flex: none; background: var(--surface-raised); }
+.card-thumb-empty { display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--accent); }
+.card-row-text { display: flex; flex-direction: column; min-width: 0; }
+.card-row-text strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-row-text span { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-editor label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 14px; }
+.card-editor label small { opacity: 0.7; }
+.card-editor input, .card-editor textarea { margin-top: 4px; }
+.card-photo { width: 100%; border-radius: var(--radius); margin: 10px 0 4px; border: 1px solid var(--border); }
+.card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; align-items: center; }
+.action-chip {
+  display: inline-flex; align-items: center; padding: 8px 14px; min-height: 36px; border-radius: 20px;
+  background: var(--accent-dim); color: var(--accent); font-size: 0.85rem; font-weight: 600; text-decoration: none; border: none;
+}
+.duplicate-note { background: var(--record-dim); border-radius: var(--radius); padding: 10px 14px; font-size: 0.85rem; margin: 10px 0; }
+.form-error { color: var(--danger); font-size: 0.85rem; margin: 10px 0 0; }

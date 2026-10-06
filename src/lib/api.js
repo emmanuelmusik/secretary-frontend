@@ -56,6 +56,13 @@ export const api = {
     authedFetch(`/sessions/${id}/translate`, { method: 'POST', body: JSON.stringify({ target_language: targetLanguage }) }),
   generateInsight: (id) => authedFetch(`/sessions/${id}/insight`, { method: 'POST' }),
 
+  // Business cards
+  scanCard: (image) => authedFetch('/cards/scan', { method: 'POST', body: JSON.stringify({ image }) }),
+  getCards: () => authedFetch('/cards'),
+  createCard: (card) => authedFetch('/cards', { method: 'POST', body: JSON.stringify(card) }),
+  updateCard: (id, card) => authedFetch(`/cards/${id}`, { method: 'PATCH', body: JSON.stringify(card) }),
+  deleteCard: (id) => authedFetch(`/cards/${id}`, { method: 'DELETE' }),
+
   // Account
   deleteAccount: () => authedFetch('/account', { method: 'DELETE' }),
 };

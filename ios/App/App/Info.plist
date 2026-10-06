@@ -24,6 +24,8 @@
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Secretary needs microphone access to record and transcribe your meetings, classes, and voice notes.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Secretary uses the camera to scan business cards, and to attach a video when you upload a file to transcribe.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
