@@ -1,9 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
+import { resizeImage } from '../lib/image.js';
+import { useAiConsent } from '../components/AiConsent.jsx';
 
 export default function CardsPage() {
   const navigate = useNavigate();
+  const { ensureConsent } = useAiConsent();
+  const libraryRef = useRef(null);
   const [cards, setCards] = useState(null);
   const [query, setQuery] = useState('');
   const [error, setError] = useState('');
@@ -26,12 +30,30 @@ export default function CardsPage() {
         .join(' ').toLowerCase().includes(q));
   }, [cards, query]);
 
+  async function openLibrary() {
+    if (await ensureConsent()) libraryRef.current?.click();
+  }
+
+  async function handleLibraryFile(e) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    try {
+      const firstPhoto = await resizeImage(file, 1600, 0.85);
+      navigate('/cards/scan', { state: { firstPhoto } });
+    } catch (err) {
+      setError(err.message || 'Could not open that photo.');
+    }
+  }
+
   return (
     <div className="cards-page">
       <h1>Cards</h1>
 
       <div className="scan-actions">
         <button className="scan-btn" onClick={() => navigate('/cards/scan')}>Scan a card</button>
+        <button className="scan-btn-secondary" onClick={openLibrary}>From photos</button>
+        <input ref={libraryRef} type="file" accept="image/*" hidden onChange={handleLibraryFile} />
       </div>
 
       {error && <p className="form-error">{error}</p>}

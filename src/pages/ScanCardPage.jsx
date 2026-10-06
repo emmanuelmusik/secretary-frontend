@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { resizeImage, shrinkDataUrl } from '../lib/image.js';
 import { useAiConsent } from '../components/AiConsent.jsx';
@@ -20,14 +20,16 @@ function guideRect(cw, ch, portrait) {
 
 export default function ScanCardPage() {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const { ensureConsent } = useAiConsent();
 
   const [allowed, setAllowed] = useState(false);
-  const [step, setStep] = useState('capture');       // capture | confirm | summary
+  const firstPhoto = state?.firstPhoto || null;      // photo picked on the Cards page
+  const [step, setStep] = useState(firstPhoto ? 'confirm' : 'capture'); // capture | confirm | summary
   const [side, setSide] = useState('front');         // which side is being captured
   const [front, setFront] = useState(null);
   const [back, setBack] = useState(null);
-  const [pending, setPending] = useState(null);
+  const [pending, setPending] = useState(firstPhoto);
   const [portrait, setPortrait] = useState(false);
   const [cameraError, setCameraError] = useState('');
   const [stage, setStage] = useState({ w: 0, h: 0 });
