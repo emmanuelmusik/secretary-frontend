@@ -57,7 +57,7 @@ export const api = {
   generateInsight: (id) => authedFetch(`/sessions/${id}/insight`, { method: 'POST' }),
 
   // Business cards
-  scanCard: (image) => authedFetch('/cards/scan', { method: 'POST', body: JSON.stringify({ image }) }),
+  scanCard: (images) => authedFetch('/cards/scan', { method: 'POST', body: JSON.stringify({ images }) }),
   getCards: () => authedFetch('/cards'),
   createCard: (card) => authedFetch('/cards', { method: 'POST', body: JSON.stringify(card) }),
   updateCard: (id, card) => authedFetch(`/cards/${id}`, { method: 'PATCH', body: JSON.stringify(card) }),

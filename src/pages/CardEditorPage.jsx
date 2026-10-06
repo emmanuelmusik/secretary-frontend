@@ -26,6 +26,7 @@ export default function CardEditorPage() {
     return { ...EMPTY, ...c, emails: toLines(c.emails), phones: toLines(c.phones) };
   });
   const [thumb, setThumb] = useState(state?.thumb || null);
+  const [thumbBack, setThumbBack] = useState(state?.thumbBack || null);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -39,6 +40,7 @@ export default function CardEditorPage() {
         if (!c) { navigate('/cards', { replace: true }); return; }
         setForm({ ...EMPTY, ...c, emails: toLines(c.emails), phones: toLines(c.phones) });
         setThumb(c.image_thumb || null);
+        setThumbBack(c.image_thumb_back || null);
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -51,7 +53,7 @@ export default function CardEditorPage() {
     setSaving(true);
     setError('');
     try {
-      if (isNew) await api.createCard({ ...payload(), image_thumb: thumb });
+      if (isNew) await api.createCard({ ...payload(), image_thumb: thumb, image_thumb_back: thumbBack });
       else await api.updateCard(id, payload());
       navigate('/cards');
     } catch (err) {
@@ -94,7 +96,12 @@ export default function CardEditorPage() {
         </div>
       )}
 
-      {thumb && <img className="card-photo" src={thumb} alt="Scanned business card" />}
+      {(thumb || thumbBack) && (
+        <div className="card-photos">
+          {thumb && <img className="card-photo" src={thumb} alt="Front of the card" />}
+          {thumbBack && <img className="card-photo" src={thumbBack} alt="Back of the card" />}
+        </div>
+      )}
 
       {!isNew && (
         <div className="card-actions">

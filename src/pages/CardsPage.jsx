@@ -1,19 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
-import { resizeImage } from '../lib/image.js';
-import { useAiConsent } from '../components/AiConsent.jsx';
 
 export default function CardsPage() {
   const navigate = useNavigate();
-  const { ensureConsent } = useAiConsent();
   const [cards, setCards] = useState(null);
   const [query, setQuery] = useState('');
-  const [scanning, setScanning] = useState(false);
   const [error, setError] = useState('');
   const [errorDetail, setErrorDetail] = useState('');
-  const cameraRef = useRef(null);
-  const libraryRef = useRef(null);
 
   useEffect(() => {
     api.getCards().then(setCards).catch((e) => {
@@ -32,41 +26,12 @@ export default function CardsPage() {
         .join(' ').toLowerCase().includes(q));
   }, [cards, query]);
 
-  async function openPicker(ref) {
-    if (await ensureConsent()) ref.current?.click();
-  }
-
-  async function handleFile(e) {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file) return;
-    setError('');
-    setScanning(true);
-    try {
-      const image = await resizeImage(file, 1600, 0.82);
-      const thumb = await resizeImage(file, 640, 0.6);
-      const { card, duplicate } = await api.scanCard(image);
-      navigate('/cards/new', { state: { card, duplicate, thumb } });
-    } catch (err) {
-      setError(err.message || 'Could not read that card.');
-    } finally {
-      setScanning(false);
-    }
-  }
-
   return (
     <div className="cards-page">
       <h1>Cards</h1>
 
       <div className="scan-actions">
-        <button className="scan-btn" onClick={() => openPicker(cameraRef)} disabled={scanning}>
-          {scanning ? 'Reading card…' : 'Scan a card'}
-        </button>
-        <button className="scan-btn-secondary" onClick={() => openPicker(libraryRef)} disabled={scanning}>
-          From photos
-        </button>
-        <input ref={cameraRef} type="file" accept="image/*" capture="environment" hidden onChange={handleFile} />
-        <input ref={libraryRef} type="file" accept="image/*" hidden onChange={handleFile} />
+        <button className="scan-btn" onClick={() => navigate('/cards/scan')}>Scan a card</button>
       </div>
 
       {error && <p className="form-error">{error}</p>}

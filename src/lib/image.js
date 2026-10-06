@@ -30,3 +30,20 @@ export function resizeImage(file, maxDim = 1600, quality = 0.82) {
     img.src = url;
   });
 }
+
+// Shrinks an existing data URL (used for the small thumbnails kept with a card).
+export function shrinkDataUrl(dataUrl, maxDim = 640, quality = 0.6) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => reject(new Error('Could not process that photo.'));
+    img.src = dataUrl;
+  });
+}
