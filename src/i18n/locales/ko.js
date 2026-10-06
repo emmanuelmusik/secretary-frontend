@@ -260,6 +260,8 @@ export default {
   'paywall.resets': "{date}에 초기화돼요",
   'paywall.monthly': "월간",
   'paywall.yearly': "연간",
+  'paywall.quarterly': "3개월마다",
+  'paywall.price_quarter': "{price} / 3개월",
   'paywall.price_month': "{price} / 월",
   'paywall.price_year': "{price} / 년",
   'paywall.subscribe': "구독하기",

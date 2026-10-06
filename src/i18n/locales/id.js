@@ -260,6 +260,8 @@ export default {
   'paywall.resets': "Diatur ulang pada {date}",
   'paywall.monthly': "Bulanan",
   'paywall.yearly': "Tahunan",
+  'paywall.quarterly': "Setiap 3 bulan",
+  'paywall.price_quarter': "{price} / 3 bulan",
   'paywall.price_month': "{price} / bulan",
   'paywall.price_year': "{price} / tahun",
   'paywall.subscribe': "Berlangganan",

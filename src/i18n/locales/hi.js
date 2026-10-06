@@ -259,6 +259,8 @@ export default {
   'paywall.resets': '{date} को रीसेट होगा',
   'paywall.monthly': 'मासिक',
   'paywall.yearly': 'वार्षिक',
+  'paywall.quarterly': "हर 3 महीने",
+  'paywall.price_quarter': "{price} / 3 महीने",
   'paywall.price_month': '{price} / माह',
   'paywall.price_year': '{price} / वर्ष',
   'paywall.subscribe': 'सदस्यता लें',

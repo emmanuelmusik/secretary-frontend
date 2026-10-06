@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 // The RevenueCat *public* iOS key (safe to ship in the app). Set VITE_REVENUECAT_IOS_KEY in Vercel.
 const API_KEY = import.meta.env.VITE_REVENUECAT_IOS_KEY || '';
 
+const ORDER = ['month', 'quarter', 'year'];
 let plugin = null;      // the native plugin, loaded only when needed
 let configured = false;
 
@@ -39,11 +40,12 @@ export async function loadPlans() {
     .map((pkg) => {
       const id = String(pkg.product?.identifier || '').toLowerCase();
       const period = pkg.packageType === 'ANNUAL' || id.includes('year') ? 'year'
+        : pkg.packageType === 'THREE_MONTH' || id.includes('quarter') ? 'quarter'
         : pkg.packageType === 'MONTHLY' || id.includes('month') ? 'month' : null;
       return period && { pkg, period, priceString: pkg.product.priceString, perMonth: pkg.product.pricePerMonthString };
     })
     .filter(Boolean)
-    .sort((a, b) => (a.period === 'month' ? -1 : 1) - (b.period === 'month' ? -1 : 1));
+    .sort((a, b) => ORDER.indexOf(a.period) - ORDER.indexOf(b.period));
 }
 
 /** Resolves true when the purchase went through, false if the person cancelled. Throws on a real error. */

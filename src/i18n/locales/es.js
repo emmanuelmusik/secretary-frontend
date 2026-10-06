@@ -272,6 +272,8 @@ export default {
   'paywall.resets': "Se restablece el {date}",
   'paywall.monthly': "Mensual",
   'paywall.yearly': "Anual",
+  'paywall.quarterly': "Cada 3 meses",
+  'paywall.price_quarter': "{price} / 3 meses",
   'paywall.price_month': "{price} / mes",
   'paywall.price_year': "{price} / año",
   'paywall.subscribe': "Suscribirme",

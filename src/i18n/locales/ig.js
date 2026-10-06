@@ -273,6 +273,8 @@ export default {
   'paywall.resets': "A ga-eweghachi ya na {date}",
   'paywall.monthly': "Kwa ọnwa",
   'paywall.yearly': "Kwa afọ",
+  'paywall.quarterly': "Kwa ọnwa atọ",
+  'paywall.price_quarter': "{price} / ọnwa atọ",
   'paywall.price_month': "{price} / ọnwa",
   'paywall.price_year': "{price} / afọ",
   'paywall.subscribe': "Debanye n’ọrụ",

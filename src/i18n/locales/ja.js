@@ -259,6 +259,8 @@ export default {
   'paywall.resets': '{date}にリセットされます',
   'paywall.monthly': '月額',
   'paywall.yearly': '年額',
+  'paywall.quarterly': "3か月ごと",
+  'paywall.price_quarter': "{price} / 3か月",
   'paywall.price_month': '{price} / 月',
   'paywall.price_year': '{price} / 年',
   'paywall.subscribe': '登録する',

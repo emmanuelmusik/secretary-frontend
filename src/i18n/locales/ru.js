@@ -258,6 +258,8 @@ export default {
   'paywall.resets': "Обновится {date}",
   'paywall.monthly': "Ежемесячно",
   'paywall.yearly': "Ежегодно",
+  'paywall.quarterly': "Каждые 3 месяца",
+  'paywall.price_quarter': "{price} / 3 мес.",
   'paywall.price_month': "{price} / месяц",
   'paywall.price_year': "{price} / год",
   'paywall.subscribe': "Оформить подписку",

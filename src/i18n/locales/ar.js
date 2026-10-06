@@ -259,6 +259,8 @@ export default {
   'paywall.resets': 'يُعاد التعيين في {date}',
   'paywall.monthly': 'شهريًا',
   'paywall.yearly': 'سنويًا',
+  'paywall.quarterly': "كل 3 أشهر",
+  'paywall.price_quarter': "{price} / 3 أشهر",
   'paywall.price_month': '{price} / شهريًا',
   'paywall.price_year': '{price} / سنويًا',
   'paywall.subscribe': 'اشترك',

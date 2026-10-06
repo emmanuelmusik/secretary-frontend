@@ -6,6 +6,11 @@ import { useI18n } from '../i18n/index.jsx';
 import { purchasesAvailable, initPurchases, loadPlans, buy, restore } from '../lib/purchases.js';
 import UsageMeter from '../components/UsageMeter.jsx';
 
+const PERIOD_KEYS = {
+  month: { name: 'paywall.monthly', price: 'paywall.price_month' },
+  quarter: { name: 'paywall.quarterly', price: 'paywall.price_quarter' },
+  year: { name: 'paywall.yearly', price: 'paywall.price_year' },
+};
 const TERMS_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
 
 export default function PaywallPage() {
@@ -16,7 +21,7 @@ export default function PaywallPage() {
 
   const [usage, setUsage] = useState(state?.usage || null);
   const [plans, setPlans] = useState(null);       // null = still loading
-  const [chosen, setChosen] = useState('year');
+  const [chosen, setChosen] = useState('quarter');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -110,9 +115,9 @@ export default function PaywallPage() {
                 className={`plan-card ${chosen === p.period ? 'selected' : ''}`}
                 onClick={() => setChosen(p.period)}
               >
-                <span className="plan-name">{p.period === 'year' ? t('paywall.yearly') : t('paywall.monthly')}</span>
-                <span className="plan-price">{t(p.period === 'year' ? 'paywall.price_year' : 'paywall.price_month', { price: p.priceString })}</span>
-                {p.period === 'year' && p.perMonth && <span className="meta">{t('paywall.price_month', { price: p.perMonth })}</span>}
+                <span className="plan-name">{t(PERIOD_KEYS[p.period].name)}</span>
+                <span className="plan-price">{t(PERIOD_KEYS[p.period].price, { price: p.priceString })}</span>
+                {p.period !== 'month' && p.perMonth && <span className="meta">{t('paywall.price_month', { price: p.perMonth })}</span>}
               </button>
             ))}
           </div>

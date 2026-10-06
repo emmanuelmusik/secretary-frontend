@@ -258,6 +258,8 @@ export default {
   'paywall.resets': "Si rinnova il {date}",
   'paywall.monthly': "Mensile",
   'paywall.yearly': "Annuale",
+  'paywall.quarterly': "Ogni 3 mesi",
+  'paywall.price_quarter': "{price} / 3 mesi",
   'paywall.price_month': "{price} / mese",
   'paywall.price_year': "{price} / anno",
   'paywall.subscribe': "Abbonati",
