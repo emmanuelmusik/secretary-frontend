@@ -11,12 +11,14 @@ export default function CardsPage() {
   const [query, setQuery] = useState('');
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState('');
+  const [errorDetail, setErrorDetail] = useState('');
   const cameraRef = useRef(null);
   const libraryRef = useRef(null);
 
   useEffect(() => {
-    api.getCards().then(setCards).catch(() => {
+    api.getCards().then(setCards).catch((e) => {
       setError('Cards is not available right now. Please try again in a few minutes.');
+      setErrorDetail(e?.message || '');
       setCards([]);
     });
   }, []);
@@ -68,6 +70,7 @@ export default function CardsPage() {
       </div>
 
       {error && <p className="form-error">{error}</p>}
+      {error && errorDetail && <p className="meta error-detail">Detail: {errorDetail}</p>}
 
       {cards && cards.length > 0 && (
         <input
