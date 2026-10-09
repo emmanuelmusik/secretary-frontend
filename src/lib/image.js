@@ -47,3 +47,23 @@ export function shrinkDataUrl(dataUrl, maxDim = 640, quality = 0.6) {
     img.src = dataUrl;
   });
 }
+
+// Cuts a data URL down to a crop given as fractions of the photo ({x, y, w, h}, each 0 to 1).
+export function cropDataUrl(dataUrl, crop, quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const sx = Math.round(crop.x * img.naturalWidth);
+      const sy = Math.round(crop.y * img.naturalHeight);
+      const sw = Math.max(1, Math.min(img.naturalWidth - sx, Math.round(crop.w * img.naturalWidth)));
+      const sh = Math.max(1, Math.min(img.naturalHeight - sy, Math.round(crop.h * img.naturalHeight)));
+      const canvas = document.createElement('canvas');
+      canvas.width = sw;
+      canvas.height = sh;
+      canvas.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => reject(new Error('Could not crop that photo.'));
+    img.src = dataUrl;
+  });
+}

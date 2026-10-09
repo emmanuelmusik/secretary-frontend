@@ -1,13 +1,15 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
-import { resizeImage, shrinkDataUrl } from '../lib/image.js';
+import { resizeImage, shrinkDataUrl, cropDataUrl } from '../lib/image.js';
+import CropBox from '../components/CropBox.jsx';
 import { useAiConsent } from '../components/AiConsent.jsx';
 import { useI18n } from '../i18n/index.jsx';
 
 const GUIDE_RATIO = 1.65;   // card width / height
 const CROP_MARGIN = 1.06;   // keep a little around the guide so edges are never cut off
 const MAX_DIM = 1600;
+const FULL = { x: 0, y: 0, w: 1, h: 1 };
 
 // The framing rectangle, centred in the camera area (in CSS pixels).
 function guideRect(cw, ch, portrait) {
@@ -32,6 +34,7 @@ export default function ScanCardPage() {
   const [front, setFront] = useState(null);
   const [back, setBack] = useState(null);
   const [pending, setPending] = useState(firstPhoto);
+  const [crop, setCrop] = useState(FULL);            // adjustable crop of the photo just taken
   const [portrait, setPortrait] = useState(false);
   const [cameraError, setCameraError] = useState('');
   const [stage, setStage] = useState({ w: 0, h: 0 });
@@ -120,6 +123,7 @@ export default function ScanCardPage() {
     canvas.width = Math.max(1, Math.round(sw * out));
     canvas.height = Math.max(1, Math.round(sh * out));
     canvas.getContext('2d').drawImage(v, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+    setCrop(FULL);
     setPending(canvas.toDataURL('image/jpeg', 0.85));
     setStep('confirm');
   }
@@ -129,6 +133,7 @@ export default function ScanCardPage() {
     e.target.value = '';
     if (!file) return;
     try {
+      setCrop(FULL);
       setPending(await resizeImage(file, MAX_DIM, 0.85));
       setStep('confirm');
     } catch (err) {
@@ -136,13 +141,20 @@ export default function ScanCardPage() {
     }
   }
 
-  function usePhoto() {
-    if (side === 'front') setFront(pending); else setBack(pending);
+  async function usePhoto() {
+    const untouched = crop.x < 0.005 && crop.y < 0.005 && crop.w > 0.99 && crop.h > 0.99;
+    let photo = pending;
+    if (!untouched) {
+      try { photo = await cropDataUrl(pending, crop); } catch { photo = pending; }
+    }
+    if (side === 'front') setFront(photo); else setBack(photo);
+    setCrop(FULL);
     setPending(null);
     setStep('summary');
   }
 
   function retake(which) {
+    setCrop(FULL);
     setSide(which);
     setPending(null);
     setStep('capture');
@@ -203,7 +215,10 @@ export default function ScanCardPage() {
       {step === 'confirm' && (
         <>
           <div className="scan-top"><span /><span className="scan-title">{title}</span><span /></div>
-          <div className="scan-stage scan-review"><img src={pending} alt={title} /></div>
+          <div className="scan-stage scan-review">
+            <CropBox src={pending} alt={title} crop={crop} onChange={setCrop} />
+            <p className="scan-hint">{t('scan.crop_hint')}</p>
+          </div>
           <div className="scan-bottom">
             <button type="button" className="scan-side-btn" onClick={() => retake(side)}>{t('scan.retake')}</button>
             <button type="button" className="scan-primary" onClick={usePhoto}>{t('scan.use')}</button>

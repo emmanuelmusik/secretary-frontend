@@ -31,6 +31,7 @@ export default function CardEditorPage() {
   const [thumbBack, setThumbBack] = useState(state?.thumbBack || null);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
+  const [showBack, setShowBack] = useState(false);
   const [editing, setEditing] = useState(isNew); // a saved card opens as plain details; the form appears only on Edit
   const [saved, setSaved] = useState(null);      // last saved values, restored if the person cancels an edit
   const [error, setError] = useState('');
@@ -121,8 +122,12 @@ export default function CardEditorPage() {
 
       {(thumb || thumbBack) && (
         <div className="card-photos">
-          {thumb && <img className="card-photo" src={thumb} alt={t('card.front')} />}
-          {thumbBack && <img className="card-photo" src={thumbBack} alt={t('card.back')} />}
+          <img className="card-photo" src={(showBack && thumbBack) || thumb || thumbBack} alt={showBack && thumbBack ? t('card.back') : t('card.front')} />
+          {thumb && thumbBack && (
+            <button type="button" className="action-chip card-flip" onClick={() => setShowBack((b) => !b)}>
+              {t('card.flip')} · {showBack ? t('card.front_short') : t('card.back_short')}
+            </button>
+          )}
         </div>
       )}
 
