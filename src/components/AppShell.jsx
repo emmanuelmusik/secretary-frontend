@@ -14,6 +14,47 @@ export default function AppShell({ children }) {
   const closeRef = useRef(null);
   const openerRef = useRef(null);
 
+  // Detail screens (an open card, note or session) get a Back button instead of the menu button,
+  // and an edge swipe to go back. Screens where leaving would lose work (recording, saving a
+  // session, the camera) are left out, and so are the main tabs.
+  const path = location.pathname;
+  const isDetail = /^\/(notes|sessions)\/[^/]+$/.test(path) || /^\/cards\/(?!scan$)[^/]+$/.test(path) || path === '/upload';
+  const canSwipeBack = isDetail || path === '/paywall';
+  const goBack = () => {
+    // Real history inside the app: go back one step. Otherwise (opened from a link, or after a
+    // reload) fall back to the list the screen belongs to.
+    if (window.history.state && window.history.state.idx > 0) { navigate(-1); return; }
+    const parent = path.startsWith('/notes') ? '/notes' : path.startsWith('/cards') ? '/cards' : '/';
+    navigate(parent, { replace: true });
+  };
+  const goBackRef = useRef(goBack);
+  goBackRef.current = goBack;
+
+  // Swipe from the left edge of the screen to the right = back (like other iPhone apps).
+  useEffect(() => {
+    if (!canSwipeBack || menuOpen) return undefined;
+    let start = null;
+    const onStart = (e) => {
+      const t0 = e.touches[0];
+      start = t0.clientX <= 28 ? { x: t0.clientX, y: t0.clientY, at: Date.now() } : null;
+    };
+    const onEnd = (e) => {
+      if (!start) return;
+      const t0 = e.changedTouches[0];
+      const dx = t0.clientX - start.x;
+      const dy = Math.abs(t0.clientY - start.y);
+      const fast = Date.now() - start.at < 700;
+      start = null;
+      if (dx > 70 && dy < 60 && dx > dy * 1.5 && fast) goBackRef.current();
+    };
+    document.addEventListener('touchstart', onStart, { passive: true });
+    document.addEventListener('touchend', onEnd, { passive: true });
+    return () => {
+      document.removeEventListener('touchstart', onStart);
+      document.removeEventListener('touchend', onEnd);
+    };
+  }, [canSwipeBack, menuOpen]);
+
   // Close the menu whenever the page changes.
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
@@ -50,16 +91,22 @@ export default function AppShell({ children }) {
   return (
     <div className="app-shell">
       <header className="app-topbar">
-        <button
-          ref={openerRef}
-          type="button"
-          className="menu-btn"
-          onClick={() => setMenuOpen(true)}
-          aria-label={t('menu.open')}
-          aria-expanded={menuOpen}
-        >
-          <MenuIcon />
-        </button>
+        {isDetail ? (
+          <button type="button" className="menu-btn" onClick={goBack} aria-label={t('common.back')}>
+            <BackIcon />
+          </button>
+        ) : (
+          <button
+            ref={openerRef}
+            type="button"
+            className="menu-btn"
+            onClick={() => setMenuOpen(true)}
+            aria-label={t('menu.open')}
+            aria-expanded={menuOpen}
+          >
+            <MenuIcon />
+          </button>
+        )}
         <NavLink to="/" className="app-brand" aria-label={t('nav.home_aria')}>
           <img src="/favicon.png" alt="" width="30" height="30" />
           <span>Secretary</span>
@@ -160,6 +207,14 @@ function MenuLink({ to, end, icon, children }) {
       <TabIcon name={icon} />
       <span>{children}</span>
     </NavLink>
+  );
+}
+
+function BackIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M15 5l-7 7 7 7" />
+    </svg>
   );
 }
 
