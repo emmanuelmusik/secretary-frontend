@@ -577,4 +577,4 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .crop-handle.tr { right: -14px; top: -14px; } .crop-handle.tr::after { right: 12px; top: 12px; border-left: 0; border-bottom: 0; }
 .crop-handle.bl { left: -14px; bottom: -14px; } .crop-handle.bl::after { left: 12px; bottom: 12px; border-right: 0; border-top: 0; }
 .crop-handle.br { right: -14px; bottom: -14px; } .crop-handle.br::after { right: 12px; bottom: 12px; border-left: 0; border-top: 0; }
-.card-flip { align-self: flex-start; }
+.card-flip { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; background: none; border: none; padding: 4px 2px; margin: 0; color: var(--accent, #2dd4bf); font-size: 0.9rem; cursor: pointer; }

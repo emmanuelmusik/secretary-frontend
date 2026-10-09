@@ -124,8 +124,9 @@ export default function CardEditorPage() {
         <div className="card-photos">
           <img className="card-photo" src={(showBack && thumbBack) || thumb || thumbBack} alt={showBack && thumbBack ? t('card.back') : t('card.front')} />
           {thumb && thumbBack && (
-            <button type="button" className="action-chip card-flip" onClick={() => setShowBack((b) => !b)}>
-              {t('card.flip')} · {showBack ? t('card.front_short') : t('card.back_short')}
+            <button type="button" className="card-flip" onClick={() => setShowBack((b) => !b)}>
+              <FlipIcon />
+              <span>{t('card.flip')} · {showBack ? t('card.front_short') : t('card.back_short')}</span>
             </button>
           )}
         </div>
@@ -197,5 +198,16 @@ function Detail({ label, value }) {
       <span className="card-detail-label">{label}</span>
       <div className="card-detail-value">{value}</div>
     </div>
+  );
+}
+
+function FlipIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M17 2l4 4-4 4" />
+      <path d="M3 11V9a3 3 0 0 1 3-3h15" />
+      <path d="M7 22l-4-4 4-4" />
+      <path d="M21 13v2a3 3 0 0 1-3 3H3" />
+    </svg>
   );
 }
