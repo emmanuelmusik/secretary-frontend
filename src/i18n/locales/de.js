@@ -41,6 +41,15 @@ export default {
   'auth.no_account': 'Sie haben noch kein Konto?',
   'auth.signup_link': 'Registrieren',
   'auth.failed': 'Anmeldung fehlgeschlagen',
+  'auth.check_title': "Prüfe dein E-Mail-Postfach",
+  'auth.check_body': "Wir haben einen Bestätigungslink an {email} gesendet. Öffne die E-Mail, tippe auf den Link und komm dann hierher zurück, um dich anzumelden.",
+  'auth.check_login': "Bestätigt – anmelden",
+  'auth.check_resend': "E-Mail erneut senden",
+  'auth.check_resent': "Bestätigungs-E-Mail erneut gesendet.",
+  'verified.title': "E-Mail bestätigt",
+  'verified.body': "Deine E-Mail-Adresse ist bestätigt. Öffne die Secretary-App und melde dich an.",
+  'verified.open': "Secretary öffnen",
+  'verified.expired': "Dieser Link ist abgelaufen oder wurde schon verwendet. Öffne die App, melde dich an und fordere einen neuen Link an.",
 
   // ---- home
   'home.mode_meeting': 'Meeting / Unterricht',

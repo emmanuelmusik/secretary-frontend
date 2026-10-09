@@ -531,3 +531,9 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .paywall-links a { color: var(--accent, #2dd4bf); }
 .limit-banner { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
 .limit-banner p { margin: 0; }
+
+/* check-your-email / verified screens */
+.check-email { text-align: center; }
+.check-email h2 { margin: 0 0 8px; }
+.check-email p { margin: 0 0 14px; }
+.open-app-btn { display: block; text-decoration: none; text-align: center; box-sizing: border-box; }

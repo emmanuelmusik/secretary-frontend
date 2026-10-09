@@ -41,6 +41,15 @@ export default {
   'auth.no_account': '¿No tienes una cuenta?',
   'auth.signup_link': 'Regístrate',
   'auth.failed': 'Error al iniciar sesión',
+  'auth.check_title': "Revisa tu correo",
+  'auth.check_body': "Enviamos un enlace de verificación a {email}. Abre el correo, toca el enlace y vuelve aquí para iniciar sesión.",
+  'auth.check_login': "Ya verifiqué: iniciar sesión",
+  'auth.check_resend': "Reenviar correo",
+  'auth.check_resent': "Correo de verificación reenviado.",
+  'verified.title': "Correo verificado",
+  'verified.body': "Tu correo está confirmado. Abre la app Secretary e inicia sesión.",
+  'verified.open': "Abrir Secretary",
+  'verified.expired': "Este enlace caducó o ya se usó. Abre la app, inicia sesión y solicita un enlace nuevo.",
 
   // ---- home
   'home.mode_meeting': 'Reunión / Clase',

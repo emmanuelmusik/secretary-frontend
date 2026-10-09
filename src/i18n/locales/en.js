@@ -42,6 +42,15 @@ export default {
   'auth.no_account': "Don't have an account?",
   'auth.signup_link': 'Sign up',
   'auth.failed': 'Sign-in failed',
+  'auth.check_title': "Check your email",
+  'auth.check_body': "We sent a verification link to {email}. Open the email, tap the link, then come back here and log in.",
+  'auth.check_login': "I've verified — log in",
+  'auth.check_resend': "Resend email",
+  'auth.check_resent': "Verification email sent again.",
+  'verified.title': "Email verified",
+  'verified.body': "Your email is confirmed. Open the Secretary app and log in.",
+  'verified.open': "Open Secretary",
+  'verified.expired': "This link has expired or was already used. Open the app, log in, and request a new link.",
 
   // ---- home
   'home.mode_meeting': 'Meeting / Classroom',

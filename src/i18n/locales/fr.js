@@ -41,6 +41,15 @@ export default {
   'auth.no_account': "Vous n'avez pas de compte ?",
   'auth.signup_link': 'Inscrivez-vous',
   'auth.failed': 'Échec de la connexion',
+  'auth.check_title': "Vérifiez vos e-mails",
+  'auth.check_body': "Nous avons envoyé un lien de vérification à {email}. Ouvrez l'e-mail, appuyez sur le lien, puis revenez ici pour vous connecter.",
+  'auth.check_login': "J'ai vérifié — me connecter",
+  'auth.check_resend': "Renvoyer l'e-mail",
+  'auth.check_resent': "E-mail de vérification renvoyé.",
+  'verified.title': "E-mail vérifié",
+  'verified.body': "Votre e-mail est confirmé. Ouvrez l'application Secretary et connectez-vous.",
+  'verified.open': "Ouvrir Secretary",
+  'verified.expired': "Ce lien a expiré ou a déjà été utilisé. Ouvrez l'application, connectez-vous et demandez un nouveau lien.",
 
   // ---- home
   'home.mode_meeting': 'Réunion / Cours',

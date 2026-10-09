@@ -4,6 +4,7 @@ import { RequireAuth } from './components/RequireAuth.jsx';
 import { LanguageProvider } from './i18n/index.jsx';
 
 import AuthPage from './pages/AuthPage.jsx';
+import VerifiedPage from './pages/VerifiedPage.jsx';
 import SupportPage from './pages/SupportPage.jsx';
 import PrivacyPage from './pages/PrivacyPage.jsx';
 import HomePage from './pages/HomePage.jsx';
@@ -28,6 +29,7 @@ export default function App() {
         <Routes>
           {/* Public — no signup required */}
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/verified" element={<VerifiedPage />} />
           <Route path="/support" element={<SupportPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
 

@@ -5,6 +5,9 @@ import { supabase } from '../lib/supabase.js';
 
 const AuthContext = createContext(null);
 
+// Where the link in the verification email lands (a plain web page that sends the person back to the app).
+const VERIFIED_URL = 'https://secretary-frontend.vercel.app/verified';
+
 /**
  * On a real iOS device (via Capacitor), uses native Sign in with Apple —
  * the actual Face ID system sheet, not a browser page.
@@ -53,7 +56,8 @@ export function AuthProvider({ children }) {
     user: session?.user ?? null,
     isLoading: session === undefined,
     isAuthenticated: !!session,
-    signUp: (email, password) => supabase.auth.signUp({ email, password }),
+    signUp: (email, password) => supabase.auth.signUp({ email, password, options: { emailRedirectTo: VERIFIED_URL } }),
+    resendVerification: (email) => supabase.auth.resend({ type: 'signup', email, options: { emailRedirectTo: VERIFIED_URL } }),
     signIn: (email, password) => supabase.auth.signInWithPassword({ email, password }),
     signInWithGoogle: () => supabase.auth.signInWithOAuth({ provider: 'google' }),
     signInWithApple,

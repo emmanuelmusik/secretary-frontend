@@ -5,7 +5,7 @@ import { useI18n } from '../i18n/index.jsx';
 import LanguageMenu from '../components/LanguageMenu.jsx';
 
 export default function AuthPage() {
-  const { signUp, signIn, signInWithGoogle, signInWithApple, isAuthenticated } = useAuth();
+  const { signUp, signIn, signInWithGoogle, signInWithApple, resendVerification, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { t } = useI18n();
   const [mode, setMode] = useState('signup'); // 'signup' | 'login'
@@ -13,6 +13,8 @@ export default function AuthPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(false); // true once a verification email is on its way
+  const [resent, setResent] = useState(false);
 
   // Catches Google/Apple sign-in success — those don't navigate manually,
   // so without this the screen just sits there even after a real login.
@@ -25,11 +27,27 @@ export default function AuthPage() {
     setError('');
     setLoading(true);
     try {
-      const { error } = mode === 'signup'
+      const { data, error } = mode === 'signup'
         ? await signUp(email, password)
         : await signIn(email, password);
       if (error) throw error;
+      // With email confirmation on, sign-up succeeds but there is no session until the link is opened.
+      if (mode === 'signup' && !data?.session) { setCheckEmail(true); return; }
       navigate('/');
+    } catch (err) {
+      if (mode === 'login' && /confirm/i.test(err.message || '')) { setCheckEmail(true); return; }
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleResend() {
+    setError(''); setResent(false); setLoading(true);
+    try {
+      const { error } = await resendVerification(email);
+      if (error) throw error;
+      setResent(true);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -61,6 +79,20 @@ export default function AuthPage() {
         <p>{t('auth.tagline')}</p>
       </div>
 
+      {checkEmail ? (
+      <div className="auth-card check-email">
+        <h2>{t('auth.check_title')}</h2>
+        <p>{t('auth.check_body', { email })}</p>
+        {resent && <p className="meta">{t('auth.check_resent')}</p>}
+        {error && <p className="error">{error}</p>}
+        <button type="button" className="auth-primary-btn" onClick={() => { setCheckEmail(false); setMode('login'); setError(''); }}>
+          {t('auth.check_login')}
+        </button>
+        <button type="button" className="link-btn" onClick={handleResend} disabled={loading}>
+          <span className="link-accent">{t('auth.check_resend')}</span>
+        </button>
+      </div>
+      ) : (
       <div className="auth-card">
         <form onSubmit={handleSubmit}>
           <input
@@ -102,6 +134,7 @@ export default function AuthPage() {
           )}
         </button>
       </div>
+      )}
 
       <div className="footer-links">
         <Link to="/support">{t('nav.support')}</Link>

@@ -40,6 +40,15 @@ export default {
   'auth.no_account': 'Ị nweghị akaụntụ?',
   'auth.signup_link': 'Debanye aha',
   'auth.failed': 'Ọbanye dara',
+  'auth.check_title': "Lelee email gị",
+  'auth.check_body': "Anyị zigara njikọ nkwenye na {email}. Mepee email ahụ, pịa njikọ ahụ, wee laghachi ebe a banye.",
+  'auth.check_login': "Enyochala m — banye",
+  'auth.check_resend': "Zighachi email",
+  'auth.check_resent': "E zigaghachila email nkwenye.",
+  'verified.title': "E kwenyela email",
+  'verified.body': "E kwenyela email gị. Mepee ngwa Secretary wee banye.",
+  'verified.open': "Meghe Secretary",
+  'verified.expired': "Njikọ a agwụla ma ọ bụ e jiriela ya. Mepee ngwa ahụ, banye, wee rịọ njikọ ọhụrụ.",
 
   // ---- home
   'home.mode_meeting': 'Nzukọ / Klaasị',
