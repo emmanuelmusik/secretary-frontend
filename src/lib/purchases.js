@@ -23,6 +23,7 @@ export async function initPurchases(userId) {
   if (!purchasesAvailable() || !userId) return false;
   const Purchases = await load();
   if (!configured) {
+    try { await Purchases.setLogLevel({ level: 'DEBUG' }); } catch { /* older native build */ }
     await Purchases.configure({ apiKey: API_KEY, appUserID: userId });
     configured = true;
   } else {
