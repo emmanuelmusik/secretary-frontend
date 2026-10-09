@@ -25,15 +25,16 @@ export default function PaywallPage() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [detail, setDetail] = useState('');
   const canBuy = purchasesAvailable();
 
   useEffect(() => {
     api.getUsage().then(setUsage).catch(() => {});
     if (!canBuy) { setPlans([]); return; }
-    initPurchases(user?.id)
-      .then(loadPlans)
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timed out waiting for the App Store')), 20000));
+    Promise.race([initPurchases(user?.id).then(loadPlans), timeout])
       .then((list) => setPlans(list))
-      .catch(() => { setPlans([]); setError(t('paywall.plans_failed')); });
+      .catch((err) => { setPlans([]); setError(t('paywall.plans_failed')); setDetail(String(err?.message || err || '').slice(0, 300)); });
   }, []);
 
   // After a purchase the store tells our server; wait a few seconds for the plan to switch to Pro.
@@ -129,6 +130,7 @@ export default function PaywallPage() {
 
       {message && <p className="meta paywall-message">{message}</p>}
       {error && <p className="form-error">{error}</p>}
+      {detail && <p className="meta">{detail}</p>}
 
       {canBuy && !isPro && (
         <button type="button" className="link-button" onClick={handleRestore} disabled={busy}>{t('paywall.restore')}</button>
