@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { useI18n } from '../i18n/index.jsx';
-import { purchasesAvailable, initPurchases, loadPlans, buy, restore } from '../lib/purchases.js';
+import { purchasesAvailable, initPurchases, loadPlans, buy, restore, diagnose } from '../lib/purchases.js';
 import UsageMeter from '../components/UsageMeter.jsx';
 
 const PERIOD_KEYS = {
@@ -34,7 +34,10 @@ export default function PaywallPage() {
     const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timed out waiting for the App Store')), 20000));
     Promise.race([initPurchases(user?.id).then(loadPlans), timeout])
       .then((list) => setPlans(list))
-      .catch((err) => { setPlans([]); setError(t('paywall.plans_failed')); setDetail(String(err?.message || err || '').slice(0, 300)); });
+      .catch((err) => {
+        setPlans([]); setError(t('paywall.plans_failed')); setDetail(String(err?.message || err || '').slice(0, 300));
+        diagnose().then((d) => setDetail((prev) => `${prev}\n${d}`.slice(0, 600))).catch(() => {});
+      });
   }, []);
 
   // After a purchase the store tells our server; wait a few seconds for the plan to switch to Pro.
@@ -130,7 +133,7 @@ export default function PaywallPage() {
 
       {message && <p className="meta paywall-message">{message}</p>}
       {error && <p className="form-error">{error}</p>}
-      {detail && <p className="meta">{detail}</p>}
+      {detail && <p className="meta" style={{ whiteSpace: "pre-line" }}>{detail}</p>}
 
       {canBuy && !isPro && (
         <button type="button" className="link-button" onClick={handleRestore} disabled={busy}>{t('paywall.restore')}</button>

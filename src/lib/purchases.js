@@ -64,3 +64,26 @@ export async function restore() {
   const Purchases = await load();
   await Purchases.restorePurchases();
 }
+
+const withTimeout = (promise, ms, label) =>
+  Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error(`${label}: no answer in ${ms / 1000}s`)), ms))]);
+
+/** One line explaining why plans did not load: does Apple return the products, and does RevenueCat have an offering? */
+export async function diagnose() {
+  const parts = [];
+  try {
+    const Purchases = await load();
+    try {
+      const r = await withTimeout(Purchases.getProducts({
+        productIdentifiers: ['com.johmacos.secretary.pro.monthly', 'com.johmacos.secretary.pro.quarterly'],
+        type: 'SUBS',
+      }), 25000, 'Apple products');
+      parts.push(`Apple returned ${r.products?.length ?? 0}/2 products`);
+    } catch (e) { parts.push(`Apple products error: ${e?.message || e}`); }
+    try {
+      const o = await withTimeout(Purchases.getOfferings(), 25000, 'RevenueCat offerings');
+      parts.push(`offering ${o.current?.identifier || 'none'}, ${o.current?.availablePackages?.length ?? 0} packages`);
+    } catch (e) { parts.push(`offerings error: ${e?.message || e}`); }
+  } catch (e) { parts.push(`plugin error: ${e?.message || e}`); }
+  return parts.join(' | ');
+}
