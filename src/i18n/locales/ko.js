@@ -74,6 +74,7 @@ export default {
   'record.paused_dots': '일시정지됨…',
   'record.err_ws': '실시간 스크립트 연결이 끊어졌어요. 오디오는 기기에서 계속 녹음되고 있어요.',
   'record.err_start': '녹음을 시작할 수 없어요',
+  'record.err_mic_denied': "마이크 접근이 꺼져 있습니다. 설정 → Secretary에서 마이크를 켠 다음 다시 시도하세요.",
   'record.err_save_audio': '오디오를 기기에 저장할 수 없어요. 스크립트는 안전하게 보관돼요.',
 
   'upload.title': '오디오 파일 업로드',

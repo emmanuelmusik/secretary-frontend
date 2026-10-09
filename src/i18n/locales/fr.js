@@ -80,6 +80,7 @@ export default {
   'record.paused_dots': 'En pause…',
   'record.err_ws': "Connexion de la transcription en direct perdue : l'audio continue d'être enregistré localement.",
   'record.err_start': "Impossible de démarrer l'enregistrement",
+  'record.err_mic_denied': "L'accès au micro est désactivé. Ouvrez Réglages → Secretary, activez Microphone, puis réessayez.",
   'record.err_save_audio': "Impossible d'enregistrer l'audio localement : la transcription reste en sécurité.",
 
   // ---- upload audio

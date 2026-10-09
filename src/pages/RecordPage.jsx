@@ -110,6 +110,8 @@ export default function RecordPage() {
         navigate('/paywall', { state: { limitReached: true, usage: err.usage } });
         return;
       }
+      // iPhone only asks for the microphone once. After a "Don't allow", the person has to switch it on in Settings.
+      if (err?.name === 'NotAllowedError' || err?.name === 'SecurityError') { setError(t('record.err_mic_denied')); return; }
       setError(err.message || t('record.err_start'));
     }
   }

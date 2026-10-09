@@ -81,6 +81,7 @@ export default {
   'record.paused_dots': 'Paused…',
   'record.err_ws': 'Live transcript connection lost — audio is still recording locally.',
   'record.err_start': 'Could not start recording',
+  'record.err_mic_denied': "Microphone access is turned off. Open Settings → Secretary, turn on Microphone, then come back and try again.",
   'record.err_save_audio': 'Could not save audio locally — transcript is still safe.',
 
   // ---- upload audio

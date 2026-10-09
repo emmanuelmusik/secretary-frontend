@@ -74,6 +74,7 @@ export default {
   'record.paused_dots': 'Dijeda…',
   'record.err_ws': 'Koneksi transkrip langsung terputus — audio tetap direkam di perangkat.',
   'record.err_start': 'Tidak dapat memulai rekaman',
+  'record.err_mic_denied': "Akses mikrofon dimatikan. Buka Pengaturan → Secretary, aktifkan Mikrofon, lalu coba lagi.",
   'record.err_save_audio': 'Tidak dapat menyimpan audio di perangkat — transkrip tetap aman.',
 
   'upload.title': 'Unggah File Audio',

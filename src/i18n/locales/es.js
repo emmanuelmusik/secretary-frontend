@@ -80,6 +80,7 @@ export default {
   'record.paused_dots': 'En pausa…',
   'record.err_ws': 'Se perdió la conexión de la transcripción en vivo: el audio se sigue grabando en el dispositivo.',
   'record.err_start': 'No se pudo iniciar la grabación',
+  'record.err_mic_denied': "El acceso al micrófono está desactivado. Abre Ajustes → Secretary, activa Micrófono y vuelve a intentarlo.",
   'record.err_save_audio': 'No se pudo guardar el audio en el dispositivo: la transcripción sigue a salvo.',
 
   // ---- upload audio

@@ -74,6 +74,7 @@ export default {
   'record.paused_dots': '一時停止中…',
   'record.err_ws': 'ライブ文字起こしの接続が切れました。音声は端末に録音され続けています。',
   'record.err_start': '録音を開始できませんでした',
+  'record.err_mic_denied': "マイクへのアクセスがオフです。設定 → Secretary を開き、マイクをオンにしてからもう一度お試しください。",
   'record.err_save_audio': '音声を端末に保存できませんでした。文字起こしは保存されています。',
 
   'upload.title': '音声ファイルをアップロード',

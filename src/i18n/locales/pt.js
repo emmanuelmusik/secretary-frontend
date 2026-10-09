@@ -74,6 +74,7 @@ export default {
   'record.paused_dots': 'Em pausa…',
   'record.err_ws': 'Conexão da transcrição ao vivo perdida — o áudio continua sendo gravado localmente.',
   'record.err_start': 'Não foi possível iniciar a gravação',
+  'record.err_mic_denied': "O acesso ao microfone está desativado. Abra Ajustes → Secretary, ative Microfone e tente novamente.",
   'record.err_save_audio': 'Não foi possível salvar o áudio localmente — a transcrição continua segura.',
 
   'upload.title': 'Enviar Arquivo de Áudio',

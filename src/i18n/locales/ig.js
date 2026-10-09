@@ -79,6 +79,7 @@ export default {
   'record.paused_dots': 'Akwụsịtụrụ…',
   'record.err_ws': 'Njikọ ederede ozugbo tụfuru — ụda ka na-edekọ n’ekwentị gị.',
   'record.err_start': 'Enweghị ike ịmalite ndekọ',
+  'record.err_mic_denied': "Mgbe ọ na-adịghị ka e jiri microphone. Mepee Settings → Secretary, kpoo Microphone, wee nwaa ọzọ.",
   'record.err_save_audio': 'Enweghị ike ichekwa ụda n’ekwentị — ederede ka dị nchebe.',
 
   // ---- upload audio

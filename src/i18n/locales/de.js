@@ -80,6 +80,7 @@ export default {
   'record.paused_dots': 'Pausiert…',
   'record.err_ws': 'Verbindung zum Live-Transkript verloren – das Audio wird weiterhin lokal aufgenommen.',
   'record.err_start': 'Aufnahme konnte nicht gestartet werden',
+  'record.err_mic_denied': "Der Mikrofonzugriff ist ausgeschaltet. Öffne Einstellungen → Secretary, aktiviere Mikrofon und versuche es erneut.",
   'record.err_save_audio': 'Audio konnte nicht lokal gespeichert werden – das Transkript ist weiterhin sicher.',
 
   // ---- upload audio

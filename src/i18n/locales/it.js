@@ -74,6 +74,7 @@ export default {
   'record.paused_dots': 'In pausa…',
   'record.err_ws': "Connessione della trascrizione live persa — l'audio viene comunque registrato in locale.",
   'record.err_start': 'Impossibile avviare la registrazione',
+  'record.err_mic_denied': "L'accesso al microfono è disattivato. Apri Impostazioni → Secretary, attiva Microfono e riprova.",
   'record.err_save_audio': "Impossibile salvare l'audio in locale — la trascrizione è comunque al sicuro.",
 
   'upload.title': 'Carica File Audio',
