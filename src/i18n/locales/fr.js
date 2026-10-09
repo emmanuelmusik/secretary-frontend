@@ -58,6 +58,8 @@ export default {
   'home.upload': 'Importer un fichier audio',
   'home.recent': 'Récents',
   'home.empty': 'Aucune session pour le moment. Appuyez sur Enregistrer pour commencer.',
+  'home.search': 'Rechercher par titre, mois ou mot…',
+  'home.no_results': 'Aucun enregistrement ne correspond à votre recherche.',
 
   // ---- record
   'record.title': 'Enregistrement',

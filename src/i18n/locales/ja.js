@@ -53,6 +53,8 @@ export default {
   'home.upload': '音声ファイルをアップロード',
   'home.recent': '最近',
   'home.empty': 'セッションはまだありません。録音をタップして始めましょう。',
+  'home.search': 'タイトル、月、または任意の言葉で検索…',
+  'home.no_results': '検索に一致する録音はありません。',
 
   'record.title': '録音中',
   'record.title_quick': 'クイックキャプチャ',

@@ -53,6 +53,8 @@ export default {
   'home.upload': 'Carica File Audio',
   'home.recent': 'Recenti',
   'home.empty': 'Ancora nessuna sessione. Tocca Registra per iniziare.',
+  'home.search': 'Cerca per titolo, mese o qualsiasi parola…',
+  'home.no_results': 'Nessuna registrazione corrisponde alla ricerca.',
 
   'record.title': 'Registrazione',
   'record.title_quick': 'Cattura Rapida',

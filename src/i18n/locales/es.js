@@ -58,6 +58,8 @@ export default {
   'home.upload': 'Subir archivo de audio',
   'home.recent': 'Recientes',
   'home.empty': 'Aún no hay sesiones. Toca Grabar para empezar.',
+  'home.search': 'Busca por título, mes o cualquier palabra…',
+  'home.no_results': 'Ninguna grabación coincide con tu búsqueda.',
 
   // ---- record
   'record.title': 'Grabando',

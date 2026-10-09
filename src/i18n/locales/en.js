@@ -59,6 +59,8 @@ export default {
   'home.upload': 'Upload Audio File',
   'home.recent': 'Recent',
   'home.empty': 'No sessions yet. Tap Record to get started.',
+  'home.search': 'Search by title, month or any word…',
+  'home.no_results': 'No recordings match your search.',
 
   // ---- record
   'record.title': 'Recording',

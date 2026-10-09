@@ -53,6 +53,8 @@ export default {
   'home.upload': 'Enviar Arquivo de Áudio',
   'home.recent': 'Recentes',
   'home.empty': 'Nenhuma sessão ainda. Toque em Gravar para começar.',
+  'home.search': 'Pesquise por título, mês ou qualquer palavra…',
+  'home.no_results': 'Nenhuma gravação corresponde à sua busca.',
 
   'record.title': 'Gravação',
   'record.title_quick': 'Captura Rápida',

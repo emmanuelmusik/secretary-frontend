@@ -53,6 +53,8 @@ export default {
   'home.upload': 'رفع ملف صوتي',
   'home.recent': 'الأحدث',
   'home.empty': 'لا توجد جلسات بعد. اضغط على تسجيل للبدء.',
+  'home.search': 'ابحث بالعنوان أو الشهر أو أي كلمة…',
+  'home.no_results': 'لا توجد تسجيلات تطابق بحثك.',
 
   'record.title': 'جارٍ التسجيل',
   'record.title_quick': 'تسجيل سريع',

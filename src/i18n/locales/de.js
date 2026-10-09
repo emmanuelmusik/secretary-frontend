@@ -58,6 +58,8 @@ export default {
   'home.upload': 'Audiodatei hochladen',
   'home.recent': 'Zuletzt',
   'home.empty': 'Noch keine Sitzungen. Tippen Sie auf Aufnehmen, um zu beginnen.',
+  'home.search': 'Nach Titel, Monat oder einem Wort suchen…',
+  'home.no_results': 'Keine Aufnahmen passen zu Ihrer Suche.',
 
   // ---- record
   'record.title': 'Aufnahme',

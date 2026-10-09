@@ -53,6 +53,8 @@ export default {
   'home.upload': 'Unggah File Audio',
   'home.recent': 'Terbaru',
   'home.empty': 'Belum ada sesi. Ketuk Rekam untuk memulai.',
+  'home.search': 'Cari berdasarkan judul, bulan, atau kata apa pun…',
+  'home.no_results': 'Tidak ada rekaman yang cocok dengan pencarian Anda.',
 
   'record.title': 'Merekam',
   'record.title_quick': 'Rekam Cepat',

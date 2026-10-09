@@ -57,6 +57,8 @@ export default {
   'home.upload': 'Bulite Faịlụ Ụda',
   'home.recent': 'Ndị Ọhụrụ',
   'home.empty': 'Nnọkọ adịghị ugbu a. Pịa Dekọọ ka ị malite.',
+  'home.search': 'Chọọ site n\'aha, ọnwa ma ọ bụ okwu ọ bụla…',
+  'home.no_results': 'Enweghị ndekọ dabara na ọchụchọ gị.',
 
   // ---- record
   'record.title': 'Na-edekọ',

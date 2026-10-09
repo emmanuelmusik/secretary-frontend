@@ -53,6 +53,8 @@ export default {
   'home.upload': '오디오 파일 업로드',
   'home.recent': '최근',
   'home.empty': '아직 세션이 없어요. 녹음을 눌러 시작해 보세요.',
+  'home.search': '제목, 월 또는 아무 단어로 검색…',
+  'home.no_results': '검색과 일치하는 녹음이 없어요.',
 
   'record.title': '녹음 중',
   'record.title_quick': '빠른 캡처',
