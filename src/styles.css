@@ -556,3 +556,12 @@ button.active { background: var(--accent-dim); color: var(--accent); }
   background: rgba(45,212,191,0.22); color: #2dd4bf;
 }
 .menu-plan-card.menu-plan-free .menu-plan-icon { color: #2dd4bf; }
+
+/* saved card: read-only details, with Edit to open the form */
+.card-header-actions { display: flex; gap: 8px; align-items: center; }
+.card-details { margin-top: 14px; display: flex; flex-direction: column; gap: 14px; }
+.card-detail-label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 3px; }
+.card-detail-value { font-size: 1.02rem; white-space: pre-line; overflow-wrap: anywhere; display: flex; flex-direction: column; gap: 2px; }
+.card-detail-value a { color: var(--accent, #2dd4bf); text-decoration: none; }
+.card-edit-buttons { display: flex; gap: 10px; align-items: center; }
+.card-edit-buttons .save-btn { flex: 1; }

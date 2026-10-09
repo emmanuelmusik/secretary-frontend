@@ -31,6 +31,8 @@ export default function CardEditorPage() {
   const [thumbBack, setThumbBack] = useState(state?.thumbBack || null);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState(isNew); // a saved card opens as plain details; the form appears only on Edit
+  const [saved, setSaved] = useState(null);      // last saved values, restored if the person cancels an edit
   const [error, setError] = useState('');
   const duplicate = state?.duplicate;
 
@@ -40,7 +42,9 @@ export default function CardEditorPage() {
       .then((all) => {
         const c = all.find((x) => x.id === id);
         if (!c) { navigate('/cards', { replace: true }); return; }
-        setForm({ ...EMPTY, ...c, emails: toLines(c.emails), phones: toLines(c.phones) });
+        const loaded = { ...EMPTY, ...c, emails: toLines(c.emails), phones: toLines(c.phones) };
+        setForm(loaded);
+        setSaved(loaded);
         setThumb(c.image_thumb || null);
         setThumbBack(c.image_thumb_back || null);
       })
@@ -56,12 +60,24 @@ export default function CardEditorPage() {
     setError('');
     try {
       if (isNew) await api.createCard({ ...payload(), image_thumb: thumb, image_thumb_back: thumbBack });
-      else await api.updateCard(id, payload());
+      else {
+        await api.updateCard(id, payload());
+        setSaved(form);
+        setEditing(false);
+        setSaving(false);
+        return;
+      }
       navigate('/cards');
     } catch (err) {
       setError(err.message);
       setSaving(false);
     }
+  }
+
+  function handleCancelEdit() {
+    if (saved) setForm(saved);
+    setError('');
+    setEditing(false);
   }
 
   async function handleDelete() {
@@ -85,7 +101,12 @@ export default function CardEditorPage() {
     <div className="card-editor">
       <div className="session-detail-header">
         <h1>{isNew ? (state?.card ? t('card.title_review') : t('card.title_new')) : t('card.title')}</h1>
-        {!isNew && <button className="danger-btn-sm" onClick={handleDelete}>{t('common.delete')}</button>}
+        {!isNew && (
+          <div className="card-header-actions">
+            {!editing && <button className="action-chip" onClick={() => setEditing(true)}>{t('common.edit')}</button>}
+            <button className="danger-btn-sm" onClick={handleDelete}>{t('common.delete')}</button>
+          </div>
+        )}
       </div>
 
       {isNew && state?.card && (
@@ -115,24 +136,61 @@ export default function CardEditorPage() {
         </div>
       )}
 
-      <label>{t('card.name')}<input value={form.name} onChange={set('name')} autoComplete="off" /></label>
-      <label>{t('card.job')}<input value={form.job_title} onChange={set('job_title')} autoComplete="off" /></label>
-      <label>{t('card.company')}<input value={form.company} onChange={set('company')} autoComplete="off" /></label>
-      <label>{t('card.phones')} <small>{t('card.one_per_line')}</small>
-        <textarea rows={2} value={form.phones} onChange={set('phones')} />
-      </label>
-      <label>{t('card.emails')} <small>{t('card.one_per_line')}</small>
-        <textarea rows={2} value={form.emails} onChange={set('emails')} />
-      </label>
-      <label>{t('card.website')}<input value={form.website} onChange={set('website')} autoCapitalize="none" autoComplete="off" /></label>
-      <label>{t('card.address')}<textarea rows={2} value={form.address} onChange={set('address')} /></label>
-      <label>{t('card.notes')}<textarea rows={3} value={form.notes} onChange={set('notes')} /></label>
+      {!editing ? (
+        <div className="card-details">
+          <Detail label={t('card.name')} value={form.name} />
+          <Detail label={t('card.job')} value={form.job_title} />
+          <Detail label={t('card.company')} value={form.company} />
+          <Detail label={t('card.phones')} value={fromLines(form.phones).map((p) => (
+            <a key={p} href={`tel:${p.replace(/[^\d+]/g, '')}`}>{p}</a>
+          ))} />
+          <Detail label={t('card.emails')} value={fromLines(form.emails).map((m) => (
+            <a key={m} href={`mailto:${m}`}>{m}</a>
+          ))} />
+          <Detail label={t('card.website')} value={site ? <a href={site} target="_blank" rel="noreferrer">{form.website}</a> : ''} />
+          <Detail label={t('card.address')} value={form.address} />
+          <Detail label={t('card.notes')} value={form.notes} />
+        </div>
+      ) : (
+        <>
+        <label>{t('card.name')}<input value={form.name} onChange={set('name')} autoComplete="off" /></label>
+        <label>{t('card.job')}<input value={form.job_title} onChange={set('job_title')} autoComplete="off" /></label>
+        <label>{t('card.company')}<input value={form.company} onChange={set('company')} autoComplete="off" /></label>
+        <label>{t('card.phones')} <small>{t('card.one_per_line')}</small>
+          <textarea rows={2} value={form.phones} onChange={set('phones')} />
+        </label>
+        <label>{t('card.emails')} <small>{t('card.one_per_line')}</small>
+          <textarea rows={2} value={form.emails} onChange={set('emails')} />
+        </label>
+        <label>{t('card.website')}<input value={form.website} onChange={set('website')} autoCapitalize="none" autoComplete="off" /></label>
+        <label>{t('card.address')}<textarea rows={2} value={form.address} onChange={set('address')} /></label>
+        <label>{t('card.notes')}<textarea rows={3} value={form.notes} onChange={set('notes')} /></label>
+
+        </>
+      )}
 
       {error && <p className="form-error">{error}</p>}
 
-      <button className="save-btn" onClick={handleSave} disabled={saving}>
-        {saving ? t('card.saving') : isNew ? t('card.save_new') : t('card.save_changes')}
-      </button>
+      {editing && (
+        <div className="card-edit-buttons">
+          <button className="save-btn" onClick={handleSave} disabled={saving}>
+            {saving ? t('card.saving') : isNew ? t('card.save_new') : t('card.save_changes')}
+          </button>
+          {!isNew && <button className="action-chip" onClick={handleCancelEdit} disabled={saving}>{t('common.cancel')}</button>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// One read-only line of the card: small label, then the value (or nothing if it is empty).
+function Detail({ label, value }) {
+  const empty = Array.isArray(value) ? value.length === 0 : !value;
+  if (empty) return null;
+  return (
+    <div className="card-detail">
+      <span className="card-detail-label">{label}</span>
+      <div className="card-detail-value">{value}</div>
     </div>
   );
 }
