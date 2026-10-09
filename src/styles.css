@@ -140,33 +140,54 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .account-page .danger-zone { margin-top: 32px; border: 1px solid var(--danger); border-radius: var(--radius); padding: 20px; }
 .account-page .danger-zone h2 { color: var(--danger); font-size: 1rem; }
 
-.app-content { flex: 1; padding: 20px; padding-bottom: calc(130px + env(safe-area-inset-bottom)); max-width: 720px; margin: 0 auto; width: 100%; }
+.app-content { flex: 1; padding: 20px; padding-bottom: calc(110px + env(safe-area-inset-bottom)); max-width: 720px; margin: 0 auto; width: 100%; }
 
+/* Floating pill tab bar (Instagram style): icons only, soft blur, highlighted pill on the active tab. */
 .app-tabbar {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  display: flex; align-items: center; justify-content: space-around;
-  background: var(--surface); border-top: 1px solid var(--border);
-  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  width: min(calc(100% - 28px), 460px);
+  display: flex; align-items: center; justify-content: space-between; gap: 2px;
+  padding: 7px 8px;
+  border-radius: 34px;
+  background: rgba(28, 30, 38, 0.86);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   z-index: 20;
 }
 .tab-item {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  height: 46px; min-width: 0; border-radius: 24px;
   text-decoration: none; color: var(--text-muted);
-  font-size: 0.68rem; padding: 4px 10px; border-radius: 10px;
-  background: transparent;
+  background: transparent; transition: background 0.18s ease, color 0.18s ease;
 }
-.tab-item.active { color: var(--accent); }
+.tab-item svg { width: 26px; height: 26px; }
+.tab-item.active { color: var(--accent); background: rgba(45, 212, 191, 0.16); }
+/* labels stay for screen readers only */
+.tab-item span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .tab-record-btn {
-  width: 58px; height: 58px; border-radius: 50%;
+  flex: none; width: 50px; height: 50px; border-radius: 50%;
   background: var(--record);
   display: flex; align-items: center; justify-content: center;
-  margin-top: -28px;
-  box-shadow: 0 0 0 4px var(--ink), 0 4px 14px rgba(255, 107, 87, 0.4);
+  margin: 0 4px;
+  box-shadow: 0 4px 14px rgba(255, 107, 87, 0.45);
   padding: 0;
 }
 .tab-record-btn:hover { background: var(--record); filter: brightness(1.08); }
-.tab-record-dot { width: 18px; height: 18px; border-radius: 50%; background: #fff; }
+.tab-record-dot { width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+
+@media (max-width: 360px) {
+  .app-content { padding-left: 14px; padding-right: 14px; }
+  .app-tabbar { width: calc(100% - 20px); padding: 6px; }
+  .tab-item { height: 42px; }
+  .tab-record-btn { width: 46px; height: 46px; }
+}
+@media (min-width: 900px) {
+  .app-content { max-width: 860px; }
+}
 
 /* ---------- Auth / static pages ---------- */
 .auth-page {
