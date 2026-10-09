@@ -538,6 +538,24 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .check-email p { margin: 0 0 14px; }
 .open-app-btn { display: block; text-decoration: none; text-align: center; box-sizing: border-box; }
 
-/* plan badge under the email in the side menu */
-.menu-plan { display: inline-block; margin: 6px 0 0; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: rgba(255,255,255,0.08); color: var(--muted, #aab); }
-.menu-plan-pro, .menu-plan-unlimited { background: rgba(45,212,191,0.18); color: #2dd4bf; }
+
+/* plan card at the bottom of the side menu */
+.menu-plan-card {
+  margin-top: auto; display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 12px 14px; border-radius: 14px; text-align: left; cursor: pointer;
+  border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--text);
+}
+.menu-plan-icon {
+  flex: none; width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
+  background: rgba(255,255,255,0.08); color: var(--text-muted);
+}
+.menu-plan-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.menu-plan-text strong { font-size: 0.95rem; font-weight: 600; }
+.menu-plan-text small { font-size: 0.78rem; color: var(--text-muted); }
+.menu-plan-card.menu-plan-pro, .menu-plan-card.menu-plan-unlimited {
+  border-color: rgba(45,212,191,0.45); background: linear-gradient(135deg, rgba(45,212,191,0.16), rgba(45,212,191,0.04));
+}
+.menu-plan-card.menu-plan-pro .menu-plan-icon, .menu-plan-card.menu-plan-unlimited .menu-plan-icon {
+  background: rgba(45,212,191,0.22); color: #2dd4bf;
+}
+.menu-plan-card.menu-plan-free .menu-plan-icon { color: #2dd4bf; }

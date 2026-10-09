@@ -87,7 +87,6 @@ export default function AppShell({ children }) {
         </div>
 
         {user?.email && <p className="menu-user">{user.email}</p>}
-        {plan && <p className={`menu-plan menu-plan-${plan}`}>{t(`usage.${plan === 'pro' ? 'pro' : plan === 'unlimited' ? 'unlimited' : 'free'}`)}</p>}
 
         <nav className="menu-list">
           <MenuLink to="/" end icon="home">{t('nav.home')}</MenuLink>
@@ -108,6 +107,20 @@ export default function AppShell({ children }) {
             <span>{t('nav.logout')}</span>
           </button>
         </nav>
+
+        {plan && (
+          <button
+            type="button"
+            className={`menu-plan-card menu-plan-${plan}`}
+            onClick={() => navigate(plan === 'free' ? '/paywall' : '/account')}
+          >
+            <span className="menu-plan-icon">{plan === 'free' ? <SparkIcon /> : <CrownIcon />}</span>
+            <span className="menu-plan-text">
+              <strong>{t(plan === 'pro' ? 'usage.pro' : plan === 'unlimited' ? 'usage.unlimited' : 'usage.free')}</strong>
+              {plan === 'free' && <small>{t('usage.upgrade')}</small>}
+            </span>
+          </button>
+        )}
       </aside>
 
       <main className="app-content">{children}</main>
@@ -180,6 +193,24 @@ function TabIcon({ name }) {
   return (
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {paths[name]}
+    </svg>
+  );
+}
+
+function CrownIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 7l4.5 4L12 4l4.5 7L21 7l-2 11H5L3 7z" />
+      <path d="M5 21h14" />
+    </svg>
+  );
+}
+
+function SparkIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z" />
+      <path d="M19 16l.7 1.8L21.5 18.5l-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7L19 16z" />
     </svg>
   );
 }
