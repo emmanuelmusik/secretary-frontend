@@ -606,3 +606,7 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .session-row-main { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
 .session-row-main strong { overflow-wrap: anywhere; }
 .session-snippet { color: var(--text-muted); font-size: 0.78rem; line-height: 1.35; overflow-wrap: anywhere; }
+.search-hit {
+  background: rgba(45, 212, 191, 0.28); color: inherit;
+  border-radius: 3px; padding: 0 1px; box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.35);
+}

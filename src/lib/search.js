@@ -46,13 +46,63 @@ export function searchSessions(sessions, query, lang) {
   return hits.sort((a, b) => Number(b.titleHit) - Number(a.titleHit));
 }
 
+// Lower-case, accent-free copy of a text, plus where each character came from in the original,
+// so matches can be located (and highlighted) in the text the person actually sees.
+function normMap(text) {
+  let n = '';
+  const map = [];
+  let i = 0;
+  for (const ch of String(text || '')) {
+    const piece = norm(ch);
+    for (let k = 0; k < piece.length; k++) map.push(i);
+    n += piece;
+    i += ch.length;
+  }
+  return { n, map };
+}
+
+// Pieces of `text` for display: [{ text, hit }], where hit pieces are what the person typed.
+export function highlightParts(text, query) {
+  const src = String(text || '');
+  const words = norm(query).split(/\s+/).filter(Boolean);
+  if (!src || !words.length) return [{ text: src, hit: false }];
+  const { n, map } = normMap(src);
+  const ranges = [];
+  for (const w of words) {
+    for (let at = n.indexOf(w); at !== -1; at = n.indexOf(w, at + w.length)) {
+      const from = map[at];
+      const to = map[at + w.length - 1] + 1;
+      // the character before the end may be a surrogate pair or a letter with accent marks
+      let end = to;
+      while (end < src.length && /[\u0300-\u036f]/.test(src[end])) end++;
+      ranges.push([from, end]);
+    }
+  }
+  if (!ranges.length) return [{ text: src, hit: false }];
+  ranges.sort((a, b) => a[0] - b[0]);
+  const merged = [ranges[0].slice()];
+  for (const [a, b] of ranges.slice(1)) {
+    const last = merged[merged.length - 1];
+    if (a <= last[1]) last[1] = Math.max(last[1], b); else merged.push([a, b]);
+  }
+  const parts = [];
+  let pos = 0;
+  for (const [a, b] of merged) {
+    if (a > pos) parts.push({ text: src.slice(pos, a), hit: false });
+    parts.push({ text: src.slice(a, b), hit: true });
+    pos = b;
+  }
+  if (pos < src.length) parts.push({ text: src.slice(pos), hit: false });
+  return parts;
+}
+
 function snippetFor(raw, words) {
-  const text = raw.replace(/\s+/g, ' ').trim();
-  const lower = norm(text);
-  // norm() can change string length (accents), so only trust positions when the lengths match.
-  if (lower.length !== text.length) return null;
-  const idx = lower.indexOf(words.find((w) => lower.includes(w)) || '');
-  if (idx < 0) return null;
+  const text = String(raw || '').replace(/\s+/g, ' ').trim();
+  const { n, map } = normMap(text);
+  let at = -1;
+  for (const w of words) { at = n.indexOf(w); if (at !== -1) break; }
+  if (at < 0) return null;
+  const idx = map[at];
   const start = Math.max(0, idx - 30);
   const end = Math.min(text.length, idx + 70);
   return `${start > 0 ? '…' : ''}${text.slice(start, end)}${end < text.length ? '…' : ''}`;

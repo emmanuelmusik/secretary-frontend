@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { searchSessions } from '../lib/search.js';
+import Highlight from '../components/Highlight.jsx';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -67,8 +68,8 @@ export default function HomePage() {
         {results.map(({ s, snippet }) => (
           <Link key={s.id} to={`/sessions/${s.id}`} className="session-row">
             <span className="session-row-main">
-              <strong>{s.name}</strong>
-              {snippet && <small className="session-snippet">{snippet}</small>}
+              <strong><Highlight text={s.name} query={query} /></strong>
+              {snippet && <small className="session-snippet"><Highlight text={snippet} query={query} /></small>}
             </span>
             <span className="session-row-right">
               {formatDate(s.created_at)}
