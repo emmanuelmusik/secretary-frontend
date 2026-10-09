@@ -66,25 +66,32 @@ export async function restore() {
   await Purchases.restorePurchases();
 }
 
-const withTimeout = (promise, ms, label) =>
-  Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error(`${label}: no answer in ${ms / 1000}s`)), ms))]);
+const withTimeout = (promise, ms) =>
+  Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error(`no answer in ${ms / 1000}s`)), ms))]);
 
-/** One line explaining why plans did not load: does Apple return the products, and does RevenueCat have an offering? */
-export async function diagnose() {
-  const parts = [];
-  try {
-    const Purchases = await load();
+/**
+ * Step-by-step self-test. Calls onLine(text) as each step starts and finishes, so the screen shows exactly
+ * where it stops: the plugin, RevenueCat's servers, or Apple's product lookup.
+ */
+export async function runDiagnostics(onLine, userId) {
+  const step = async (name, fn, ms = 20000) => {
+    const t0 = Date.now();
+    onLine(`${name}: …`);
     try {
-      const r = await withTimeout(Purchases.getProducts({
-        productIdentifiers: ['com.johmacos.secretary.pro.monthly', 'com.johmacos.secretary.pro.quarterly'],
-        type: 'SUBS',
-      }), 25000, 'Apple products');
-      parts.push(`Apple returned ${r.products?.length ?? 0}/2 products`);
-    } catch (e) { parts.push(`Apple products error: ${e?.message || e}`); }
-    try {
-      const o = await withTimeout(Purchases.getOfferings(), 25000, 'RevenueCat offerings');
-      parts.push(`offering ${o.current?.identifier || 'none'}, ${o.current?.availablePackages?.length ?? 0} packages`);
-    } catch (e) { parts.push(`offerings error: ${e?.message || e}`); }
-  } catch (e) { parts.push(`plugin error: ${e?.message || e}`); }
-  return parts.join(' | ');
+      const out = await withTimeout(fn(), ms);
+      onLine(`${name}: OK ${Date.now() - t0}ms${out ? ` (${out})` : ''}`, true);
+    } catch (e) {
+      onLine(`${name}: FAILED ${Date.now() - t0}ms (${String(e?.message || e).slice(0, 160)})`, true);
+    }
+  };
+  let P;
+  await step('1 plugin loads', async () => { P = await load(); return Capacitor.getPlatform(); }, 8000);
+  if (!P) return;
+  await step('2 RevenueCat configured', async () => { await initPurchases(userId); return `key ${API_KEY.slice(0, 5)}…${API_KEY.slice(-4)}`; });
+  await step('3 RevenueCat servers', async () => { const r = await P.getCustomerInfo(); return `user ${String(r.customerInfo?.originalAppUserId || '').slice(0, 8)}`; });
+  await step('4 Apple products', async () => {
+    const r = await P.getProducts({ productIdentifiers: ['com.johmacos.secretary.pro.monthly', 'com.johmacos.secretary.pro.quarterly'], type: 'SUBS' });
+    return `${r.products?.length ?? 0} of 2 returned`;
+  }, 30000);
+  await step('5 Offerings', async () => { const o = await P.getOfferings(); return `current=${o.current?.identifier || 'none'}, ${o.current?.availablePackages?.length ?? 0} packages`; }, 30000);
 }

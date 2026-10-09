@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { useI18n } from '../i18n/index.jsx';
-import { purchasesAvailable, initPurchases, loadPlans, buy, restore, diagnose } from '../lib/purchases.js';
+import { purchasesAvailable, initPurchases, loadPlans, buy, restore, runDiagnostics } from '../lib/purchases.js';
 import UsageMeter from '../components/UsageMeter.jsx';
 
 const PERIOD_KEYS = {
@@ -26,18 +26,18 @@ export default function PaywallPage() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [detail, setDetail] = useState('');
+  const [diag, setDiag] = useState([]); // live self-test lines shown when plans fail to load
   const canBuy = purchasesAvailable();
 
   useEffect(() => {
     api.getUsage().then(setUsage).catch(() => {});
     if (!canBuy) { setPlans([]); return; }
-    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('[v3] No answer from the App Store after 45s')), 45000));
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('[v4] No answer from the App Store after 25s')), 25000));
     Promise.race([initPurchases(user?.id).then(loadPlans), timeout])
       .then((list) => setPlans(list))
       .catch((err) => {
         setPlans([]); setError(t('paywall.plans_failed')); setDetail(String(err?.message || err || '').slice(0, 300));
-        setDetail((prev) => `${prev}\nChecking Apple and RevenueCat… (up to 50s)`);
-        diagnose().then((d) => setDetail((prev) => `${prev.split('\n')[0]}\n${d}`.slice(0, 600))).catch(() => {});
+        runDiagnostics((line, done) => setDiag((prev) => (done ? [...prev.filter((l) => !l.startsWith(line.split(':')[0] + ':')), line] : [...prev, line])), user?.id);
       });
   }, []);
 
@@ -134,7 +134,8 @@ export default function PaywallPage() {
 
       {message && <p className="meta paywall-message">{message}</p>}
       {error && <p className="form-error">{error}</p>}
-      {detail && <p className="meta" style={{ whiteSpace: "pre-line" }}>{detail}</p>}
+      {detail && <p className="meta">{detail}</p>}
+      {diag.length > 0 && <p className="meta" style={{ whiteSpace: 'pre-line', fontSize: 12 }}>{[...diag].sort().join('\n')}</p>}
 
       {canBuy && !isPro && (
         <button type="button" className="link-button" onClick={handleRestore} disabled={busy}>{t('paywall.restore')}</button>
