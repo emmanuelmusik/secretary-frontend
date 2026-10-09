@@ -31,12 +31,13 @@ export default function PaywallPage() {
   useEffect(() => {
     api.getUsage().then(setUsage).catch(() => {});
     if (!canBuy) { setPlans([]); return; }
-    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timed out waiting for the App Store')), 20000));
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('[v3] No answer from the App Store after 45s')), 45000));
     Promise.race([initPurchases(user?.id).then(loadPlans), timeout])
       .then((list) => setPlans(list))
       .catch((err) => {
         setPlans([]); setError(t('paywall.plans_failed')); setDetail(String(err?.message || err || '').slice(0, 300));
-        diagnose().then((d) => setDetail((prev) => `${prev}\n${d}`.slice(0, 600))).catch(() => {});
+        setDetail((prev) => `${prev}\nChecking Apple and RevenueCat… (up to 50s)`);
+        diagnose().then((d) => setDetail((prev) => `${prev.split('\n')[0]}\n${d}`.slice(0, 600))).catch(() => {});
       });
   }, []);
 
