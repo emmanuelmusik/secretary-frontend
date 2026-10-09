@@ -281,6 +281,7 @@ export default {
   'usage.title': "Paket dan penggunaan",
   'usage.free': "Paket Gratis",
   'usage.pro': "Paket Pro",
+  'usage.unlimited': "Akses tanpa batas",
   'usage.renews': "aktif hingga {date}",
   'usage.upgrade': "Tingkatkan ke Pro",
   'limit.banner': "Rekaman Anda berhenti karena Anda mencapai batas bulan ini. Rekaman yang sudah dibuat sejauh ini tersimpan.",

@@ -4,7 +4,7 @@ import { formatSeconds } from '../lib/format.js';
 /** Bar showing how much of this month's recording time has been used. */
 export default function UsageMeter({ usage }) {
   const { t, formatDate } = useI18n();
-  if (!usage) return null;
+  if (!usage || usage.unlimited) return null;
   const pct = usage.limit_seconds > 0 ? Math.min(100, Math.round((usage.used_seconds / usage.limit_seconds) * 100)) : 100;
   return (
     <div className="usage-meter">

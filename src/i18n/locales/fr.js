@@ -293,6 +293,7 @@ export default {
   'usage.title': "Formule et utilisation",
   'usage.free': "Formule gratuite",
   'usage.pro': "Formule Pro",
+  'usage.unlimited': "Accès illimité",
   'usage.renews': "actif jusqu'au {date}",
   'usage.upgrade': "Passer à Pro",
   'limit.banner': "Votre enregistrement s'est arrêté, car vous avez atteint la limite de ce mois-ci. Ce qui a été enregistré jusqu'ici est sauvegardé.",

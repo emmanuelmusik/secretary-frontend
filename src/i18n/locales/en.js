@@ -296,6 +296,7 @@ export default {
   'usage.title': "Plan and usage",
   'usage.free': "Free plan",
   'usage.pro': "Pro plan",
+  'usage.unlimited': "Unlimited access",
   'usage.renews': "active until {date}",
   'usage.upgrade': "Upgrade to Pro",
   'limit.banner': "Your recording stopped because you reached this month's limit. What was recorded so far is saved.",

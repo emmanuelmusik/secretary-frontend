@@ -279,6 +279,7 @@ export default {
   'usage.title': "Piano e utilizzo",
   'usage.free': "Piano gratuito",
   'usage.pro': "Piano Pro",
+  'usage.unlimited': "Accesso illimitato",
   'usage.renews': "attivo fino al {date}",
   'usage.upgrade': "Passa a Pro",
   'limit.banner': "La registrazione si è interrotta perché hai raggiunto il limite di questo mese. Ciò che è stato registrato finora è salvato.",

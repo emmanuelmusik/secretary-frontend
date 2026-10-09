@@ -281,6 +281,7 @@ export default {
   'usage.title': "요금제 및 사용량",
   'usage.free': "무료 요금제",
   'usage.pro': "Pro 요금제",
+  'usage.unlimited': "무제한 이용",
   'usage.renews': "{date}까지 이용 가능",
   'usage.upgrade': "Pro로 업그레이드",
   'limit.banner': "이번 달 한도에 도달해서 녹음이 중지되었어요. 지금까지 녹음된 내용은 저장되었어요.",

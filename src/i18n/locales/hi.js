@@ -280,6 +280,7 @@ export default {
   'usage.title': 'प्लान और उपयोग',
   'usage.free': 'मुफ़्त प्लान',
   'usage.pro': 'Pro प्लान',
+  'usage.unlimited': "असीमित पहुँच",
   'usage.renews': '{date} तक सक्रिय',
   'usage.upgrade': 'Pro में अपग्रेड करें',
   'limit.banner': 'इस महीने की सीमा पूरी हो जाने के कारण आपकी रिकॉर्डिंग रुक गई। अब तक जो रिकॉर्ड हुआ है, वह सहेज लिया गया है।',

@@ -293,6 +293,7 @@ export default {
   'usage.title': "Tarif und Nutzung",
   'usage.free': "Kostenloser Tarif",
   'usage.pro': "Pro-Tarif",
+  'usage.unlimited': "Unbegrenzter Zugang",
   'usage.renews': "aktiv bis {date}",
   'usage.upgrade': "Auf Pro upgraden",
   'limit.banner': "Ihre Aufnahme wurde beendet, weil Sie das Limit dieses Monats erreicht haben. Das bisher Aufgenommene ist gespeichert.",

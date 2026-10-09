@@ -293,6 +293,7 @@ export default {
   'usage.title': "Plan y uso",
   'usage.free': "Plan gratuito",
   'usage.pro': "Plan Pro",
+  'usage.unlimited': "Acceso ilimitado",
   'usage.renews': "activo hasta el {date}",
   'usage.upgrade': "Mejorar a Pro",
   'limit.banner': "Tu grabación se detuvo porque alcanzaste el límite de este mes. Lo grabado hasta ahora está guardado.",

@@ -294,6 +294,7 @@ export default {
   'usage.title': "Atụmatụ na ojiji",
   'usage.free': "Atụmatụ n’efu",
   'usage.pro': "Atụmatụ Pro",
+  'usage.unlimited': "Ohere enweghị oke",
   'usage.renews': "na-arụ ọrụ ruo {date}",
   'usage.upgrade': "Bulie gaa Pro",
   'limit.banner': "Ndekọ gị kwụsịrị n’ihi na i ruola oke ọnwa a. Ihe a dekọrọ ruo ugbu a echekwara.",

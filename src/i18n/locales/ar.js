@@ -280,6 +280,7 @@ export default {
   'usage.title': 'الباقة والاستخدام',
   'usage.free': 'الباقة المجانية',
   'usage.pro': 'باقة Pro',
+  'usage.unlimited': "وصول غير محدود",
   'usage.renews': 'مفعّلة حتى {date}',
   'usage.upgrade': 'الترقية إلى Pro',
   'limit.banner': 'توقف تسجيلك لأنك بلغت حد هذا الشهر. تم حفظ ما سُجّل حتى الآن.',

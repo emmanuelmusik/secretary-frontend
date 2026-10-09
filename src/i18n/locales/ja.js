@@ -280,6 +280,7 @@ export default {
   'usage.title': 'プランと使用量',
   'usage.free': '無料プラン',
   'usage.pro': 'Proプラン',
+  'usage.unlimited': "無制限アクセス",
   'usage.renews': '{date}まで有効',
   'usage.upgrade': 'Proにアップグレード',
   'limit.banner': '今月の上限に達したため、録音が停止しました。ここまでの録音は保存されています。',
