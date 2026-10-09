@@ -13,15 +13,20 @@ export function purchasesAvailable() {
     && Capacitor.isPluginAvailable('Purchases');
 }
 
-async function load() {
-  if (!plugin) plugin = (await import('@revenuecat/purchases-capacitor')).Purchases;
-  return plugin;
+// Never return the plugin object from an async function: Capacitor plugin proxies look "thenable",
+// so the returned promise would wait forever on a native call that does not exist.
+async function ensure() {
+  if (!plugin) {
+    const mod = await import('@revenuecat/purchases-capacitor');
+    plugin = mod.Purchases;
+  }
 }
 
 /** Starts RevenueCat for this signed-in person (their account id links purchases to their account). */
 export async function initPurchases(userId) {
   if (!purchasesAvailable() || !userId) return false;
-  const Purchases = await load();
+  await ensure();
+  const Purchases = plugin;
   if (!configured) {
     try { await Purchases.setLogLevel({ level: 'DEBUG' }); } catch { /* older native build */ }
     await Purchases.configure({ apiKey: API_KEY, appUserID: userId });
@@ -34,7 +39,8 @@ export async function initPurchases(userId) {
 
 /** The plans to show, with the real prices from the App Store. */
 export async function loadPlans() {
-  const Purchases = await load();
+  await ensure();
+  const Purchases = plugin;
   const offerings = await Purchases.getOfferings();
   const packages = offerings.current?.availablePackages || [];
   return packages
@@ -51,7 +57,8 @@ export async function loadPlans() {
 
 /** Resolves true when the purchase went through, false if the person cancelled. Throws on a real error. */
 export async function buy(plan) {
-  const Purchases = await load();
+  await ensure();
+  const Purchases = plugin;
   try {
     await Purchases.purchasePackage({ aPackage: plan.pkg });
     return true;
@@ -62,7 +69,8 @@ export async function buy(plan) {
 }
 
 export async function restore() {
-  const Purchases = await load();
+  await ensure();
+  const Purchases = plugin;
   await Purchases.restorePurchases();
 }
 
@@ -85,7 +93,7 @@ export async function runDiagnostics(onLine, userId) {
     }
   };
   let P;
-  await step('1 plugin loads', async () => { P = await load(); return Capacitor.getPlatform(); }, 8000);
+  await step('1 plugin loads', async () => { await ensure(); P = plugin; return Capacitor.getPlatform(); }, 8000);
   if (!P) return;
   await step('2 RevenueCat configured', async () => { await initPurchases(userId); return `key ${API_KEY.slice(0, 5)}…${API_KEY.slice(-4)}`; });
   await step('3 RevenueCat servers', async () => { const r = await P.getCustomerInfo(); return `user ${String(r.customerInfo?.originalAppUserId || '').slice(0, 8)}`; });
