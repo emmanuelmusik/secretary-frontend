@@ -3,6 +3,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { useI18n } from '../i18n/index.jsx';
 import LanguageMenu from './LanguageMenu.jsx';
+import { api } from '../lib/api.js';
 
 export default function AppShell({ children }) {
   const navigate = useNavigate();
@@ -15,6 +16,13 @@ export default function AppShell({ children }) {
 
   // Close the menu whenever the page changes.
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
+
+  // Which plan the person is on, shown under their email in the menu. Refreshed whenever the menu opens.
+  const [plan, setPlan] = useState(null); // 'free' | 'pro' | 'unlimited'
+  useEffect(() => {
+    if (!menuOpen || !user) return;
+    api.getUsage().then((u) => setPlan(u?.unlimited ? 'unlimited' : u?.plan === 'pro' ? 'pro' : 'free')).catch(() => {});
+  }, [menuOpen, user]);
 
   // While the menu is open: Escape closes it, the page behind doesn't scroll,
   // and focus moves into the menu (then back to the menu button on close).
@@ -79,6 +87,7 @@ export default function AppShell({ children }) {
         </div>
 
         {user?.email && <p className="menu-user">{user.email}</p>}
+        {plan && <p className={`menu-plan menu-plan-${plan}`}>{t(`usage.${plan === 'pro' ? 'pro' : plan === 'unlimited' ? 'unlimited' : 'free'}`)}</p>}
 
         <nav className="menu-list">
           <MenuLink to="/" end icon="home">{t('nav.home')}</MenuLink>
