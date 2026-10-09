@@ -43,11 +43,12 @@ export default function PaywallPage() {
 
   // After a purchase the store tells our server; wait a few seconds for the plan to switch to Pro.
   async function waitForPro() {
-    for (let i = 0; i < 12; i += 1) {
-      const u = await api.getUsage().catch(() => null);
+    for (let i = 0; i < 15; i += 1) {
+      // The first call usually settles it: the server checks with RevenueCat itself instead of waiting for the webhook.
+      const u = await api.syncBilling().catch(() => api.getUsage().catch(() => null));
       if (u) setUsage(u);
       if (u?.plan === 'pro') return true;
-      await new Promise((r) => setTimeout(r, 1500));
+      await new Promise((r) => setTimeout(r, 1600));
     }
     return false;
   }

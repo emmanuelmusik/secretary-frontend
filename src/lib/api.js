@@ -63,6 +63,8 @@ export const api = {
 
   // Plan and monthly usage
   getUsage: () => authedFetch('/billing/usage'),
+  // Right after a purchase: the server asks RevenueCat directly, so Pro unlocks without waiting for the webhook.
+  syncBilling: () => authedFetch('/billing/sync', { method: 'POST' }),
 
   // Business cards
   scanCard: (images) => authedFetch('/cards/scan', { method: 'POST', body: JSON.stringify({ images }) }),
