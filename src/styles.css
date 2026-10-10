@@ -696,7 +696,7 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .ftree-new { padding: 8px 10px 8px 14px; margin-bottom: 14px; color: var(--accent); }
 .ftree-new input { flex: 1; min-width: 0; margin: 0; background: transparent; border: none; padding: 10px 6px; color: var(--text); }
 .ftree-new input:focus { outline: none; }
-.ftree-new button { background: var(--accent-dim); border: 1px solid rgba(45, 212, 191, 0.5); color: var(--accent); border-radius: 12px; padding: 10px 16px; font-weight: 600; }
+.ftree-new button { display: inline-flex; align-items: center; gap: 6px; background: var(--accent-dim); border: 1px solid rgba(45, 212, 191, 0.5); color: var(--accent); border-radius: 12px; padding: 10px 16px; font-weight: 600; }
 .ftree-item { position: relative; margin: 8px 0; }
 .ftree-row { padding: 4px 4px 4px 6px; min-height: 54px; }
 .ftree-chevron { background: transparent; border: none; color: var(--accent); width: 34px; height: 34px; padding: 0; display: inline-flex; align-items: center; justify-content: center; flex: none; }

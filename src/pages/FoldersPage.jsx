@@ -41,9 +41,6 @@ export default function FoldersPage() {
         <button type="button" className="folders-icon-btn" aria-label={t('folders.search')} aria-pressed={searching} onClick={toggleSearch}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
         </button>
-        <button type="button" className="folders-create-btn" onClick={() => { newRef.current?.focus(); newRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }}>
-          <span aria-hidden="true">+</span> {t('folders.create')}
-        </button>
       </div>
 
       {searching && (
@@ -53,7 +50,7 @@ export default function FoldersPage() {
       <form className="ftree-new" onSubmit={handleCreate}>
         <FolderIcon />
         <input ref={newRef} placeholder={t('folders.new_placeholder')} value={newName} onChange={(e) => setNewName(e.target.value)} maxLength={80} />
-        <button type="submit">{t('folders.create')}</button>
+        <button type="submit"><span aria-hidden="true">+</span> {t('folders.create')}</button>
       </form>
 
       <FolderTree folders={folders} query={query} onChanged={load} />
