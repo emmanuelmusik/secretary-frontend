@@ -269,6 +269,7 @@ export default {
   'scan.err_nocam': '여기서는 카메라를 사용할 수 없어요. 대신 사진을 선택할 수 있어요.',
   'scan.err_cam': '카메라를 열 수 없어요. 휴대폰 설정에서 Secretary의 카메라 접근이 허용되어 있는지 확인하거나, 대신 사진을 선택하세요.',
   'scan.err_read': '명함을 읽을 수 없어요.',
+  'scan.err_limit_pro': "이번 달 명함 스캔 {limit}회를 모두 사용했습니다. 다음 달 초에 초기화됩니다.",
 
   'consent.title': '시작하기 전에',
   'consent.intro': 'Secretary는 제3자 AI 서비스를 사용해 작동해요. 동의하시면 다음 정보가 전송됩니다:',
@@ -309,6 +310,7 @@ export default {
   'paywall.title': "Secretary Pro",
   'paywall.tagline': "매달 {hours}시간 분량의 녹음과 받아쓰기를 이용하실 수 있어요.",
   'paywall.limit_reached': "이번 달 녹음 시간을 모두 사용했어요.",
+  'paywall.scan_limit': "이번 달 명함 스캔을 모두 사용했습니다. Pro로 업그레이드하면 월 100회 스캔할 수 있습니다.",
   'paywall.usage': "이번 달 {limit} 중 {used} 사용",
   'paywall.resets': "{date}에 초기화돼요",
   'paywall.monthly': "월간",

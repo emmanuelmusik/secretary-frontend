@@ -170,6 +170,13 @@ export default function ScanCardPage() {
       const thumbBack = back ? await shrinkDataUrl(back, 640, 0.6) : null;
       navigate('/cards/new', { replace: true, state: { card, duplicate, thumb, thumbBack } });
     } catch (err) {
+      if (err.status === 402) {
+        // Out of scans this month: Free is sent to the upgrade screen, Pro is told when it resets.
+        const sc = err.data?.card_scans;
+        if (sc?.plan === 'pro') { setError(t('scan.err_limit_pro', { limit: sc.limit })); setReading(false); return; }
+        navigate('/paywall', { state: { scanLimit: true } });
+        return;
+      }
       setError(err.message || t('scan.err_read'));
       setReading(false);
     }

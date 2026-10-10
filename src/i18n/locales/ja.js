@@ -269,6 +269,7 @@ export default {
   'scan.err_nocam': 'ここではカメラを利用できません。代わりに写真を選択できます。',
   'scan.err_cam': 'カメラを開けませんでした。スマートフォンの設定で Secretary にカメラへのアクセスが許可されているか確認するか、代わりに写真を選択してください。',
   'scan.err_read': 'カードを読み取れませんでした。',
+  'scan.err_limit_pro': "今月の名刺スキャン{limit}回をすべて使い切りました。来月の初めにリセットされます。",
 
   'consent.title': '始める前に',
   'consent.intro': 'Secretary は機能を提供するために、第三者のAIサービスを利用します。ご許可いただくと、次の内容が送信されます。',
@@ -308,6 +309,7 @@ export default {
   'paywall.title': 'Secretary Pro',
   'paywall.tagline': '毎月{hours}時間分の録音と文字起こしをご利用いただけます。',
   'paywall.limit_reached': '今月の録音時間をすべて使い切りました。',
+  'paywall.scan_limit': "今月の名刺スキャンをすべて使い切りました。Proにアップグレードすると月100回スキャンできます。",
   'paywall.usage': '今月の使用量：{used} / {limit}',
   'paywall.resets': '{date}にリセットされます',
   'paywall.monthly': '月額',

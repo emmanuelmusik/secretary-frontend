@@ -269,6 +269,7 @@ export default {
   'scan.err_nocam': 'La fotocamera non è disponibile qui. Puoi scegliere una foto.',
   'scan.err_cam': "Impossibile aprire la fotocamera. Controlla che l'accesso alla fotocamera sia consentito a Secretary nelle impostazioni del telefono, oppure scegli una foto.",
   'scan.err_read': 'Impossibile leggere il biglietto.',
+  'scan.err_limit_pro': "Hai usato tutte le {limit} scansioni di biglietti da visita di questo mese. Si azzerano all’inizio del mese prossimo.",
 
   'consent.title': 'Prima di iniziare',
   'consent.intro': 'Secretary usa servizi AI di terze parti per funzionare. Con il tuo permesso, ecco cosa viene inviato:',
@@ -307,6 +308,7 @@ export default {
   'paywall.title': "Secretary Pro",
   'paywall.tagline': "{hours} ore di registrazione e trascrizione ogni mese.",
   'paywall.limit_reached': "Hai usato tutto il tempo di registrazione di questo mese.",
+  'paywall.scan_limit': "Hai usato tutte le scansioni di biglietti da visita di questo mese. Passa a Pro per averne 100 al mese.",
   'paywall.usage': "{used} di {limit} usati questo mese",
   'paywall.resets': "Si rinnova il {date}",
   'paywall.monthly': "Mensile",

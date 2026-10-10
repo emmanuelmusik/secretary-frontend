@@ -269,6 +269,7 @@ export default {
   'scan.err_nocam': 'A câmera não está disponível aqui. Você pode escolher uma foto.',
   'scan.err_cam': 'Não foi possível abrir a câmera. Verifique se o acesso à câmera está permitido para o Secretary nos ajustes do celular, ou escolha uma foto.',
   'scan.err_read': 'Não foi possível ler o cartão.',
+  'scan.err_limit_pro': "Você usou os {limit} escaneamentos de cartões deste mês. Eles são renovados no início do próximo mês.",
 
   'consent.title': 'Antes de começar',
   'consent.intro': 'O Secretary usa serviços de IA de terceiros para funcionar. Com a sua permissão, isto é o que será enviado:',
@@ -307,6 +308,7 @@ export default {
   'paywall.title': "Secretary Pro",
   'paywall.tagline': "{hours} horas de gravação e transcrição por mês.",
   'paywall.limit_reached': "Você usou todo o seu tempo de gravação deste mês.",
+  'paywall.scan_limit': "Você usou todos os escaneamentos de cartões deste mês. Assine o Pro para ter 100 por mês.",
   'paywall.usage': "{used} de {limit} usados neste mês",
   'paywall.resets': "Renova em {date}",
   'paywall.monthly': "Mensal",

@@ -97,6 +97,7 @@ export default function PaywallPage() {
       <p className="paywall-tagline">{t('paywall.tagline', { hours: proHours })}</p>
 
       {state?.limitReached && !isPro && <p className="warning">{t('paywall.limit_reached')}</p>}
+      {state?.scanLimit && !isPro && <p className="warning">{t('paywall.scan_limit')}</p>}
       {reasonText && !isPro && <p className="warning">{reasonText}</p>}
       <UsageMeter usage={usage} />
 

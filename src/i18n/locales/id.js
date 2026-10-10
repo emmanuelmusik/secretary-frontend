@@ -269,6 +269,7 @@ export default {
   'scan.err_nocam': 'Kamera tidak tersedia di sini. Anda dapat memilih foto sebagai gantinya.',
   'scan.err_cam': 'Tidak dapat membuka kamera. Pastikan akses kamera untuk Secretary diizinkan di pengaturan ponsel Anda, atau pilih foto sebagai gantinya.',
   'scan.err_read': 'Tidak dapat membaca kartu.',
+  'scan.err_limit_pro': "Anda telah memakai semua {limit} pindaian kartu bulan ini. Kuota diatur ulang di awal bulan depan.",
 
   'consent.title': 'Sebelum Anda mulai',
   'consent.intro': 'Secretary menggunakan layanan AI pihak ketiga untuk bekerja. Dengan izin Anda, berikut data yang dikirim:',
@@ -309,6 +310,7 @@ export default {
   'paywall.title': "Secretary Pro",
   'paywall.tagline': "{hours} jam perekaman dan transkripsi setiap bulan.",
   'paywall.limit_reached': "Anda telah menggunakan seluruh waktu rekaman untuk bulan ini.",
+  'paywall.scan_limit': "Anda telah memakai semua pindaian kartu bulan ini. Upgrade ke Pro untuk 100 pindaian per bulan.",
   'paywall.usage': "{used} dari {limit} terpakai bulan ini",
   'paywall.resets': "Diatur ulang pada {date}",
   'paywall.monthly': "Bulanan",

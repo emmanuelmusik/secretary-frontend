@@ -280,6 +280,7 @@ export default {
   'scan.err_nocam': 'Igwefoto adịghị ebe a. Ị nwere ike ịhọrọ foto kama.',
   'scan.err_cam': 'Enweghị ike imepe igwefoto. Lelee na e kwere Secretary ka o jiri igwefoto na ntọala ekwentị gị, ma ọ bụ họrọ foto kama.',
   'scan.err_read': 'Enweghị ike ịgụ kaadị ahụ.',
+  'scan.err_limit_pro': "Ị jirila nyocha kaadị {limit} niile maka ọnwa a. A ga-eweghachi ha n’mmalite ọnwa na-esote.",
 
   // ---- AI data-sharing permission
   'consent.title': 'Tupu ị malite',
@@ -322,6 +323,7 @@ export default {
   'paywall.title': "Secretary Pro",
   'paywall.tagline': "Awa {hours} nke ndekọ na ide ederede n’ọnwa ọ bụla.",
   'paywall.limit_reached': "Ejirila oge ndekọ gị niile eme n’ọnwa a.",
+  'paywall.scan_limit': "Ị jirila nyocha kaadị niile maka ọnwa a. Rịgoo na Pro maka nyocha 100 n’ọnwa.",
   'paywall.usage': "Ejirila {used} n’ime {limit} n’ọnwa a",
   'paywall.resets': "A ga-eweghachi ya na {date}",
   'paywall.monthly': "Kwa ọnwa",
