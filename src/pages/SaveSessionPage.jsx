@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../lib/api.js';
+import { flattenFolders } from '../lib/folders.js';
 import { useI18n } from '../i18n/index.jsx';
 
 export default function SaveSessionPage() {
@@ -56,8 +57,8 @@ export default function SaveSessionPage() {
           <>
             <select value={folderId} onChange={(e) => setFolderId(e.target.value)}>
               <option value="">{t('save.unfiled')}</option>
-              {folders.map((f) => (
-                <option key={f.id} value={f.id}>{f.name}</option>
+              {flattenFolders(folders).map((f) => (
+                <option key={f.id} value={f.id}>{'\u2003'.repeat(f.depth - 1)}{f.depth > 1 ? '↳ ' : ''}{f.name}</option>
               ))}
             </select>
             <button type="button" onClick={() => setCreatingFolder(true)}>{t('save.new_folder')}</button>

@@ -18,13 +18,13 @@ export default function AppShell({ children }) {
   // and an edge swipe to go back. Screens where leaving would lose work (recording, saving a
   // session, the camera) are left out, and so are the main tabs.
   const path = location.pathname;
-  const isDetail = /^\/(notes|sessions)\/[^/]+$/.test(path) || /^\/cards\/(?!scan$)[^/]+$/.test(path) || path === '/upload';
+  const isDetail = /^\/(notes|sessions)\/[^/]+$/.test(path) || /^\/cards\/(?!scan$)[^/]+$/.test(path) || /^\/folders\/[^/]+$/.test(path) || path === '/upload';
   const canSwipeBack = isDetail || path === '/paywall';
   const goBack = () => {
     // Real history inside the app: go back one step. Otherwise (opened from a link, or after a
     // reload) fall back to the list the screen belongs to.
     if (window.history.state && window.history.state.idx > 0) { navigate(-1); return; }
-    const parent = path.startsWith('/notes') ? '/notes' : path.startsWith('/cards') ? '/cards' : '/';
+    const parent = path.startsWith('/notes') ? '/notes' : path.startsWith('/cards') ? '/cards' : path.startsWith('/folders') ? '/folders' : '/';
     navigate(parent, { replace: true });
   };
   const goBackRef = useRef(goBack);

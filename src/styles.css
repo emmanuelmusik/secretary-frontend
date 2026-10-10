@@ -612,3 +612,33 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 }
 
 .save-status { margin: 16px 0; text-align: center; }
+
+/* ---------- Folder page, menu, dialogs ---------- */
+.folder-row-wrap { display: flex; align-items: center; gap: 6px; margin: 8px 0; }
+.folder-row-wrap .folder-row { flex: 1; margin: 0; min-width: 0; }
+.folder-name { color: var(--text) !important; font-size: 1rem !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.folder-menu { position: relative; display: inline-flex; }
+.folder-menu-btn { background: transparent; border: none; color: var(--text-muted); padding: 10px; border-radius: 50%; display: inline-flex; }
+.folder-menu-btn:hover { background: var(--surface-raised); color: var(--text); }
+.folder-menu-pop {
+  position: absolute; inset-inline-end: 0; top: 100%; z-index: 30; min-width: 170px;
+  background: var(--surface-raised); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); padding: 6px; display: flex; flex-direction: column;
+}
+.folder-menu-pop button { background: transparent; border: none; color: var(--text); text-align: start; padding: 12px 14px; border-radius: 8px; font-size: 0.95rem; }
+.folder-menu-pop button:hover { background: var(--surface); }
+.folder-menu-pop button.danger { color: var(--danger); }
+.dialog-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+.dialog-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; width: 100%; max-width: 380px; text-align: start; }
+.dialog-card h2 { margin: 0 0 12px; font-size: 1.1rem; }
+.dialog-card input { width: 100%; margin: 0 0 16px; }
+.dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.dialog-actions .primary { background: var(--accent-dim); color: var(--accent); }
+.breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+.breadcrumb strong { color: var(--text); font-weight: 600; }
+.crumb-sep { margin: 0 6px; }
+.folder-title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.folder-title-row h1 { margin: 8px 0; overflow-wrap: anywhere; }
+.folder-section { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 22px 0 6px; }
+.folder-hint { color: var(--text-muted); font-size: 0.85rem; }

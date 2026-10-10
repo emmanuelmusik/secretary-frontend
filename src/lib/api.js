@@ -32,7 +32,7 @@ async function authedFetch(path, options = {}) {
 export const api = {
   // Folders
   getFolders: () => authedFetch('/folders'),
-  createFolder: (name) => authedFetch('/folders', { method: 'POST', body: JSON.stringify({ name }) }),
+  createFolder: (name, parentId) => authedFetch('/folders', { method: 'POST', body: JSON.stringify({ name, parent_id: parentId || null }) }),
   renameFolder: (id, name) => authedFetch(`/folders/${id}`, { method: 'PATCH', body: JSON.stringify({ name }) }),
   deleteFolder: (id) => authedFetch(`/folders/${id}`, { method: 'DELETE' }),
 
