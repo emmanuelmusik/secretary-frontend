@@ -4,6 +4,7 @@ import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { MAX_FOLDER_DEPTH, folderPath } from '../lib/folders.js';
 import FolderMenu from '../components/FolderMenu.jsx';
+import FolderTree from '../components/FolderTree.jsx';
 
 export default function FolderPage() {
   const { id } = useParams();
@@ -74,12 +75,7 @@ export default function FolderPage() {
       {!canNest && <p className="folder-hint">{t('folders.max_depth')}</p>}
 
       {subfolders.length > 0 && <h2 className="folder-section">{t('folders.subfolders')}</h2>}
-      {subfolders.map((f) => (
-        <div key={f.id} className="folder-row-wrap">
-          <Link to={`/folders/${f.id}`} className="folder-row"><span className="folder-name">{f.name}</span></Link>
-          <FolderMenu folder={f} folders={folders} onChanged={load} />
-        </div>
-      ))}
+      <FolderTree folders={folders} rootId={id} onChanged={load} />
 
       {sessions.length > 0 && <h2 className="folder-section">{t('folders.recordings')}</h2>}
       {sessions.map((s) => (

@@ -1,7 +1,7 @@
 // Simple on-device search over the recordings the app already loaded.
 // Words are matched anywhere in the title, the date (month names in the app language and in English,
 // the year, the day, the numeric date) and the transcript. Accents and capital letters are ignored.
-const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+export const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 function monthNames(date, lang) {
   const out = [];

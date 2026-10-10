@@ -1,15 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
-import { flattenFolders } from '../lib/folders.js';
-import FolderMenu from '../components/FolderMenu.jsx';
+import FolderTree, { FolderIcon } from '../components/FolderTree.jsx';
 
 export default function FoldersPage() {
   const { t } = useI18n();
   const [folders, setFolders] = useState([]);
   const [newName, setNewName] = useState('');
-  const rows = useMemo(() => flattenFolders(folders), [folders]);
+  const [searching, setSearching] = useState(false);
+  const [query, setQuery] = useState('');
+  const newRef = useRef(null);
+  const searchRef = useRef(null);
 
   useEffect(() => { load(); }, []);
 
@@ -17,28 +18,45 @@ export default function FoldersPage() {
     setFolders(await api.getFolders());
   }
 
-  async function handleCreate() {
-    if (!newName.trim()) return;
+  async function handleCreate(e) {
+    e?.preventDefault();
+    if (!newName.trim()) { newRef.current?.focus(); return; }
     await api.createFolder(newName.trim());
     setNewName('');
     load();
   }
 
+  function toggleSearch() {
+    setSearching((s) => {
+      if (s) setQuery('');
+      else setTimeout(() => searchRef.current?.focus(), 0);
+      return !s;
+    });
+  }
+
   return (
     <div className="folders-page">
-      <h1>{t('folders.title')}</h1>
-      <div className="new-folder">
-        <input placeholder={t('folders.new_placeholder')} value={newName} onChange={(e) => setNewName(e.target.value)} />
-        <button onClick={handleCreate}>{t('folders.create')}</button>
+      <div className="folders-head">
+        <h1>{t('folders.title')}</h1>
+        <button type="button" className="folders-icon-btn" aria-label={t('folders.search')} aria-pressed={searching} onClick={toggleSearch}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
+        </button>
+        <button type="button" className="folders-create-btn" onClick={() => { newRef.current?.focus(); newRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }}>
+          <span aria-hidden="true">+</span> {t('folders.create')}
+        </button>
       </div>
-      {rows.map((f) => (
-        <div key={f.id} className="folder-row-wrap" style={{ marginInlineStart: (f.depth - 1) * 18 }}>
-          <Link to={`/folders/${f.id}`} className="folder-row">
-            <span className="folder-name">{f.name}</span>
-          </Link>
-          <FolderMenu folder={f} folders={folders} onChanged={load} />
-        </div>
-      ))}
+
+      {searching && (
+        <input ref={searchRef} className="folders-search" type="search" enterKeyHint="search" placeholder={t('folders.search')} value={query} onChange={(e) => setQuery(e.target.value)} aria-label={t('folders.search')} />
+      )}
+
+      <form className="ftree-new" onSubmit={handleCreate}>
+        <FolderIcon />
+        <input ref={newRef} placeholder={t('folders.new_placeholder')} value={newName} onChange={(e) => setNewName(e.target.value)} maxLength={80} />
+        <button type="submit">{t('folders.create')}</button>
+      </form>
+
+      <FolderTree folders={folders} query={query} onChanged={load} />
     </div>
   );
 }

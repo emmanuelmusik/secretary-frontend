@@ -680,3 +680,42 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 }
 .live-controls button { max-width: 260px; backdrop-filter: blur(10px); background-color: rgba(35, 36, 39, 0.55); }
 .live-controls .resume-btn { background-color: rgba(26, 58, 55, 0.7); }
+
+/* ---------- Folder tree ---------- */
+.folders-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.folders-head h1 { flex: 1; margin: 0; }
+.folders-icon-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); width: 46px; height: 46px; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; padding: 0; }
+.folders-icon-btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.folders-create-btn { background: linear-gradient(180deg, rgba(45, 212, 191, 0.22), rgba(45, 212, 191, 0.1)); border: 1px solid rgba(45, 212, 191, 0.6); color: var(--accent); height: 46px; padding: 0 16px; border-radius: 14px; font-weight: 600; box-shadow: 0 0 18px rgba(45, 212, 191, 0.15); }
+.folders-search { width: 100%; margin: 0 0 12px; }
+.ftree-new, .ftree-row {
+  display: flex; align-items: center; gap: 8px; border-radius: 16px;
+  background: linear-gradient(180deg, rgba(45, 212, 191, 0.07), rgba(255, 255, 255, 0.015));
+  border: 1px solid rgba(45, 212, 191, 0.18);
+}
+.ftree-new { padding: 8px 10px 8px 14px; margin-bottom: 14px; color: var(--accent); }
+.ftree-new input { flex: 1; min-width: 0; margin: 0; background: transparent; border: none; padding: 10px 6px; color: var(--text); }
+.ftree-new input:focus { outline: none; }
+.ftree-new button { background: var(--accent-dim); border: 1px solid rgba(45, 212, 191, 0.5); color: var(--accent); border-radius: 12px; padding: 10px 16px; font-weight: 600; }
+.ftree-item { position: relative; margin: 8px 0; }
+.ftree-row { padding: 4px 4px 4px 6px; min-height: 54px; }
+.ftree-chevron { background: transparent; border: none; color: var(--accent); width: 34px; height: 34px; padding: 0; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.ftree-chevron svg { transition: transform 0.18s ease; }
+.ftree-chevron svg.open { transform: rotate(90deg); }
+[dir="rtl"] .ftree-chevron svg { transform: rotate(180deg); }
+[dir="rtl"] .ftree-chevron svg.open { transform: rotate(90deg); }
+.ftree-spacer { width: 34px; flex: none; }
+.ftree-link { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 10px 4px; color: var(--text); text-decoration: none; }
+.ftree-icon { color: var(--accent); flex: none; }
+.ftree-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1rem; }
+.ftree-children { position: relative; margin-inline-start: 22px; padding-inline-start: 22px; }
+.ftree-children > .ftree-item::before {
+  content: ''; position: absolute; inset-inline-start: -22px; top: -9px; width: 22px; height: 36px;
+  border-inline-start: 2px solid rgba(154, 155, 163, 0.35); border-bottom: 2px solid rgba(154, 155, 163, 0.35);
+  border-end-start-radius: 12px;
+}
+.ftree-children > .ftree-item:not(:last-child)::after {
+  content: ''; position: absolute; inset-inline-start: -22px; top: 26px; bottom: -9px; border-inline-start: 2px solid rgba(154, 155, 163, 0.35);
+}
+.ftree-chevron, .ftree-link, .folders-icon-btn, .folders-create-btn { -webkit-tap-highlight-color: transparent; }
+.ftree-chevron:focus, .ftree-chevron:active { background: transparent; outline: none; }
