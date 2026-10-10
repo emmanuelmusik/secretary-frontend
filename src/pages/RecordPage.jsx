@@ -27,6 +27,8 @@ export default function RecordPage() {
   const [elapsed, setElapsed] = useState(0);
   const [liveTranscript, setLiveTranscript] = useState('');
   const [error, setError] = useState('');
+  const [reconnecting, setReconnecting] = useState(false);
+  const [saveState, setSaveState] = useState('idle'); // 'idle' | 'saving' | 'failed' (saving the finished recording)
 
   const sessionIdRef = useRef(null);
   const wsRef = useRef(null);
@@ -34,10 +36,92 @@ export default function RecordPage() {
   const audioChunksRef = useRef([]);
   const timerRef = useRef(null);
   const limitHitRef = useRef(false);
+  const stoppingRef = useRef(false);
+  const sentUpToRef = useRef(-1);        // index of the last audio chunk handed to the live connection
+  const reconnectTimerRef = useRef(null);
+  const reconnectAttemptRef = useRef(0);
+  const savedFileRef = useRef(null);
   const elapsedRef = useRef(0);
   elapsedRef.current = elapsed; // always the latest value, even inside callbacks created earlier
 
   useEffect(() => () => cleanup(), []);
+
+  // When the phone gets its connection back, or the app comes back to the front, reconnect right away
+  // instead of waiting for the next retry.
+  useEffect(() => {
+    const retryNow = () => {
+      if (!mediaRecorderRef.current || stoppingRef.current) return;
+      if (wsRef.current?.readyState === WebSocket.OPEN || wsRef.current?.readyState === WebSocket.CONNECTING) return;
+      clearTimeout(reconnectTimerRef.current);
+      openSocket();
+    };
+    const onVisible = () => { if (document.visibilityState === 'visible') retryNow(); };
+    window.addEventListener('online', retryNow);
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      window.removeEventListener('online', retryNow);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, []);
+
+  // Sends every audio chunk the live connection has not received yet. After a reconnect the new
+  // transcription stream needs the first chunk (the audio header) again, then everything that was
+  // recorded while the connection was down, so nothing said in the gap is missing from the transcript.
+  function flushUnsent(ws, afterReconnect) {
+    const chunks = audioChunksRef.current;
+    if (!chunks.length || ws.readyState !== WebSocket.OPEN) return;
+    if (afterReconnect && sentUpToRef.current >= 0) ws.send(chunks[0]);
+    for (let i = sentUpToRef.current + 1; i < chunks.length; i++) ws.send(chunks[i]);
+    sentUpToRef.current = chunks.length - 1;
+  }
+
+  function scheduleReconnect() {
+    clearTimeout(reconnectTimerRef.current);
+    const attempt = reconnectAttemptRef.current++;
+    const delay = Math.min(10000, 1000 * 2 ** Math.min(attempt, 4)); // 1s, 2s, 4s, 8s, then every 10s
+    reconnectTimerRef.current = setTimeout(() => { if (!stoppingRef.current) openSocket(); }, delay);
+  }
+
+  // Opens the live-transcription connection. If it drops while recording, the audio keeps being recorded
+  // on the phone and the connection is retried until it works again.
+  async function openSocket() {
+    let token = null;
+    try { token = (await supabase.auth.getSession()).data.session?.access_token; } catch { /* offline */ }
+    if (stoppingRef.current) return;
+    if (!token) { setReconnecting(true); scheduleReconnect(); return; }
+
+    const ws = new WebSocket(
+      `${WS_BASE}/ws/live-transcription?sessionId=${sessionIdRef.current}&token=${token}&installId=${encodeURIComponent(getInstallId() || '')}`
+    );
+    wsRef.current = ws;
+
+    ws.onopen = () => {
+      const wasDown = reconnectAttemptRef.current > 0;
+      reconnectAttemptRef.current = 0;
+      setReconnecting(false);
+      flushUnsent(ws, wasDown);
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'transcript' && data.is_final) {
+        setLiveTranscript((prev) => prev + data.text + ' ');
+      } else if (data.type === 'limit') {
+        // The monthly allowance ran out: keep what was recorded and save it.
+        limitHitRef.current = true;
+        if (mediaRecorderRef.current?.state !== 'inactive') stopRecording();
+      } else if (data.type === 'error') {
+        setError(data.message);
+      }
+    };
+
+    ws.onclose = (e) => {
+      if (wsRef.current !== ws) return; // an older connection that was already replaced
+      if (stoppingRef.current || limitHitRef.current || e.code === 4002 || e.code === 4004) return;
+      setReconnecting(true);
+      scheduleReconnect();
+    };
+  }
 
   async function startRecording() {
     if (!(await ensureConsent())) return;
@@ -59,35 +143,20 @@ export default function RecordPage() {
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
-      // 3. Open WS to backend for live transcription (separate from local recording —
-      //    if this drops, local audio keeps recording regardless). If target_language
-      //    is set, the backend translates each line on the fly before sending it back,
-      //    so the live view shows the chosen language even if that's not what's spoken.
-      const { data: { session: authSession } } = await supabase.auth.getSession();
-      const ws = new WebSocket(
-        `${WS_BASE}/ws/live-transcription?sessionId=${session.id}&token=${authSession.access_token}&installId=${encodeURIComponent(getInstallId() || '')}`
-      );
-      wsRef.current = ws;
-
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === 'transcript' && data.is_final) {
-          setLiveTranscript((prev) => prev + data.text + ' ');
-        } else if (data.type === 'limit') {
-          // The monthly allowance ran out: keep what was recorded and save it.
-          limitHitRef.current = true;
-          if (mediaRecorderRef.current?.state !== 'inactive') stopRecording();
-        } else if (data.type === 'error') {
-          setError(data.message);
-        }
-      };
-
-      ws.onerror = () => setError(t('record.err_ws'));
+      // 3. Live transcription runs on a separate connection to the backend. If it drops, the local
+      //    recording above keeps going and the connection is re-opened (see openSocket). If a language
+      //    is picked for the live view, the backend translates each line before sending it back.
+      stoppingRef.current = false;
+      sentUpToRef.current = -1;
+      reconnectAttemptRef.current = 0;
+      setReconnecting(false);
+      openSocket();
 
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) {
           audioChunksRef.current.push(e.data);
-          if (ws.readyState === WebSocket.OPEN) e.data.arrayBuffer().then((buf) => ws.send(buf));
+          const ws = wsRef.current;
+          if (ws && ws.readyState === WebSocket.OPEN) flushUnsent(ws, false);
         }
       };
 
@@ -137,17 +206,27 @@ export default function RecordPage() {
   }
 
   async function stopRecording() {
+    if (stoppingRef.current) return;
+    stoppingRef.current = true;
+    clearTimeout(reconnectTimerRef.current);
     clearInterval(timerRef.current);
     stopKeepAwake();
-    mediaRecorderRef.current?.stop();
+    const recorder = mediaRecorderRef.current;
+    // Wait for the recorder to hand over its last piece of audio before the file is put together.
+    if (recorder && recorder.state !== 'inactive') {
+      await new Promise((resolve) => { recorder.onstop = resolve; recorder.stop(); });
+    }
     wsRef.current?.close();
+    recorder?.stream?.getTracks().forEach((tr) => tr.stop());
     setIsRecording(false);
     setIsPaused(false);
+    setReconnecting(false);
 
     // Save audio locally on-device (Capacitor Filesystem). Audio never
     // leaves the device — only the transcript goes to Supabase.
     const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
     const fileName = `session-${sessionIdRef.current}.webm`;
+    savedFileRef.current = fileName;
 
     try {
       const base64 = await blobToBase64(blob);
@@ -157,15 +236,34 @@ export default function RecordPage() {
       setError(t('record.err_save_audio'));
     }
 
-    const session = await api.stopSession(sessionIdRef.current, {
-      duration_seconds: elapsedRef.current,
-      local_audio_path: fileName,
-    });
+    await finishSave();
+  }
 
-    navigate(`/sessions/${session.id}/save`, { state: { limitReached: limitHitRef.current } });
+  // Tells the server the recording is over. Without a connection it keeps trying for a while, and then
+  // offers a button, so a recording is never lost just because the signal dropped at the moment of Stop.
+  const durationRef = useRef(0);
+  async function finishSave() {
+    setSaveState('saving');
+    if (durationRef.current === 0) durationRef.current = elapsedRef.current;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      try {
+        const session = await api.stopSession(sessionIdRef.current, {
+          duration_seconds: durationRef.current,
+          local_audio_path: savedFileRef.current,
+        });
+        navigate(`/sessions/${session.id}/save`, { state: { limitReached: limitHitRef.current } });
+        return;
+      } catch (err) {
+        console.error('[record] stop failed, retrying', err);
+        await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+      }
+    }
+    setSaveState('failed');
   }
 
   function cleanup() {
+    stoppingRef.current = true;
+    clearTimeout(reconnectTimerRef.current);
     clearInterval(timerRef.current);
     stopKeepAwake();
     wsRef.current?.close();
@@ -180,7 +278,7 @@ export default function RecordPage() {
     <div className="record-page">
       <h1>{mode === 'quick_capture' ? t('record.title_quick') : t('record.title')}</h1>
 
-      {!isRecording && (
+      {!isRecording && saveState === 'idle' && (
         <div className="pre-record-settings">
           <label>
             {t('record.spoken_language')}
@@ -212,14 +310,26 @@ export default function RecordPage() {
       )}
 
       {error && <p className="error">{error}</p>}
+      {saveState !== 'idle' && (
+        <div className="save-status">
+          {saveState === 'saving' && <p className="meta">{t('record.saving')}</p>}
+          {saveState === 'failed' && (
+            <>
+              <p className="error">{t('record.err_stop')}</p>
+              <button className="record-btn" onClick={finishSave}>{t('record.retry_save')}</button>
+            </>
+          )}
+        </div>
+      )}
 
       <div className="timer">
         {formatTime(elapsed)} {isRecording && <span> / 3:00:00</span>}
       </div>
       {nearingCap && isRecording && !isPaused && <p className="warning">{t('record.cap_warning')}</p>}
       {isPaused && <p className="warning">{t('record.paused_warning')}</p>}
+      {isRecording && reconnecting && <p className="warning">{t('record.reconnecting')}</p>}
 
-      {!isRecording && (
+      {!isRecording && saveState === 'idle' && (
         <button className="record-btn" onClick={startRecording}>{t('record.start')}</button>
       )}
 

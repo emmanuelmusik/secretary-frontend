@@ -610,3 +610,5 @@ button.active { background: var(--accent-dim); color: var(--accent); }
   background: rgba(45, 212, 191, 0.28); color: inherit;
   border-radius: 3px; padding: 0 1px; box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.35);
 }
+
+.save-status { margin: 16px 0; text-align: center; }
