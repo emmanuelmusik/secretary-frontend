@@ -22,6 +22,7 @@ async function authedFetch(path, options = {}) {
     const failure = new Error(err.error || 'Request failed');
     failure.status = res.status;
     failure.usage = err.usage;
+    failure.data = err;
     throw failure;
   }
 
@@ -59,6 +60,7 @@ export const api = {
     authedFetch(`/sessions/${id}/analyze-with-history`, { method: 'POST', body: JSON.stringify({ range }) }),
   translateSession: (id, targetLanguage) =>
     authedFetch(`/sessions/${id}/translate`, { method: 'POST', body: JSON.stringify({ target_language: targetLanguage }) }),
+  liveInsight: (id, transcript) => authedFetch(`/sessions/${id}/live-insight`, { method: 'POST', body: JSON.stringify({ transcript }) }),
   generateInsight: (id) => authedFetch(`/sessions/${id}/insight`, { method: 'POST' }),
 
   // Plan and monthly usage

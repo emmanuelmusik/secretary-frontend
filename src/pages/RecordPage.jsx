@@ -7,6 +7,7 @@ import { startKeepAwake, stopKeepAwake } from '../lib/keepAwake.js';
 import { getInstallId } from '../lib/install.js';
 import { useAiConsent } from '../components/AiConsent.jsx';
 import { useI18n, TRANSLATION_LANGUAGES } from '../i18n/index.jsx';
+import LiveView from '../components/LiveView.jsx';
 
 const MAX_DURATION_SECONDS = 3 * 60 * 60; // 3-hour cap
 const WS_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:3000').replace(/^http/, 'ws');
@@ -26,6 +27,9 @@ export default function RecordPage() {
   const [isPaused, setIsPaused] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [liveTranscript, setLiveTranscript] = useState('');
+  const [interim, setInterim] = useState('');          // words still being recognised, shown until they are final
+  const [view, setView] = useState('transcript');      // 'transcript' | 'insights'
+  const [insight, setInsight] = useState({ status: 'idle', data: null, at: null, used: 0, limit: null, error: '' });
   const [error, setError] = useState('');
   const [reconnecting, setReconnecting] = useState(false);
   const [saveState, setSaveState] = useState('idle'); // 'idle' | 'saving' | 'failed' (saving the finished recording)
@@ -106,6 +110,9 @@ export default function RecordPage() {
       const data = JSON.parse(event.data);
       if (data.type === 'transcript' && data.is_final) {
         setLiveTranscript((prev) => prev + data.text + ' ');
+        setInterim('');
+      } else if (data.type === 'transcript') {
+        setInterim(data.text || '');
       } else if (data.type === 'limit') {
         // The monthly allowance ran out: keep what was recorded and save it.
         limitHitRef.current = true;
@@ -270,6 +277,23 @@ export default function RecordPage() {
     mediaRecorderRef.current?.stream?.getTracks().forEach((t) => t.stop());
   }
 
+  async function generateInsight() {
+    if (insight.status === 'loading') return;
+    setInsight((i) => ({ ...i, status: 'loading', error: '' }));
+    try {
+      const r = await api.liveInsight(sessionIdRef.current, (liveTranscript + ' ' + interim).trim());
+      setInsight({ status: 'ready', data: r.insight, at: r.generated_at, used: r.used, limit: r.limit, error: '' });
+    } catch (err) {
+      const code = err?.data?.error || err?.status; // 'too_short' | 'insight_limit' | 429 | ...
+      setInsight((i) => ({
+        ...i,
+        status: code === 'insight_limit' || code === 429 ? 'limit' : 'idle',
+        limit: err?.data?.limit ?? i.limit,
+        error: code === 'too_short' ? 'short' : code === 'insight_limit' || code === 429 ? '' : 'failed',
+      }));
+    }
+  }
+
   const remaining = MAX_DURATION_SECONDS - elapsed;
   const nearingCap = remaining <= 5 * 60; // last 5 minutes
   const showingTranslatedLive = targetLanguage && targetLanguage !== 'none';
@@ -322,33 +346,33 @@ export default function RecordPage() {
         </div>
       )}
 
-      <div className="timer">
-        {formatTime(elapsed)} {isRecording && <span> / 3:00:00</span>}
-      </div>
-      {nearingCap && isRecording && !isPaused && <p className="warning">{t('record.cap_warning')}</p>}
-      {isPaused && <p className="warning">{t('record.paused_warning')}</p>}
-      {isRecording && reconnecting && <p className="warning">{t('record.reconnecting')}</p>}
-
-      {!isRecording && saveState === 'idle' && (
-        <button className="record-btn" onClick={startRecording}>{t('record.start')}</button>
+      {!isRecording && (
+        <>
+          <div className="timer">{formatTime(elapsed)}</div>
+          {saveState === 'idle' && <button className="record-btn" onClick={startRecording}>{t('record.start')}</button>}
+        </>
       )}
 
       {isRecording && (
-        <div className="recording-controls-floating">
-          {!isPaused ? (
-            <button className="pause-btn" onClick={pauseRecording}>{t('record.pause')}</button>
-          ) : (
-            <button className="resume-btn" onClick={resumeRecording}>{t('record.resume')}</button>
-          )}
-          <button className="stop-btn" onClick={stopRecording}>{t('record.stop')}</button>
-        </div>
-      )}
-
-      {isRecording && (
-        <div className="live-transcript">
-          <h3>{t('record.live_title')}{showingTranslatedLive && ` (${targetLanguage.toUpperCase()})`}</h3>
-          <p>{liveTranscript || (isPaused ? t('record.paused_dots') : t('record.listening'))}</p>
-        </div>
+        <LiveView
+          t={t}
+          elapsed={elapsed}
+          maxSeconds={MAX_DURATION_SECONDS}
+          paused={isPaused}
+          reconnecting={reconnecting}
+          nearingCap={nearingCap}
+          error={error}
+          text={liveTranscript}
+          interim={interim}
+          translatedLabel={showingTranslatedLive ? targetLanguage.toUpperCase() : ''}
+          view={view}
+          onView={setView}
+          insight={insight}
+          onGenerate={generateInsight}
+          onPause={pauseRecording}
+          onResume={resumeRecording}
+          onStop={stopRecording}
+        />
       )}
     </div>
   );
