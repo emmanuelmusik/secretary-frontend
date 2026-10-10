@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 
 const SENTENCE = /[^.!?。！？؟]+[.!?。！？؟]*\s*/g;
 
@@ -26,8 +26,10 @@ export default function LiveView({
   const older = sentences.slice(0, -1);
   const latest = sentences[sentences.length - 1];
 
-  useEffect(() => {
-    if (view === 'transcript' && stick.current) endRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
+  // Jump straight to the bottom (no animation) whenever new text arrives, so the newest sentence never falls behind.
+  useLayoutEffect(() => {
+    const el = scroller.current;
+    if (view === 'transcript' && el && stick.current) el.scrollTop = el.scrollHeight;
   }, [sentences.length, latest, view]);
 
   function onScroll() {
