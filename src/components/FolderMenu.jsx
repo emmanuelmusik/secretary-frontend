@@ -4,6 +4,7 @@ import { useI18n } from '../i18n/index.jsx';
 import { descendantIds, folderPath } from '../lib/folders.js';
 import { exportPdf } from '../lib/pdf.js';
 import { formatSeconds } from '../lib/format.js';
+import MoveDialog from './MoveDialog.jsx';
 
 // The ⋮ menu on a folder: rename, delete (contents move up one level) and export everything inside as a PDF.
 export default function FolderMenu({ folder, folders, onChanged, onDeleted }) {
@@ -12,6 +13,7 @@ export default function FolderMenu({ folder, folders, onChanged, onDeleted }) {
   const [renaming, setRenaming] = useState(false);
   const [name, setName] = useState(folder.name);
   const [busy, setBusy] = useState('');
+  const [moving, setMoving] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -29,6 +31,14 @@ export default function FolderMenu({ folder, folders, onChanged, onDeleted }) {
     try {
       await api.renameFolder(folder.id, name.trim());
       setRenaming(false);
+      onChanged?.();
+    } catch (err) { alert(err.message); }
+  }
+
+  async function doMove(parentId) {
+    setMoving(false);
+    try {
+      await api.moveFolder(folder.id, parentId);
       onChanged?.();
     } catch (err) { alert(err.message); }
   }
@@ -91,10 +101,12 @@ export default function FolderMenu({ folder, folders, onChanged, onDeleted }) {
       {open && (
         <div className="folder-menu-pop" role="menu">
           <button type="button" role="menuitem" onClick={() => { setOpen(false); setName(folder.name); setRenaming(true); }}>{t('folders.rename')}</button>
+          <button type="button" role="menuitem" onClick={() => { setOpen(false); setMoving(true); }}>{t('move.action')}</button>
           <button type="button" role="menuitem" onClick={doExport}>{t('folders.export_pdf')}</button>
           <button type="button" role="menuitem" className="danger" onClick={doDelete}>{t('common.delete')}</button>
         </div>
       )}
+      {moving && <MoveDialog kind="folder" movingId={folder.id} folders={folders} currentId={folder.parent_id} onPick={doMove} onClose={() => setMoving(false)} />}
       {busy && <div className="dialog-backdrop"><div className="dialog-card"><p>{busy}</p></div></div>}
       {renaming && (
         <div className="dialog-backdrop" onClick={() => setRenaming(false)}>

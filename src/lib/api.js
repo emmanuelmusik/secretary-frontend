@@ -35,6 +35,7 @@ export const api = {
   getFolders: () => authedFetch('/folders'),
   createFolder: (name, parentId) => authedFetch('/folders', { method: 'POST', body: JSON.stringify({ name, parent_id: parentId || null }) }),
   renameFolder: (id, name) => authedFetch(`/folders/${id}`, { method: 'PATCH', body: JSON.stringify({ name }) }),
+  moveFolder: (id, parentId) => authedFetch(`/folders/${id}`, { method: 'PATCH', body: JSON.stringify({ parent_id: parentId || null }) }),
   deleteFolder: (id) => authedFetch(`/folders/${id}`, { method: 'DELETE' }),
 
   // Notes

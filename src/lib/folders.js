@@ -41,3 +41,9 @@ export function descendantIds(folders, id) {
   }
   return out;
 }
+
+// Levels taken by a folder and everything inside it (a folder with no subfolders is 1).
+export function folderHeight(folders, id) {
+  const kids = folders.filter((f) => f.parent_id === id);
+  return 1 + Math.max(0, ...kids.map((k) => folderHeight(folders, k.id)));
+}

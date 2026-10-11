@@ -752,3 +752,9 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .sheet-pick-main strong { overflow-wrap: anywhere; }
 .sheet-pick-main small { color: var(--text-muted); }
 .sheet-count { margin: 4px 0 10px; }
+
+.session-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 6px 0 14px; }
+.session-actions .analyze-btn { margin: 0; }
+.move-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 999px; padding: 10px 16px; max-width: 100%; }
+.move-btn-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52vw; }
+.move-list .ftree-icon { color: var(--accent); }

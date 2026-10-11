@@ -5,6 +5,8 @@ import { getLocalAudioUrl, shareLocalAudio } from '../lib/localAudio.js';
 import { insightToText } from '../lib/clipboard.js';
 import CopyButton from '../components/CopyButton.jsx';
 import AnalyzeSheet from '../components/AnalyzeSheet.jsx';
+import MoveDialog from '../components/MoveDialog.jsx';
+import { folderPath } from '../lib/folders.js';
 import { useI18n, TRANSLATION_LANGUAGES } from '../i18n/index.jsx';
 
 export default function SessionDetailPage() {
@@ -15,6 +17,8 @@ export default function SessionDetailPage() {
   const [tab, setTab] = useState('transcript'); // transcript | insight | translation | history | audio
 
   const [analyzeOpen, setAnalyzeOpen] = useState(false);
+  const [moveOpen, setMoveOpen] = useState(false);
+  const [folders, setFolders] = useState([]);
   const [analyzingHistory, setAnalyzingHistory] = useState(false);
 
   const [generatingInsight, setGeneratingInsight] = useState(false);
@@ -28,6 +32,7 @@ export default function SessionDetailPage() {
   const audioObjectUrl = useRef(null);
 
   useEffect(() => { load(); }, [id]);
+  useEffect(() => { api.getFolders().then(setFolders).catch(() => {}); }, []);
 
   useEffect(() => {
     return () => { if (audioObjectUrl.current) URL.revokeObjectURL(audioObjectUrl.current); };
@@ -73,6 +78,16 @@ export default function SessionDetailPage() {
       alert(err.message);
     } finally {
       setAnalyzingHistory(false);
+    }
+  }
+
+  async function handleMove(folderId) {
+    setMoveOpen(false);
+    try {
+      const updated = await api.saveSession(id, { folder_id: folderId });
+      setSession((prev) => ({ ...prev, folder_id: updated.folder_id }));
+    } catch (err) {
+      alert(err.message);
     }
   }
 
@@ -122,9 +137,15 @@ export default function SessionDetailPage() {
         {session.source_language && ` · ${t('session.detected', { lang: session.source_language })}`}
       </p>
 
-      <button type="button" className="analyze-btn" onClick={() => setAnalyzeOpen(true)}>
-        <span aria-hidden="true">✦</span> {t('analyze.button')}
-      </button>
+      <div className="session-actions">
+        <button type="button" className="analyze-btn" onClick={() => setAnalyzeOpen(true)}>
+          <span aria-hidden="true">✦</span> {t('analyze.button')}
+        </button>
+        <button type="button" className="move-btn" onClick={() => setMoveOpen(true)}>
+          <span className="move-btn-name">{session.folder_id ? folderPath(folders, session.folder_id).map((f) => f.name).join(' › ') || t('move.action') : t('save.unfiled')}</span>
+          <span aria-hidden="true">▾</span>
+        </button>
+      </div>
 
       <div className="tabs">
         <button className={tab === 'transcript' ? 'active' : ''} onClick={() => setTab('transcript')}>{t('tab.transcript')}</button>
@@ -261,6 +282,7 @@ export default function SessionDetailPage() {
         </div>
       )}
 
+      {moveOpen && <MoveDialog folders={folders} currentId={session.folder_id} onPick={handleMove} onClose={() => setMoveOpen(false)} />}
       {analyzeOpen && (
         <AnalyzeSheet
           session={session}

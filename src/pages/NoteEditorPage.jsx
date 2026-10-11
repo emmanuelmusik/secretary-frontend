@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { supabase } from '../lib/supabase.js';
 import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
+import MoveDialog from '../components/MoveDialog.jsx';
 
 const WS_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:3000').replace(/^http/, 'ws');
 
@@ -13,6 +14,9 @@ export default function NoteEditorPage() {
   const { t } = useI18n();
   const [note, setNote] = useState(null);
   const [preview, setPreview] = useState(false);
+  const [moveOpen, setMoveOpen] = useState(false);
+  const [folders, setFolders] = useState([]);
+  useEffect(() => { api.getFolders().then(setFolders).catch(() => {}); }, []);
   const [isDictating, setIsDictating] = useState(false);
   const saveTimeout = useRef(null);
   const wsRef = useRef(null);
@@ -106,6 +110,7 @@ export default function NoteEditorPage() {
         </button>
         <button onClick={insertChecklistItem}>{t('notes.checklist')}</button>
         <button onClick={() => setPreview((p) => !p)}>{preview ? t('common.edit') : t('notes.preview')}</button>
+        <button onClick={() => setMoveOpen(true)}>{t('move.action')}</button>
         <button className="danger-btn-sm" onClick={handleDeleteNote}>{t('common.delete')}</button>
       </div>
 
@@ -117,6 +122,15 @@ export default function NoteEditorPage() {
           value={note.body}
           onChange={(e) => scheduleSave({ body: e.target.value })}
           placeholder={t('notes.placeholder')}
+        />
+      )}
+
+      {moveOpen && (
+        <MoveDialog
+          folders={folders}
+          currentId={note.folder_id}
+          onPick={async (fid) => { setMoveOpen(false); try { await api.updateNote(id, { folder_id: fid }); setNote((prev) => ({ ...prev, folder_id: fid })); } catch (err) { alert(err.message); } }}
+          onClose={() => setMoveOpen(false)}
         />
       )}
 
