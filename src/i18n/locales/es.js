@@ -124,6 +124,7 @@ export default {
 
   // ---- recording detail
   'session.delete_confirm': '¿Eliminar esta grabación de forma permanente? No se puede deshacer.',
+  'session.rename_title': "Renombrar grabación",
   'session.detected': 'Detectado: {lang}',
   'tab.transcript': 'Transcripción',
   'tab.insight': 'Análisis',

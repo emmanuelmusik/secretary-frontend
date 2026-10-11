@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { searchSessions } from '../lib/search.js';
+import RenameDialog from '../components/RenameDialog.jsx';
 import RowMenu from '../components/RowMenu.jsx';
 import Highlight from '../components/Highlight.jsx';
 
@@ -14,6 +15,7 @@ export default function HomePage() {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
+  const [renaming, setRenaming] = useState(null);
   const results = useMemo(() => searchSessions(sessions, query, lang), [sessions, query, lang]);
 
   useEffect(() => {
@@ -72,10 +74,14 @@ export default function HomePage() {
               <small className="session-duration">{formatDate(s.created_at)}{s.duration_seconds > 0 ? ` · ⏱ ${formatSeconds(t, s.duration_seconds)}` : ''}</small>
               {snippet && <small className="session-snippet"><Highlight text={snippet} query={query} /></small>}
             </span>
-            <RowMenu label={t('folders.menu')} items={[{ label: t('common.delete'), danger: true, onClick: () => handleDelete(s.id) }]} />
+            <RowMenu label={t('folders.menu')} items={[{ label: t('folders.rename'), onClick: () => setRenaming(s) }, { label: t('common.delete'), danger: true, onClick: () => handleDelete(s.id) }]} />
           </Link>
         ))}
       </section>
+      {renaming && (
+        <RenameDialog t={t} title={t('session.rename_title')} initial={renaming.name} onClose={() => setRenaming(null)}
+          onSave={async (name) => { try { const u = await api.saveSession(renaming.id, { name }); setSessions((prev) => prev.map((x) => (x.id === renaming.id ? { ...x, name: u.name } : x))); setRenaming(null); } catch (err) { alert(err.message); } }} />
+      )}
     </div>
   );
 }

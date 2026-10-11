@@ -802,3 +802,6 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 /* iOS zooms the page when a field under 16px is focused and may stay zoomed; keep fields at 16px and never scroll sideways */
 html, body { overflow-x: hidden; max-width: 100%; }
 .note-body { font-size: 16px; }
+
+.title-edit-btn{background:transparent;border:none;color:var(--text-muted);font-size:1.2rem;padding:6px 8px;align-self:flex-start}
+.session-detail-header h1{flex:1;min-width:0}

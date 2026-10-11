@@ -115,6 +115,7 @@ export default {
   'save.default_name': 'Sessione – {date}',
 
   'session.delete_confirm': 'Eliminare definitivamente questa registrazione? Questa azione non può essere annullata.',
+  'session.rename_title': "Rinomina registrazione",
   'session.detected': 'Rilevata: {lang}',
   'tab.transcript': 'Trascrizione',
   'tab.insight': 'Insight',

@@ -115,6 +115,7 @@ export default {
   'save.default_name': '세션 – {date}',
 
   'session.delete_confirm': '이 녹음을 영구적으로 삭제할까요? 되돌릴 수 없어요.',
+  'session.rename_title': "녹음 이름 변경",
   'session.detected': '감지된 언어: {lang}',
   'tab.transcript': '스크립트',
   'tab.insight': '인사이트',

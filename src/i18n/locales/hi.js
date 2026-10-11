@@ -115,6 +115,7 @@ export default {
   'save.default_name': 'सेशन – {date}',
 
   'session.delete_confirm': 'क्या इस रिकॉर्डिंग को हमेशा के लिए हटाएँ? इसे वापस नहीं किया जा सकता।',
+  'session.rename_title': "रिकॉर्डिंग का नाम बदलें",
   'session.detected': 'पहचानी गई भाषा: {lang}',
   'tab.transcript': 'ट्रांसक्रिप्ट',
   'tab.insight': 'इनसाइट',

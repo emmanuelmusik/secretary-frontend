@@ -124,6 +124,7 @@ export default {
 
   // ---- recording detail
   'session.delete_confirm': 'Supprimer définitivement cet enregistrement ? Cette action est irréversible.',
+  'session.rename_title': "Renommer l'enregistrement",
   'session.detected': 'Détectée : {lang}',
   'tab.transcript': 'Transcription',
   'tab.insight': 'Analyse',

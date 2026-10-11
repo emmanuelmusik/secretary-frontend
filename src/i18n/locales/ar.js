@@ -115,6 +115,7 @@ export default {
   'save.default_name': 'جلسة – {date}',
 
   'session.delete_confirm': 'هل تريد حذف هذا التسجيل نهائيًا؟ لا يمكن التراجع عن ذلك.',
+  'session.rename_title': "إعادة تسمية التسجيل",
   'session.detected': 'اللغة المكتشفة: {lang}',
   'tab.transcript': 'النص المفرغ',
   'tab.insight': 'الرؤى',

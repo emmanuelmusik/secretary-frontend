@@ -115,6 +115,7 @@ export default {
   'save.default_name': 'セッション – {date}',
 
   'session.delete_confirm': 'この録音を完全に削除しますか？この操作は元に戻せません。',
+  'session.rename_title': "録音名を変更",
   'session.detected': '検出された言語：{lang}',
   'tab.transcript': '文字起こし',
   'tab.insight': 'インサイト',

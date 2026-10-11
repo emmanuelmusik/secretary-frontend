@@ -124,6 +124,7 @@ export default {
 
   // ---- recording detail
   'session.delete_confirm': 'Diese Aufnahme endgültig löschen? Das kann nicht rückgängig gemacht werden.',
+  'session.rename_title': "Aufnahme umbenennen",
   'session.detected': 'Erkannt: {lang}',
   'tab.transcript': 'Transkript',
   'tab.insight': 'Auswertung',

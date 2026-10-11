@@ -125,6 +125,7 @@ export default {
 
   // ---- recording detail
   'session.delete_confirm': 'Delete this recording permanently? This cannot be undone.',
+  'session.rename_title': "Rename recording",
   'session.detected': 'Detected: {lang}',
   'tab.transcript': 'Transcript',
   'tab.insight': 'Insight',

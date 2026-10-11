@@ -115,6 +115,7 @@ export default {
   'save.default_name': 'Сессия – {date}',
 
   'session.delete_confirm': 'Удалить эту запись навсегда? Это действие нельзя отменить.',
+  'session.rename_title': "Переименовать запись",
   'session.detected': 'Определён: {lang}',
   'tab.transcript': 'Транскрипт',
   'tab.insight': 'Инсайт',

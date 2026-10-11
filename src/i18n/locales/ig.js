@@ -123,6 +123,7 @@ export default {
 
   // ---- recording detail
   'session.delete_confirm': 'Hichapụ ndekọ a ruo mgbe ebighị ebi? Enweghị ike ịmeghachi ya.',
+  'session.rename_title': "Gbanwee aha ndekọ",
   'session.detected': 'Achọpụtara: {lang}',
   'tab.transcript': 'Ederede',
   'tab.insight': 'Nghọta',

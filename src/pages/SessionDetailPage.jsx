@@ -4,6 +4,7 @@ import { api } from '../lib/api.js';
 import { getLocalAudioUrl, shareLocalAudio } from '../lib/localAudio.js';
 import { insightToText } from '../lib/clipboard.js';
 import CopyButton from '../components/CopyButton.jsx';
+import RenameDialog from '../components/RenameDialog.jsx';
 import AskBox from '../components/AskBox.jsx';
 import AnalyzeSheet from '../components/AnalyzeSheet.jsx';
 import MoveDialog from '../components/MoveDialog.jsx';
@@ -23,6 +24,7 @@ export default function SessionDetailPage() {
   const [analyzingHistory, setAnalyzingHistory] = useState(false);
   const [editingSpeaker, setEditingSpeaker] = useState(null); // { from, value }
   const [speakersOpen, setSpeakersOpen] = useState(false);
+  const [renaming, setRenaming] = useState(false);
 
   const [generatingInsight, setGeneratingInsight] = useState(false);
 
@@ -134,6 +136,14 @@ export default function SessionDetailPage() {
     }
   }
 
+  async function handleRename(name) {
+    try {
+      const updated = await api.saveSession(id, { name });
+      setSession((prev) => ({ ...prev, name: updated.name }));
+      setRenaming(false);
+    } catch (err) { alert(err.message); }
+  }
+
   async function handleDeleteSession() {
     if (!confirm(t('session.delete_confirm'))) return;
     await api.deleteSession(id);
@@ -148,6 +158,7 @@ export default function SessionDetailPage() {
     <div className="session-detail">
       <div className="session-detail-header">
         <h1>{session.name}</h1>
+        <button type="button" className="title-edit-btn" aria-label={t('folders.rename')} onClick={() => setRenaming(true)}>✎</button>
         <button className="danger-btn-sm" onClick={handleDeleteSession}>{t('common.delete')}</button>
       </div>
       <p className="meta">
@@ -334,6 +345,7 @@ export default function SessionDetailPage() {
         </div>
       )}
 
+      {renaming && <RenameDialog t={t} title={t('session.rename_title')} initial={session.name} onSave={handleRename} onClose={() => setRenaming(false)} />}
       {moveOpen && <MoveDialog folders={folders} currentId={session.folder_id} onPick={handleMove} onClose={() => setMoveOpen(false)} />}
       {analyzeOpen && (
         <AnalyzeSheet

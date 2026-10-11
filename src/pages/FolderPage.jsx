@@ -4,6 +4,7 @@ import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { MAX_FOLDER_DEPTH, folderPath } from '../lib/folders.js';
 import FolderMenu from '../components/FolderMenu.jsx';
+import RenameDialog from '../components/RenameDialog.jsx';
 import RowMenu from '../components/RowMenu.jsx';
 import MoveDialog from '../components/MoveDialog.jsx';
 import { formatSeconds } from '../lib/format.js';
@@ -19,6 +20,7 @@ export default function FolderPage() {
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState('');
   const [error, setError] = useState('');
+  const [renamingSession, setRenamingSession] = useState(null);
   const [moving, setMoving] = useState(null); // { kind: 'session' | 'note', item }
 
   const load = useCallback(async () => {
@@ -67,6 +69,7 @@ export default function FolderPage() {
 
   const rowMenu = (kind, item) => (
     <RowMenu label={t('folders.menu')} items={[
+      ...(kind === 'session' ? [{ label: t('folders.rename'), onClick: () => setRenamingSession(item) }] : []),
       { label: t('move.to'), onClick: () => setMoving({ kind, item }) },
       { label: t('common.delete'), danger: true, onClick: () => doDeleteItem(kind, item) },
     ]} />
@@ -126,6 +129,10 @@ export default function FolderPage() {
         </Link>
       ))}
 
+      {renamingSession && (
+        <RenameDialog t={t} title={t('session.rename_title')} initial={renamingSession.name} onClose={() => setRenamingSession(null)}
+          onSave={async (name) => { try { await api.saveSession(renamingSession.id, { name }); setRenamingSession(null); load(); } catch (err) { alert(err.message); } }} />
+      )}
       {moving && <MoveDialog folders={folders} currentId={id} onPick={doMoveItem} onClose={() => setMoving(null)} />}
 
       {!loading && empty && <p className="folder-hint">{t('folders.empty')}</p>}

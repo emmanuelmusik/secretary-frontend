@@ -115,6 +115,7 @@ export default {
   'save.default_name': 'Sessão – {date}',
 
   'session.delete_confirm': 'Excluir esta gravação permanentemente? Esta ação não pode ser desfeita.',
+  'session.rename_title': "Renomear gravação",
   'session.detected': 'Detectado: {lang}',
   'tab.transcript': 'Transcrição',
   'tab.insight': 'Insight',

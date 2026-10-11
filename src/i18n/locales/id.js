@@ -115,6 +115,7 @@ export default {
   'save.default_name': 'Sesi – {date}',
 
   'session.delete_confirm': 'Hapus rekaman ini secara permanen? Tindakan ini tidak dapat dibatalkan.',
+  'session.rename_title': "Ganti nama rekaman",
   'session.detected': 'Terdeteksi: {lang}',
   'tab.transcript': 'Transkrip',
   'tab.insight': 'Insight',
