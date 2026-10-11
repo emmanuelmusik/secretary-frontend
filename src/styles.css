@@ -36,7 +36,7 @@ a { color: var(--accent); }
 
 input, select, textarea {
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 16px;
   padding: 12px 14px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -762,7 +762,7 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .speaker-chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:4px 0 10px}
 .speaker-hint{flex-basis:100%;font-size:12px;opacity:.65}
 .speaker-chip{border:1px solid var(--border,#d0d0d5);background:transparent;color:inherit;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
-.speaker-input{border:1px solid var(--border,#d0d0d5);border-radius:999px;padding:5px 12px;font-size:14px;width:150px;background:transparent;color:inherit}
+.speaker-input{border:1px solid var(--border,#d0d0d5);border-radius:999px;padding:5px 12px;font-size:16px;width:150px;background:transparent;color:inherit}
 
 .ask-box{margin-top:18px}
 .ask-turn{margin-bottom:12px}
@@ -798,3 +798,7 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .speaker-caret{opacity:.6}
 .speaker-box{margin:4px 0 10px}
 .speaker-box .speaker-chips{margin-top:10px}
+
+/* iOS zooms the page when a field under 16px is focused and may stay zoomed; keep fields at 16px and never scroll sideways */
+html, body { overflow-x: hidden; max-width: 100%; }
+.note-body { font-size: 16px; }
