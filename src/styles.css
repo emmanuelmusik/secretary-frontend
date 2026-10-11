@@ -779,3 +779,6 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .ask-a{align-self:flex-start;background:rgba(127,127,140,.18);border-bottom-left-radius:6px}
 .sheet-folder-select{width:100%;margin:8px 0;padding:10px 12px;border-radius:12px;border:1px solid var(--border,#3a3a42);background:transparent;color:inherit;font-size:16px}
 .sheet-chips button:disabled{opacity:.4}
+
+.move-btn-label{opacity:.6;font-size:13px;white-space:nowrap}
+.session-actions .move-btn-name{max-width:40vw}

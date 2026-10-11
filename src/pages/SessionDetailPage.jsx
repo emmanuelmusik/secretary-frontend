@@ -155,12 +155,13 @@ export default function SessionDetailPage() {
       </p>
 
       <div className="session-actions">
-        <button type="button" className="analyze-btn" onClick={() => setAnalyzeOpen(true)}>
-          <span aria-hidden="true">✦</span> {t('analyze.button')}
-        </button>
         <button type="button" className="move-btn" onClick={() => setMoveOpen(true)}>
+          <span className="move-btn-label">{t('move.to')}</span>
           <span className="move-btn-name">{session.folder_id ? folderPath(folders, session.folder_id).map((f) => f.name).join(' › ') || t('move.action') : t('save.unfiled')}</span>
           <span aria-hidden="true">▾</span>
+        </button>
+        <button type="button" className="analyze-btn" onClick={() => setAnalyzeOpen(true)}>
+          <span aria-hidden="true">✦</span> {t('analyze.button')}
         </button>
       </div>
 
