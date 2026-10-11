@@ -132,6 +132,7 @@ export default {
   'insight.regenerate': 'Buat Ulang',
   'insight.regenerating': 'Membuat ulang…',
   'speakers.hint': 'Ketuk nama untuk mengganti nama pembicara di mana saja.',
+  'speakers.rename': "Ganti nama pembicara",
   'tab.ask': 'Tanya',
   'ask.hint': 'Tanyakan apa saja tentang rekaman ini, misalnya "Apa keputusan kita soal anggaran?"',
   'ask.placeholder': 'Ajukan pertanyaan…',

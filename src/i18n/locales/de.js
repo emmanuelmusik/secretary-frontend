@@ -141,6 +141,7 @@ export default {
   'insight.regenerate': 'Neu erstellen',
   'insight.regenerating': 'Wird neu erstellt…',
   'speakers.hint': 'Tippe auf einen Namen, um einen Sprecher überall umzubenennen.',
+  'speakers.rename': "Sprecher umbenennen",
   'tab.ask': 'Fragen',
   'ask.hint': 'Frag etwas zu dieser Aufnahme, zum Beispiel „Was haben wir zum Budget entschieden?“',
   'ask.placeholder': 'Stell eine Frage …',

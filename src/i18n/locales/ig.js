@@ -140,6 +140,7 @@ export default {
   'insight.regenerate': 'Mepụtaghachi',
   'insight.regenerating': 'Na-emepụtaghachi…',
   'speakers.hint': 'Pịa aha iji gbanwee aha onye na-ekwu n\'ebe niile.',
+  'speakers.rename': "Gbanwee aha ndị na-ekwu",
   'tab.ask': 'Jụọ',
   'ask.hint': 'Jụọ ihe ọ bụla gbasara ndekọ a, dịka "Gịnị ka any kpebiri gbasara mmefu ego?"',
   'ask.placeholder': 'Jụọ ajụjụ…',

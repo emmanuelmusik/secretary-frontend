@@ -142,6 +142,7 @@ export default {
   'insight.regenerate': 'Regenerate',
   'insight.regenerating': 'Regenerating…',
   'speakers.hint': 'Tap a name to rename a speaker everywhere.',
+  'speakers.rename': "Rename speakers",
   'tab.ask': 'Ask',
   'ask.hint': 'Ask anything about this recording, for example "What did we decide about the budget?"',
   'ask.placeholder': 'Ask a question…',

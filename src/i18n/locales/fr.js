@@ -141,6 +141,7 @@ export default {
   'insight.regenerate': 'Régénérer',
   'insight.regenerating': 'Régénération…',
   'speakers.hint': 'Touchez un nom pour renommer un interlocuteur partout.',
+  'speakers.rename': "Renommer les interlocuteurs",
   'tab.ask': 'Questions',
   'ask.hint': 'Posez une question sur cet enregistrement, par exemple « Qu\'avons-nous décidé pour le budget ? »',
   'ask.placeholder': 'Posez une question…',

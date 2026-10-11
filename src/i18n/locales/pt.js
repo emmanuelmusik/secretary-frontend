@@ -132,6 +132,7 @@ export default {
   'insight.regenerate': 'Gerar de Novo',
   'insight.regenerating': 'Gerando de novo…',
   'speakers.hint': 'Toque num nome para renomear um falante em todo o texto.',
+  'speakers.rename': "Renomear falantes",
   'tab.ask': 'Perguntar',
   'ask.hint': 'Pergunte qualquer coisa sobre esta gravação, por exemplo "O que decidimos sobre o orçamento?"',
   'ask.placeholder': 'Faça uma pergunta…',

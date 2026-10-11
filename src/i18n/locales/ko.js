@@ -132,6 +132,7 @@ export default {
   'insight.regenerate': '다시 생성',
   'insight.regenerating': '다시 생성 중…',
   'speakers.hint': '이름을 탭하면 화자 이름을 모두 변경할 수 있습니다.',
+  'speakers.rename': "화자 이름 변경",
   'tab.ask': '질문',
   'ask.hint': '이 녹음에 대해 무엇이든 물어보세요. 예: "예산에 대해 무엇을 결정했나요?"',
   'ask.placeholder': '질문하기…',

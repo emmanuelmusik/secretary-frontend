@@ -132,6 +132,7 @@ export default {
   'insight.regenerate': 'إعادة الإنشاء',
   'insight.regenerating': 'جارٍ إعادة الإنشاء…',
   'speakers.hint': 'اضغط على اسم لإعادة تسمية المتحدث في كل مكان.',
+  'speakers.rename': "إعادة تسمية المتحدثين",
   'tab.ask': 'اسأل',
   'ask.hint': 'اسأل أي شيء عن هذا التسجيل، مثل "ماذا قررنا بشأن الميزانية؟"',
   'ask.placeholder': 'اكتب سؤالاً…',

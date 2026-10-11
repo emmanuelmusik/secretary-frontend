@@ -132,6 +132,7 @@ export default {
   'insight.regenerate': '再生成',
   'insight.regenerating': '再生成中…',
   'speakers.hint': '名前をタップすると、話者名をすべて変更できます。',
+  'speakers.rename': "話者名を変更",
   'tab.ask': '質問',
   'ask.hint': 'この録音について何でも質問できます。例：「予算について何を決めた？」',
   'ask.placeholder': '質問を入力…',

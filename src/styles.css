@@ -792,3 +792,9 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 /* Analyze history: neutral button, golden star */
 .analyze-btn, .session-actions .analyze-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
 .analyze-btn span[aria-hidden="true"] { color: #f5b301; }
+
+.speaker-toggle{display:flex;align-items:center;gap:8px;width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:12px;padding:10px 14px;font-size:.95rem;text-align:start}
+.speaker-toggle span:nth-of-type(1){flex:1}
+.speaker-caret{opacity:.6}
+.speaker-box{margin:4px 0 10px}
+.speaker-box .speaker-chips{margin-top:10px}

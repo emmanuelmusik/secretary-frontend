@@ -132,6 +132,7 @@ export default {
   'insight.regenerate': 'Rigenera',
   'insight.regenerating': 'Rigenerazione…',
   'speakers.hint': 'Tocca un nome per rinominare un parlante ovunque.',
+  'speakers.rename': "Rinomina i parlanti",
   'tab.ask': 'Chiedi',
   'ask.hint': 'Chiedi qualsiasi cosa su questa registrazione, ad esempio "Cosa abbiamo deciso sul budget?"',
   'ask.placeholder': 'Fai una domanda…',

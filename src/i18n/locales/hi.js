@@ -132,6 +132,7 @@ export default {
   'insight.regenerate': 'फिर से बनाएँ',
   'insight.regenerating': 'फिर से बन रहा है…',
   'speakers.hint': 'किसी नाम पर टैप करके वक्ता का नाम हर जगह बदलें।',
+  'speakers.rename': "वक्ताओं के नाम बदलें",
   'tab.ask': 'पूछें',
   'ask.hint': 'इस रिकॉर्डिंग के बारे में कुछ भी पूछें, जैसे "बजट पर हमने क्या तय किया?"',
   'ask.placeholder': 'सवाल पूछें…',
