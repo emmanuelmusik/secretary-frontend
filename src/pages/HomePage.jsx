@@ -1,3 +1,4 @@
+import { formatSeconds } from '../lib/format.js';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
@@ -69,6 +70,7 @@ export default function HomePage() {
           <Link key={s.id} to={`/sessions/${s.id}`} className="session-row">
             <span className="session-row-main">
               <strong><Highlight text={s.name} query={query} /></strong>
+              {s.duration_seconds > 0 && <small className="session-duration">⏱ {formatSeconds(t, s.duration_seconds)}</small>}
               {snippet && <small className="session-snippet"><Highlight text={snippet} query={query} /></small>}
             </span>
             <span className="session-row-right">

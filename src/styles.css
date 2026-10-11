@@ -782,3 +782,7 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 
 .move-btn-label{opacity:.6;font-size:13px;white-space:nowrap}
 .session-actions .move-btn-name{max-width:40vw}
+
+.session-duration{color:var(--text-muted);font-size:.8rem}
+.row-right-stack{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.row-move-btn{background:transparent;border:1px solid var(--border);color:var(--accent);border-radius:999px;padding:3px 10px;font-size:.75rem}

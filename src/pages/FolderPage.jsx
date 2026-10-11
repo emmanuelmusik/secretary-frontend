@@ -4,6 +4,8 @@ import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { MAX_FOLDER_DEPTH, folderPath } from '../lib/folders.js';
 import FolderMenu from '../components/FolderMenu.jsx';
+import MoveDialog from '../components/MoveDialog.jsx';
+import { formatSeconds } from '../lib/format.js';
 import FolderTree from '../components/FolderTree.jsx';
 
 export default function FolderPage() {
@@ -16,6 +18,7 @@ export default function FolderPage() {
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState('');
   const [error, setError] = useState('');
+  const [moving, setMoving] = useState(null); // { kind: 'session' | 'note', item }
 
   const load = useCallback(async () => {
     try {
@@ -41,6 +44,22 @@ export default function FolderPage() {
       load();
     } catch (err) { setError(err.message); }
   }
+
+  async function doMoveItem(folderId) {
+    const { kind, item } = moving;
+    setMoving(null);
+    try {
+      if (kind === 'session') await api.saveSession(item.id, { folder_id: folderId });
+      else await api.updateNote(item.id, { folder_id: folderId });
+      load();
+    } catch (err) { setError(err.message); }
+  }
+
+  const moveBtn = (kind, item) => (
+    <button type="button" className="row-move-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMoving({ kind, item }); }}>
+      {t('move.to')}
+    </button>
+  );
 
   if (!loading && !folder) {
     return <div className="folders-page"><p>{t('folders.not_found')}</p></div>;
@@ -80,8 +99,11 @@ export default function FolderPage() {
       {sessions.length > 0 && <h2 className="folder-section">{t('folders.recordings')}</h2>}
       {sessions.map((s) => (
         <Link key={s.id} to={`/sessions/${s.id}`} className="session-row">
-          <span className="session-row-main"><strong>{s.name}</strong></span>
-          <span className="session-row-right">{formatDate(s.created_at)}</span>
+          <span className="session-row-main">
+            <strong>{s.name}</strong>
+            {s.duration_seconds > 0 && <small className="session-duration">⏱ {formatSeconds(t, s.duration_seconds)}</small>}
+          </span>
+          <span className="session-row-right row-right-stack">{formatDate(s.created_at)}{moveBtn('session', s)}</span>
         </Link>
       ))}
 
@@ -89,9 +111,11 @@ export default function FolderPage() {
       {notes.map((n) => (
         <Link key={n.id} to={`/notes/${n.id}`} className="note-row">
           <strong>{n.title}</strong>
-          <span>{formatDate(n.updated_at)}</span>
+          <span className="row-right-stack">{formatDate(n.updated_at)}{moveBtn('note', n)}</span>
         </Link>
       ))}
+
+      {moving && <MoveDialog folders={folders} currentId={id} onPick={doMoveItem} onClose={() => setMoving(null)} />}
 
       {!loading && empty && <p className="folder-hint">{t('folders.empty')}</p>}
     </div>
