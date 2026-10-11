@@ -102,6 +102,8 @@ export default {
   'upload.uploading': 'Mengunggah…',
   'upload.transcribe': 'Transkripsikan File Ini',
   'upload.failed': 'Gagal mengunggah',
+  'upload.too_long': "File ini lebih dari 3 jam. Pecah menjadi bagian yang lebih pendek lalu unggah satu per satu.",
+  'upload.not_enough': "File ini sekitar {needed} menit, tetapi sisa waktu Anda bulan ini hanya {left} menit.",
 
   'save.title': 'Simpan Sesi',
   'save.name': 'Nama',

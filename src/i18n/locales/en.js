@@ -110,6 +110,8 @@ export default {
   'upload.uploading': 'Uploading…',
   'upload.transcribe': 'Transcribe This File',
   'upload.failed': 'Upload failed',
+  'upload.too_long': "This file is longer than 3 hours. Split it into shorter parts and upload them one at a time.",
+  'upload.not_enough': "This file is about {needed} min long, but you have only {left} min left this month.",
 
   // ---- save session
   'save.title': 'Save Session',

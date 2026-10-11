@@ -102,6 +102,8 @@ export default {
   'upload.uploading': 'Enviando…',
   'upload.transcribe': 'Transcrever Este Arquivo',
   'upload.failed': 'Falha no envio',
+  'upload.too_long': "Este arquivo tem mais de 3 horas. Divida-o em partes menores e envie uma de cada vez.",
+  'upload.not_enough': "Este arquivo tem cerca de {needed} min, mas você tem apenas {left} min restantes neste mês.",
 
   'save.title': 'Salvar Sessão',
   'save.name': 'Nome',

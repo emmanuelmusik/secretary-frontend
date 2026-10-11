@@ -102,6 +102,8 @@ export default {
   'upload.uploading': 'جارٍ الرفع…',
   'upload.transcribe': 'تفريغ هذا الملف',
   'upload.failed': 'فشل الرفع',
+  'upload.too_long': "هذا الملف أطول من 3 ساعات. قسِّمه إلى أجزاء أقصر وارفعها واحدًا تلو الآخر.",
+  'upload.not_enough': "مدة هذا الملف نحو {needed} دقيقة، لكن المتبقي لك هذا الشهر {left} دقيقة فقط.",
 
   'save.title': 'حفظ الجلسة',
   'save.name': 'الاسم',

@@ -109,6 +109,8 @@ export default {
   'upload.uploading': 'Wird hochgeladen…',
   'upload.transcribe': 'Diese Datei transkribieren',
   'upload.failed': 'Hochladen fehlgeschlagen',
+  'upload.too_long': "Diese Datei ist länger als 3 Stunden. Teile sie in kürzere Teile auf und lade sie nacheinander hoch.",
+  'upload.not_enough': "Diese Datei ist etwa {needed} Min. lang, aber du hast diesen Monat nur noch {left} Min.",
 
   // ---- save session
   'save.title': 'Sitzung speichern',

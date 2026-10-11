@@ -102,6 +102,8 @@ export default {
   'upload.uploading': 'अपलोड हो रहा है…',
   'upload.transcribe': 'इस फ़ाइल को ट्रांसक्राइब करें',
   'upload.failed': 'अपलोड विफल रहा',
+  'upload.too_long': "यह फ़ाइल 3 घंटे से लंबी है। इसे छोटे हिस्सों में बाँटकर एक-एक करके अपलोड करें।",
+  'upload.not_enough': "यह फ़ाइल लगभग {needed} मिनट की है, लेकिन इस महीने आपके पास केवल {left} मिनट बचे हैं।",
 
   'save.title': 'सेशन सहेजें',
   'save.name': 'नाम',

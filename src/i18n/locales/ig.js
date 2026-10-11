@@ -108,6 +108,8 @@ export default {
   'upload.uploading': 'Na-ebulite…',
   'upload.transcribe': 'Detụghachi Faịlụ A',
   'upload.failed': 'Ibulite dara',
+  'upload.too_long': "Faịlụ a karịrị awa 3. Kewaa ya n’akụkụ dị mkpụmkpụ wee bulite ha otu otu.",
+  'upload.not_enough': "Faịlụ a dị ihe dị ka nkeji {needed}, mana ị nwere naanị nkeji {left} fọdụrụ n’ọnwa a.",
 
   // ---- save session
   'save.title': 'Chekwaa Nnọkọ',

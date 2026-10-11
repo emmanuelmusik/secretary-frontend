@@ -109,6 +109,8 @@ export default {
   'upload.uploading': 'Subiendo…',
   'upload.transcribe': 'Transcribir este archivo',
   'upload.failed': 'Error al subir el archivo',
+  'upload.too_long': "Este archivo dura más de 3 horas. Divídelo en partes más cortas y súbelas una por una.",
+  'upload.not_enough': "Este archivo dura unos {needed} min, pero este mes solo te quedan {left} min.",
 
   // ---- save session
   'save.title': 'Guardar sesión',

@@ -33,6 +33,7 @@ export default function UploadPage() {
     setError('');
 
     let session = null;
+    const duration = await getAudioDuration(file); // 0 when the phone cannot read it; the server then checks only that some time is left
     try {
       // 1. Create the session row with the chosen settings
       session = await api.createSession({
@@ -49,7 +50,6 @@ export default function UploadPage() {
       try {
         const base64 = await blobToBase64(file);
         await Filesystem.writeFile({ path: fileName, data: base64, directory: Directory.Data });
-        const duration = await getAudioDuration(file);
         await api.saveSession(session.id, { local_audio_path: fileName, duration_seconds: Math.round(duration) });
       } catch (err) {
         console.warn('[upload] could not save file locally', err);
@@ -57,13 +57,24 @@ export default function UploadPage() {
       }
 
       // 3. Send to backend for transcription (runs async — analysis/translation follow automatically)
-      await api.uploadAudio(session.id, file);
+      await api.uploadAudio(session.id, file, duration);
 
       navigate(`/sessions/${session.id}/save`);
     } catch (err) {
-      if (err.status === 402) {
-        // Out of time this month: remove the empty session and show the upgrade screen.
+      if (err.status === 413 && err.data?.error === 'too_long') {
         if (session) api.deleteSession(session.id).catch(() => {});
+        setError(t('upload.too_long'));
+        setUploading(false);
+        return;
+      }
+      if (err.status === 402) {
+        // Out of time this month, or not enough left for this file: remove the empty session first.
+        if (session) api.deleteSession(session.id).catch(() => {});
+        if (err.data?.error === 'not_enough_time' && err.usage?.plan === 'pro') {
+          setError(t('upload.not_enough', { needed: Math.ceil(err.data.needed_seconds / 60), left: Math.floor(err.usage.remaining_seconds / 60) }));
+          setUploading(false);
+          return;
+        }
         navigate('/paywall', { state: { limitReached: true, usage: err.usage } });
         return;
       }
@@ -151,7 +162,7 @@ function getAudioDuration(file) {
   return new Promise((resolve) => {
     const audio = new Audio();
     audio.preload = 'metadata';
-    audio.onloadedmetadata = () => resolve(audio.duration || 0);
+    audio.onloadedmetadata = () => resolve(Number.isFinite(audio.duration) ? audio.duration : 0);
     audio.onerror = () => resolve(0);
     audio.src = URL.createObjectURL(file);
   });

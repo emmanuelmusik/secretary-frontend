@@ -102,6 +102,8 @@ export default {
   'upload.uploading': 'Caricamento…',
   'upload.transcribe': 'Trascrivi Questo File',
   'upload.failed': 'Caricamento non riuscito',
+  'upload.too_long': "Questo file dura più di 3 ore. Dividilo in parti più brevi e caricale una alla volta.",
+  'upload.not_enough': "Questo file dura circa {needed} min, ma questo mese ti restano solo {left} min.",
 
   'save.title': 'Salva Sessione',
   'save.name': 'Nome',

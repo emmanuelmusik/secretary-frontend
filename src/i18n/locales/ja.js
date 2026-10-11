@@ -102,6 +102,8 @@ export default {
   'upload.uploading': 'アップロード中…',
   'upload.transcribe': 'このファイルを文字起こし',
   'upload.failed': 'アップロードに失敗しました',
+  'upload.too_long': "このファイルは3時間を超えています。短く分割して、1つずつアップロードしてください。",
+  'upload.not_enough': "このファイルは約{needed}分ですが、今月の残りは{left}分です。",
 
   'save.title': 'セッションを保存',
   'save.name': '名前',

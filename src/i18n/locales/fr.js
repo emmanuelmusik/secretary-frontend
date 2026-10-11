@@ -109,6 +109,8 @@ export default {
   'upload.uploading': 'Importation…',
   'upload.transcribe': 'Transcrire ce fichier',
   'upload.failed': "Échec de l'importation",
+  'upload.too_long': "Ce fichier dure plus de 3 heures. Découpez-le en parties plus courtes et importez-les une par une.",
+  'upload.not_enough': "Ce fichier dure environ {needed} min, mais il ne vous reste que {left} min ce mois-ci.",
 
   // ---- save session
   'save.title': 'Enregistrer la session',

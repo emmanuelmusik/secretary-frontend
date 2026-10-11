@@ -102,6 +102,8 @@ export default {
   'upload.uploading': '업로드 중…',
   'upload.transcribe': '이 파일 받아쓰기',
   'upload.failed': '업로드에 실패했어요',
+  'upload.too_long': "이 파일은 3시간보다 깁니다. 짧게 나누어 하나씩 업로드해 주세요.",
+  'upload.not_enough': "이 파일은 약 {needed}분인데 이번 달 남은 시간은 {left}분뿐입니다.",
 
   'save.title': '세션 저장',
   'save.name': '이름',

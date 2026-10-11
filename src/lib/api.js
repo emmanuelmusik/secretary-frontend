@@ -51,8 +51,9 @@ export const api = {
   stopSession: (id, payload) => authedFetch(`/sessions/${id}/stop`, { method: 'PATCH', body: JSON.stringify(payload) }),
   saveSession: (id, payload) => authedFetch(`/sessions/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   deleteSession: (id) => authedFetch(`/sessions/${id}`, { method: 'DELETE' }),
-  uploadAudio: (id, file) => {
+  uploadAudio: (id, file, durationSeconds) => {
     const form = new FormData();
+    if (durationSeconds > 0) form.append('duration', String(Math.round(durationSeconds)));
     form.append('audio', file);
     return authedFetch(`/sessions/${id}/upload`, { method: 'POST', body: form });
   },
