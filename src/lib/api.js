@@ -57,8 +57,8 @@ export const api = {
     form.append('audio', file);
     return authedFetch(`/sessions/${id}/upload`, { method: 'POST', body: form });
   },
-  analyzeWithHistory: (id, range) =>
-    authedFetch(`/sessions/${id}/analyze-with-history`, { method: 'POST', body: JSON.stringify({ range }) }),
+  analyzeWithHistory: (id, range, sessionIds) =>
+    authedFetch(`/sessions/${id}/analyze-with-history`, { method: 'POST', body: JSON.stringify(sessionIds ? { session_ids: sessionIds } : { range }) }),
   translateSession: (id, targetLanguage) =>
     authedFetch(`/sessions/${id}/translate`, { method: 'POST', body: JSON.stringify({ target_language: targetLanguage }) }),
   liveInsight: (id, transcript) => authedFetch(`/sessions/${id}/live-insight`, { method: 'POST', body: JSON.stringify({ transcript }) }),

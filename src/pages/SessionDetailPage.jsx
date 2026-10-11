@@ -4,6 +4,7 @@ import { api } from '../lib/api.js';
 import { getLocalAudioUrl, shareLocalAudio } from '../lib/localAudio.js';
 import { insightToText } from '../lib/clipboard.js';
 import CopyButton from '../components/CopyButton.jsx';
+import AnalyzeSheet from '../components/AnalyzeSheet.jsx';
 import { useI18n, TRANSLATION_LANGUAGES } from '../i18n/index.jsx';
 
 export default function SessionDetailPage() {
@@ -13,8 +14,8 @@ export default function SessionDetailPage() {
   const [session, setSession] = useState(null);
   const [tab, setTab] = useState('transcript'); // transcript | insight | translation | history | audio
 
+  const [analyzeOpen, setAnalyzeOpen] = useState(false);
   const [analyzingHistory, setAnalyzingHistory] = useState(false);
-  const [historyRange, setHistoryRange] = useState('last_20');
 
   const [generatingInsight, setGeneratingInsight] = useState(false);
 
@@ -61,12 +62,13 @@ export default function SessionDetailPage() {
     }
   }
 
-  async function handleAnalyzeWithHistory() {
+  async function handleAnalyzeWithHistory({ range, ids }) {
     setAnalyzingHistory(true);
     try {
-      const updated = await api.analyzeWithHistory(id, historyRange);
+      const updated = await api.analyzeWithHistory(id, range, ids);
       setSession(updated);
       setTab('history');
+      setAnalyzeOpen(false);
     } catch (err) {
       alert(err.message);
     } finally {
@@ -80,6 +82,7 @@ export default function SessionDetailPage() {
       const updated = await api.generateInsight(id);
       setSession(updated);
       setTab('insight');
+      setAnalyzeOpen(false);
     } catch (err) {
       alert(err.message);
     } finally {
@@ -118,6 +121,10 @@ export default function SessionDetailPage() {
         {formatDateTime(session.created_at)} · {formatDuration(session.duration_seconds, t)}
         {session.source_language && ` · ${t('session.detected', { lang: session.source_language })}`}
       </p>
+
+      <button type="button" className="analyze-btn" onClick={() => setAnalyzeOpen(true)}>
+        <span aria-hidden="true">✦</span> {t('analyze.button')}
+      </button>
 
       <div className="tabs">
         <button className={tab === 'transcript' ? 'active' : ''} onClick={() => setTab('transcript')}>{t('tab.transcript')}</button>
@@ -240,6 +247,9 @@ export default function SessionDetailPage() {
           <div className="insight-header">
             <CopyButton text={() => historyToText(session.history_analysis, t)} label={t('copy.history')} />
           </div>
+          {session.history_analysis.compared?.length > 0 && (
+            <p className="meta">{t('analyze.compared', { n: session.history_analysis.compared.length, names: session.history_analysis.compared.map((c) => c.name).join(', ') })}</p>
+          )}
           <h3>{t('history.themes')}</h3>
           <ul>{session.history_analysis.recurring_themes?.map((x, i) => <li key={i}>{x}</li>)}</ul>
           <h3>{t('history.progress')}</h3>
@@ -251,17 +261,14 @@ export default function SessionDetailPage() {
         </div>
       )}
 
-      {session.folder_id && (
-        <div className="history-analysis-trigger">
-          <select value={historyRange} onChange={(e) => setHistoryRange(e.target.value)}>
-            <option value="last_5">{t('history.last5')}</option>
-            <option value="last_20">{t('history.last20')}</option>
-            <option value="all">{t('history.all')}</option>
-          </select>
-          <button onClick={handleAnalyzeWithHistory} disabled={analyzingHistory}>
-            {analyzingHistory ? t('history.analyzing') : t('history.analyze')}
-          </button>
-        </div>
+      {analyzeOpen && (
+        <AnalyzeSheet
+          session={session}
+          busy={analyzingHistory || generatingInsight}
+          onClose={() => setAnalyzeOpen(false)}
+          onInsight={handleGenerateInsight}
+          onHistory={handleAnalyzeWithHistory}
+        />
       )}
     </div>
   );
