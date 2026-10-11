@@ -61,7 +61,7 @@ export const api = {
   },
   analyzeWithHistory: (id, range, sessionIds, folderId) =>
     authedFetch(`/sessions/${id}/analyze-with-history`, { method: 'POST', body: JSON.stringify(sessionIds ? { session_ids: sessionIds } : { range, folder_id: folderId || undefined }) }),
-  getAskMessages: (id) => authedFetch(`/sessions/${id}/ask`),
+  getAskMessages: (id) => authedFetch(`/sessions/${id}/ask`, { cache: 'no-store' }),
   translateSession: (id, targetLanguage) =>
     authedFetch(`/sessions/${id}/translate`, { method: 'POST', body: JSON.stringify({ target_language: targetLanguage }) }),
   askAboutRecording: (id, question, transcript) => authedFetch(`/sessions/${id}/ask`, { method: 'POST', body: JSON.stringify({ question, transcript }) }),

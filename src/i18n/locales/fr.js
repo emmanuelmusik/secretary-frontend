@@ -145,6 +145,8 @@ export default {
   'ask.hint': 'Posez une question sur cet enregistrement, par exemple « Qu\'avons-nous décidé pour le budget ? »',
   'ask.placeholder': 'Posez une question…',
   'ask.send': 'Envoyer',
+  'ask.load_failed': "Impossible de charger la conversation enregistrée.",
+  'ask.retry': "Réessayer",
   'analyze.choose_folder': 'Choisir un dossier…',
   'ask.thinking': 'Je consulte l\'enregistrement…',
   'ask.failed': 'Impossible de répondre pour le moment. Réessayez.',

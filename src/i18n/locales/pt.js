@@ -136,6 +136,8 @@ export default {
   'ask.hint': 'Pergunte qualquer coisa sobre esta gravação, por exemplo "O que decidimos sobre o orçamento?"',
   'ask.placeholder': 'Faça uma pergunta…',
   'ask.send': 'Enviar',
+  'ask.load_failed': "Não foi possível carregar o chat salvo.",
+  'ask.retry': "Tentar de novo",
   'analyze.choose_folder': 'Escolha uma pasta…',
   'ask.thinking': 'Consultando a gravação…',
   'ask.failed': 'Não foi possível responder agora. Tente novamente.',

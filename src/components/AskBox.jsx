@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api.js';
 
+const cache = new Map(); // sessionId -> turns, so switching tabs never shows an empty chat while the saved one loads
+
 // Ask a question about a recording. `getTranscript` (optional) supplies the freshest text while still recording.
 export default function AskBox({ t, sessionId, getTranscript }) {
   const [q, setQ] = useState('');
-  const [turns, setTurns] = useState([]); // { q, a } in order
+  const [turns, setTurnsState] = useState(() => cache.get(sessionId) || []); // { q, a } in order
+  const setTurns = (updater) => setTurnsState((prev) => { const next = typeof updater === 'function' ? updater(prev) : updater; cache.set(sessionId, next); return next; });
+  const [loadError, setLoadError] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [limit, setLimit] = useState(false);
@@ -12,13 +16,18 @@ export default function AskBox({ t, sessionId, getTranscript }) {
   const endRef = useRef(null);
 
   // The conversation is saved with the recording, so it is still here after leaving the page or signing in again.
-  useEffect(() => {
-    let alive = true;
-    api.getAskMessages(sessionId)
-      .then((rows) => { if (alive) { setTurns(rows.map((r) => ({ q: r.question, a: r.answer }))); setLoaded(true); setTimeout(() => endRef.current?.scrollIntoView({ block: 'nearest' }), 50); } })
-      .catch(() => { if (alive) setLoaded(true); });
-    return () => { alive = false; };
-  }, [sessionId]);
+  function loadSaved() {
+    setLoadError(false);
+    return api.getAskMessages(sessionId)
+      .then((rows) => {
+        const saved = rows.map((r) => ({ q: r.question, a: r.answer }));
+        setTurns((prev) => (saved.length >= prev.length ? saved : prev));
+        setLoaded(true);
+        setTimeout(() => endRef.current?.scrollIntoView({ block: 'nearest' }), 50);
+      })
+      .catch(() => { setLoadError(true); setLoaded(true); });
+  }
+  useEffect(() => { loadSaved(); }, [sessionId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function send(e) {
     e?.preventDefault();
@@ -52,6 +61,7 @@ export default function AskBox({ t, sessionId, getTranscript }) {
         {busy && <p className="meta">{t('ask.thinking')}</p>}
         <div ref={endRef} />
       </div>
+      {loadError && <p className="warning">{t('ask.load_failed')} <button type="button" className="ask-retry" onClick={loadSaved}>{t('ask.retry')}</button></p>}
       {error && <p className="error">{error}</p>}
       {limit && <p className="warning">{t('ask.limit')}</p>}
       {!limit && (

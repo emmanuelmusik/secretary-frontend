@@ -145,6 +145,8 @@ export default {
   'ask.hint': 'Frag etwas zu dieser Aufnahme, zum Beispiel „Was haben wir zum Budget entschieden?“',
   'ask.placeholder': 'Stell eine Frage …',
   'ask.send': 'Senden',
+  'ask.load_failed': "Der gespeicherte Chat konnte nicht geladen werden.",
+  'ask.retry': "Erneut versuchen",
   'analyze.choose_folder': 'Ordner wählen …',
   'ask.thinking': 'Ich sehe die Aufnahme durch …',
   'ask.failed': 'Gerade keine Antwort möglich. Bitte versuche es erneut.',

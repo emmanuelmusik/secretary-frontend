@@ -136,6 +136,8 @@ export default {
   'ask.hint': 'Chiedi qualsiasi cosa su questa registrazione, ad esempio "Cosa abbiamo deciso sul budget?"',
   'ask.placeholder': 'Fai una domanda…',
   'ask.send': 'Invia',
+  'ask.load_failed': "Impossibile caricare la chat salvata.",
+  'ask.retry': "Riprova",
   'analyze.choose_folder': 'Scegli una cartella…',
   'ask.thinking': 'Controllo la registrazione…',
   'ask.failed': 'Impossibile rispondere ora. Riprova.',

@@ -146,6 +146,8 @@ export default {
   'ask.hint': 'Ask anything about this recording, for example "What did we decide about the budget?"',
   'ask.placeholder': 'Ask a question…',
   'ask.send': 'Ask',
+  'ask.load_failed': "Could not load the saved chat.",
+  'ask.retry': "Retry",
   'analyze.choose_folder': 'Choose a folder…',
   'ask.thinking': 'Looking through the recording…',
   'ask.failed': 'Could not answer right now. Please try again.',

@@ -136,6 +136,8 @@ export default {
   'ask.hint': '이 녹음에 대해 무엇이든 물어보세요. 예: "예산에 대해 무엇을 결정했나요?"',
   'ask.placeholder': '질문하기…',
   'ask.send': '보내기',
+  'ask.load_failed': "저장된 대화를 불러오지 못했습니다.",
+  'ask.retry': "다시 시도",
   'analyze.choose_folder': '폴더 선택…',
   'ask.thinking': '녹음을 확인하는 중…',
   'ask.failed': '지금은 답변할 수 없습니다. 다시 시도해 주세요.',

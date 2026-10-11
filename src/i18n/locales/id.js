@@ -136,6 +136,8 @@ export default {
   'ask.hint': 'Tanyakan apa saja tentang rekaman ini, misalnya "Apa keputusan kita soal anggaran?"',
   'ask.placeholder': 'Ajukan pertanyaan…',
   'ask.send': 'Kirim',
+  'ask.load_failed': "Tidak dapat memuat obrolan tersimpan.",
+  'ask.retry': "Coba lagi",
   'analyze.choose_folder': 'Pilih folder…',
   'ask.thinking': 'Memeriksa rekaman…',
   'ask.failed': 'Tidak dapat menjawab sekarang. Coba lagi.',
