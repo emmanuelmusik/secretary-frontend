@@ -771,3 +771,11 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .ask-form{display:flex;gap:8px;margin-top:10px}
 .ask-form input{flex:1;min-width:0;border:1px solid var(--border,#d0d0d5);border-radius:12px;padding:10px 12px;font-size:16px;background:transparent;color:inherit}
 .ask-form button{border-radius:12px;padding:10px 16px}
+
+.ask-turns{display:flex;flex-direction:column;gap:6px;max-height:55vh;overflow-y:auto}
+.ask-turn{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.ask-bubble{max-width:85%;margin:0;padding:9px 13px;border-radius:18px;line-height:1.4;white-space:pre-wrap;font-weight:400}
+.ask-q{align-self:flex-end;background:#14b8a6;color:#04201d;border-bottom-right-radius:6px}
+.ask-a{align-self:flex-start;background:rgba(127,127,140,.18);border-bottom-left-radius:6px}
+.sheet-folder-select{width:100%;margin:8px 0;padding:10px 12px;border-radius:12px;border:1px solid var(--border,#3a3a42);background:transparent;color:inherit;font-size:16px}
+.sheet-chips button:disabled{opacity:.4}

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api.js';
 
 // Ask a question about a recording. `getTranscript` (optional) supplies the freshest text while still recording.
@@ -8,16 +8,25 @@ export default function AskBox({ t, sessionId, getTranscript }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [limit, setLimit] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const endRef = useRef(null);
+
+  // The conversation is saved with the recording, so it is still here after leaving the page or signing in again.
+  useEffect(() => {
+    let alive = true;
+    api.getAskMessages(sessionId)
+      .then((rows) => { if (alive) { setTurns(rows.map((r) => ({ q: r.question, a: r.answer }))); setLoaded(true); setTimeout(() => endRef.current?.scrollIntoView({ block: 'nearest' }), 50); } })
+      .catch(() => { if (alive) setLoaded(true); });
+    return () => { alive = false; };
+  }, [sessionId]);
 
   async function send(e) {
     e?.preventDefault();
     const question = q.trim();
     if (!question || busy || limit) return;
     setBusy(true); setError('');
-    const history = turns.flatMap((x) => [{ role: 'user', content: x.q }, { role: 'assistant', content: x.a }]);
     try {
-      const r = await api.askAboutRecording(sessionId, question, history, getTranscript ? getTranscript() : undefined);
+      const r = await api.askAboutRecording(sessionId, question, getTranscript ? getTranscript() : undefined);
       setTurns((prev) => [...prev, { q: question, a: r.answer }]);
       setQ('');
       setTimeout(() => endRef.current?.scrollIntoView({ block: 'nearest' }), 50);
@@ -33,11 +42,11 @@ export default function AskBox({ t, sessionId, getTranscript }) {
   return (
     <div className="ask-box">
       <div className="ask-turns">
-        {turns.length === 0 && <p className="meta">{t('ask.hint')}</p>}
+        {loaded && turns.length === 0 && <p className="meta">{t('ask.hint')}</p>}
         {turns.map((x, i) => (
           <div key={i} className="ask-turn">
-            <p className="ask-q" dir="auto">{x.q}</p>
-            <p className="ask-a" dir="auto">{x.a}</p>
+            <p className="ask-bubble ask-q" dir="auto">{x.q}</p>
+            <p className="ask-bubble ask-a" dir="auto">{x.a}</p>
           </div>
         ))}
         {busy && <p className="meta">{t('ask.thinking')}</p>}

@@ -136,6 +136,7 @@ export default {
   'ask.hint': 'Pergunte qualquer coisa sobre esta gravação, por exemplo "O que decidimos sobre o orçamento?"',
   'ask.placeholder': 'Faça uma pergunta…',
   'ask.send': 'Enviar',
+  'analyze.choose_folder': 'Escolha uma pasta…',
   'ask.thinking': 'Consultando a gravação…',
   'ask.failed': 'Não foi possível responder agora. Tente novamente.',
   'ask.too_short': 'Ainda não há conteúdo suficiente na gravação para responder.',

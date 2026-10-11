@@ -144,6 +144,7 @@ export default {
   'ask.hint': 'Jụọ ihe ọ bụla gbasara ndekọ a, dịka "Gịnị ka any kpebiri gbasara mmefu ego?"',
   'ask.placeholder': 'Jụọ ajụjụ…',
   'ask.send': 'Zipu',
+  'analyze.choose_folder': 'Họrọ folda…',
   'ask.thinking': 'Na-enyocha ndekọ…',
   'ask.failed': 'Enweghị ike ịza ugbu a. Biko nwaa ọzọ.',
   'ask.too_short': 'Ndekọ a enweghị ihe zuru ezu iji zaa.',

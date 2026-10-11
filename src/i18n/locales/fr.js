@@ -145,6 +145,7 @@ export default {
   'ask.hint': 'Posez une question sur cet enregistrement, par exemple « Qu\'avons-nous décidé pour le budget ? »',
   'ask.placeholder': 'Posez une question…',
   'ask.send': 'Envoyer',
+  'analyze.choose_folder': 'Choisir un dossier…',
   'ask.thinking': 'Je consulte l\'enregistrement…',
   'ask.failed': 'Impossible de répondre pour le moment. Réessayez.',
   'ask.too_short': 'Il n\'y a pas encore assez de contenu pour répondre.',

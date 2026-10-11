@@ -136,6 +136,7 @@ export default {
   'ask.hint': 'この録音について何でも質問できます。例：「予算について何を決めた？」',
   'ask.placeholder': '質問を入力…',
   'ask.send': '送信',
+  'analyze.choose_folder': 'フォルダを選択…',
   'ask.thinking': '録音を確認しています…',
   'ask.failed': '今は回答できません。もう一度お試しください。',
   'ask.too_short': '回答するには録音の内容がまだ足りません。',

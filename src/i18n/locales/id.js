@@ -136,6 +136,7 @@ export default {
   'ask.hint': 'Tanyakan apa saja tentang rekaman ini, misalnya "Apa keputusan kita soal anggaran?"',
   'ask.placeholder': 'Ajukan pertanyaan…',
   'ask.send': 'Kirim',
+  'analyze.choose_folder': 'Pilih folder…',
   'ask.thinking': 'Memeriksa rekaman…',
   'ask.failed': 'Tidak dapat menjawab sekarang. Coba lagi.',
   'ask.too_short': 'Isi rekaman belum cukup untuk dijawab.',

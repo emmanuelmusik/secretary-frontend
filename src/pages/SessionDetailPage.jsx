@@ -69,10 +69,10 @@ export default function SessionDetailPage() {
     }
   }
 
-  async function handleAnalyzeWithHistory({ range, ids }) {
+  async function handleAnalyzeWithHistory({ range, ids, folderId }) {
     setAnalyzingHistory(true);
     try {
-      const updated = await api.analyzeWithHistory(id, range, ids);
+      const updated = await api.analyzeWithHistory(id, range, ids, folderId);
       setSession(updated);
       setTab('history');
       setAnalyzeOpen(false);

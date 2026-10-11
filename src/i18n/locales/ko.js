@@ -136,6 +136,7 @@ export default {
   'ask.hint': '이 녹음에 대해 무엇이든 물어보세요. 예: "예산에 대해 무엇을 결정했나요?"',
   'ask.placeholder': '질문하기…',
   'ask.send': '보내기',
+  'analyze.choose_folder': '폴더 선택…',
   'ask.thinking': '녹음을 확인하는 중…',
   'ask.failed': '지금은 답변할 수 없습니다. 다시 시도해 주세요.',
   'ask.too_short': '답변하기에는 녹음 내용이 아직 부족합니다.',

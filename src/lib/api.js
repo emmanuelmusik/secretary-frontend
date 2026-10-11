@@ -59,11 +59,12 @@ export const api = {
     form.append('audio', file);
     return authedFetch(`/sessions/${id}/upload`, { method: 'POST', body: form });
   },
-  analyzeWithHistory: (id, range, sessionIds) =>
-    authedFetch(`/sessions/${id}/analyze-with-history`, { method: 'POST', body: JSON.stringify(sessionIds ? { session_ids: sessionIds } : { range }) }),
+  analyzeWithHistory: (id, range, sessionIds, folderId) =>
+    authedFetch(`/sessions/${id}/analyze-with-history`, { method: 'POST', body: JSON.stringify(sessionIds ? { session_ids: sessionIds } : { range, folder_id: folderId || undefined }) }),
+  getAskMessages: (id) => authedFetch(`/sessions/${id}/ask`),
   translateSession: (id, targetLanguage) =>
     authedFetch(`/sessions/${id}/translate`, { method: 'POST', body: JSON.stringify({ target_language: targetLanguage }) }),
-  askAboutRecording: (id, question, history, transcript) => authedFetch(`/sessions/${id}/ask`, { method: 'POST', body: JSON.stringify({ question, history, transcript }) }),
+  askAboutRecording: (id, question, transcript) => authedFetch(`/sessions/${id}/ask`, { method: 'POST', body: JSON.stringify({ question, transcript }) }),
   liveInsight: (id, transcript) => authedFetch(`/sessions/${id}/live-insight`, { method: 'POST', body: JSON.stringify({ transcript }) }),
   generateInsight: (id) => authedFetch(`/sessions/${id}/insight`, { method: 'POST' }),
 

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { searchSessions } from '../lib/search.js';
+import { flattenFolders } from '../lib/folders.js';
 import Highlight from './Highlight.jsx';
 
 export const MAX_PICKED = 20;
@@ -13,7 +14,11 @@ export default function AnalyzeSheet({ session, busy, onClose, onInsight, onHist
   const [all, setAll] = useState(null);
   const [picked, setPicked] = useState(() => new Set());
   const [query, setQuery] = useState('');
+  const [folders, setFolders] = useState([]);
+  const [folderId, setFolderId] = useState(session.folder_id || '');
   const [scope, setScope] = useState(session.folder_id ? 'folder' : 'all');
+
+  useEffect(() => { api.getFolders().then(setFolders).catch(() => {}); }, []);
 
   useEffect(() => {
     if (step !== 'pick' || all) return;
@@ -43,13 +48,19 @@ export default function AnalyzeSheet({ session, busy, onClose, onInsight, onHist
               <strong>{t('analyze.this')}</strong>
               <small>{session.analysis ? t('analyze.this_again') : t('analyze.this_desc')}</small>
             </button>
-            {session.folder_id && (
+            {folders.length > 0 && (
               <div className="sheet-group">
                 <strong>{t('analyze.folder_hist')}</strong>
+                <select className="sheet-folder-select" value={folderId} onChange={(e) => setFolderId(e.target.value)} aria-label={t('analyze.choose_folder')}>
+                  <option value="">{t('analyze.choose_folder')}</option>
+                  {flattenFolders(folders).map((f) => (
+                    <option key={f.id} value={f.id}>{'\u2003'.repeat(f.depth - 1)}{f.depth > 1 ? '↳ ' : ''}{f.name}</option>
+                  ))}
+                </select>
                 <div className="sheet-chips">
-                  <button type="button" onClick={() => onHistory({ range: 'last_5' })}>{t('history.last5')}</button>
-                  <button type="button" onClick={() => onHistory({ range: 'last_20' })}>{t('history.last20')}</button>
-                  <button type="button" onClick={() => onHistory({ range: 'all' })}>{t('history.all')}</button>
+                  <button type="button" disabled={!folderId} onClick={() => onHistory({ range: 'last_5', folderId })}>{t('history.last5')}</button>
+                  <button type="button" disabled={!folderId} onClick={() => onHistory({ range: 'last_20', folderId })}>{t('history.last20')}</button>
+                  <button type="button" disabled={!folderId} onClick={() => onHistory({ range: 'all', folderId })}>{t('history.all')}</button>
                 </div>
               </div>
             )}

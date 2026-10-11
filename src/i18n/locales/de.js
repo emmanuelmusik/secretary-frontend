@@ -145,6 +145,7 @@ export default {
   'ask.hint': 'Frag etwas zu dieser Aufnahme, zum Beispiel „Was haben wir zum Budget entschieden?“',
   'ask.placeholder': 'Stell eine Frage …',
   'ask.send': 'Senden',
+  'analyze.choose_folder': 'Ordner wählen …',
   'ask.thinking': 'Ich sehe die Aufnahme durch …',
   'ask.failed': 'Gerade keine Antwort möglich. Bitte versuche es erneut.',
   'ask.too_short': 'Die Aufnahme enthält noch zu wenig für eine Antwort.',

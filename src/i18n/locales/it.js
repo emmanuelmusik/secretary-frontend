@@ -136,6 +136,7 @@ export default {
   'ask.hint': 'Chiedi qualsiasi cosa su questa registrazione, ad esempio "Cosa abbiamo deciso sul budget?"',
   'ask.placeholder': 'Fai una domanda…',
   'ask.send': 'Invia',
+  'analyze.choose_folder': 'Scegli una cartella…',
   'ask.thinking': 'Controllo la registrazione…',
   'ask.failed': 'Impossibile rispondere ora. Riprova.',
   'ask.too_short': 'Non c\'è ancora abbastanza nella registrazione per rispondere.',
