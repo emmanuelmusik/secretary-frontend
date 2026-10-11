@@ -85,6 +85,7 @@ export default {
   'record.err_stop': 'Impossible d\'enregistrer car il n\'y a pas de connexion. Votre enregistrement est en sécurité sur ce téléphone. Vérifiez votre connexion, puis réessayez.',
   'record.retry_save': 'Réessayer',
   'record.saving': 'Enregistrement…',
+  'record.left': "Reste ce mois-ci : {time}",
   "record.paused_short": "En pause",
   "record.reconnecting_short": "Reconnexion",
   "record.view_transcript": "Transcription",
@@ -283,6 +284,7 @@ export default {
   'scan.err_nocam': "L'appareil photo n'est pas disponible ici. Vous pouvez choisir une photo à la place.",
   'scan.err_cam': "Impossible d'ouvrir l'appareil photo. Vérifiez que l'accès à l'appareil photo est autorisé pour Secretary dans les réglages de votre téléphone, ou choisissez une photo.",
   'scan.err_read': 'Impossible de lire la carte.',
+  'scan.left': "{n} scans restants ce mois-ci",
   'scan.err_limit_pro': "Vous avez utilisé les {limit} scans de cartes de ce mois-ci. Ils sont remis à zéro au début du mois prochain.",
 
   // ---- AI data-sharing permission
@@ -348,6 +350,7 @@ export default {
   'paywall.reason_disposable': "Le temps d'enregistrement gratuit n'est pas disponible pour les adresses e-mail temporaires. Abonnez-vous à Pro ou connectez-vous avec une adresse e-mail classique.",
   'paywall.reason_unverified': "Veuillez vérifier votre adresse e-mail pour utiliser votre temps d'enregistrement gratuit.",
   'usage.title': "Formule et utilisation",
+  'usage.scans': "Scans de cartes : {used} sur {limit} utilisés ce mois-ci",
   'usage.free': "Formule gratuite",
   'usage.pro': "Formule Pro",
   'usage.unlimited': "Accès illimité",

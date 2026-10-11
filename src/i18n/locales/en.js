@@ -86,6 +86,7 @@ export default {
   'record.err_stop': 'Could not save the recording because there is no connection. Your recording is safe on this phone. Check your internet, then try again.',
   'record.retry_save': 'Try again',
   'record.saving': 'Saving…',
+  'record.left': "Left this month: {time}",
   "record.paused_short": "Paused",
   "record.reconnecting_short": "Reconnecting",
   "record.view_transcript": "Transcript",
@@ -284,6 +285,7 @@ export default {
   'scan.err_nocam': 'The camera is not available here. You can choose a photo instead.',
   'scan.err_cam': 'Could not open the camera. Check that camera access is allowed for Secretary in your phone settings, or choose a photo instead.',
   'scan.err_read': 'Could not read the card.',
+  'scan.left': "{n} scans left this month",
   'scan.err_limit_pro': "You have used all {limit} card scans for this month. They reset at the start of next month.",
 
   // ---- AI data-sharing permission
@@ -351,6 +353,7 @@ export default {
   'paywall.reason_disposable': "Free recording time is not available for temporary email addresses. Subscribe to Pro, or sign in with a regular email address.",
   'paywall.reason_unverified': "Please verify your email address to use your free recording time.",
   'usage.title': "Plan and usage",
+  'usage.scans': "Card scans: {used} of {limit} used this month",
   'usage.free': "Free plan",
   'usage.pro': "Pro plan",
   'usage.unlimited': "Unlimited access",

@@ -40,6 +40,8 @@ export default function ScanCardPage() {
   const [stage, setStage] = useState({ w: 0, h: 0 });
   const [reading, setReading] = useState(false);
   const [error, setError] = useState('');
+  const [scansLeft, setScansLeft] = useState(null);
+  useEffect(() => { api.getUsage().then((u) => { if (u?.card_scans && !u.card_scans.unlimited) setScansLeft(u.card_scans.remaining); }).catch(() => {}); }, []);
 
   const videoRef = useRef(null);
   const stageRef = useRef(null);
@@ -257,6 +259,7 @@ export default function ScanCardPage() {
               <button type="button" className="scan-add-back" onClick={() => retake('back')}>{t('scan.add_back')}</button>
             )}
             {error && <p className="form-error">{error}</p>}
+            {scansLeft !== null && <p className="scan-left">{t('scan.left', { n: scansLeft })}</p>}
           </div>
           <div className="scan-bottom">
             <button type="button" className="scan-primary" onClick={readCard} disabled={reading}>

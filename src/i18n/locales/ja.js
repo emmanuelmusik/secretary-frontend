@@ -79,6 +79,7 @@ export default {
   'record.err_stop': '接続がないため録音を保存できませんでした。録音はこの端末に安全に残っています。インターネットを確認して、もう一度お試しください。',
   'record.retry_save': 'もう一度試す',
   'record.saving': '保存中…',
+  'record.left': "今月の残り: {time}",
   "record.paused_short": "一時停止中",
   "record.reconnecting_short": "再接続中",
   "record.view_transcript": "文字起こし",
@@ -271,6 +272,7 @@ export default {
   'scan.err_nocam': 'ここではカメラを利用できません。代わりに写真を選択できます。',
   'scan.err_cam': 'カメラを開けませんでした。スマートフォンの設定で Secretary にカメラへのアクセスが許可されているか確認するか、代わりに写真を選択してください。',
   'scan.err_read': 'カードを読み取れませんでした。',
+  'scan.left': "今月の残りスキャン: {n}回",
   'scan.err_limit_pro': "今月の名刺スキャン{limit}回をすべて使い切りました。来月の初めにリセットされます。",
 
   'consent.title': '始める前に',
@@ -335,6 +337,7 @@ export default {
   'paywall.reason_disposable': '一時的なメールアドレスでは、無料の録音時間をご利用いただけません。Proに登録するか、通常のメールアドレスでログインしてください。',
   'paywall.reason_unverified': '無料の録音時間をご利用になるには、メールアドレスを確認してください。',
   'usage.title': 'プランと使用量',
+  'usage.scans': "名刺スキャン: 今月 {used} / {limit} 回使用",
   'usage.free': '無料プラン',
   'usage.pro': 'Proプラン',
   'usage.unlimited': "無制限アクセス",

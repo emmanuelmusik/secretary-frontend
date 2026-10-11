@@ -84,6 +84,7 @@ export default {
   'record.err_stop': 'Enweghị ike ichekwa ndekọ n\'ihi na ntanetị adịghị. Ndekọ gị dị nchebe n\'ekwentị a. Lelee ịntanetị, gbalịa ọzọ.',
   'record.retry_save': 'Gbalịa ọzọ',
   'record.saving': 'Na-echekwa…',
+  'record.left': "Fọdụrụ n’ọnwa a: {time}",
   "record.paused_short": "Akwụsịrị nwa oge",
   "record.reconnecting_short": "Na-ejikọ ọzọ",
   "record.view_transcript": "Ederede",
@@ -282,6 +283,7 @@ export default {
   'scan.err_nocam': 'Igwefoto adịghị ebe a. Ị nwere ike ịhọrọ foto kama.',
   'scan.err_cam': 'Enweghị ike imepe igwefoto. Lelee na e kwere Secretary ka o jiri igwefoto na ntọala ekwentị gị, ma ọ bụ họrọ foto kama.',
   'scan.err_read': 'Enweghị ike ịgụ kaadị ahụ.',
+  'scan.left': "Nyocha {n} fọdụrụ n’ọnwa a",
   'scan.err_limit_pro': "Ị jirila nyocha kaadị {limit} niile maka ọnwa a. A ga-eweghachi ha n’mmalite ọnwa na-esote.",
 
   // ---- AI data-sharing permission
@@ -349,6 +351,7 @@ export default {
   'paywall.reason_disposable': "Oge ndekọ n’efu adịghị maka adreesị imeelụ nwa oge. Debanye na Pro, ma ọ bụ banye site na adreesị imeelụ nkịtị.",
   'paywall.reason_unverified': "Biko kwenye adreesị imeelụ gị iji jiri oge ndekọ n’efu gị.",
   'usage.title': "Atụmatụ na ojiji",
+  'usage.scans': "Nyocha kaadị: {used} n’ime {limit} ejirila n’ọnwa a",
   'usage.free': "Atụmatụ n’efu",
   'usage.pro': "Atụmatụ Pro",
   'usage.unlimited': "Ohere enweghị oke",

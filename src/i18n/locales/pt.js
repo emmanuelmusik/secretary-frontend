@@ -79,6 +79,7 @@ export default {
   'record.err_stop': 'Não foi possível salvar a gravação porque não há conexão. Sua gravação está segura neste telefone. Verifique a internet e tente novamente.',
   'record.retry_save': 'Tentar novamente',
   'record.saving': 'Salvando…',
+  'record.left': "Restante neste mês: {time}",
   "record.paused_short": "Em pausa",
   "record.reconnecting_short": "Reconectando",
   "record.view_transcript": "Transcrição",
@@ -271,6 +272,7 @@ export default {
   'scan.err_nocam': 'A câmera não está disponível aqui. Você pode escolher uma foto.',
   'scan.err_cam': 'Não foi possível abrir a câmera. Verifique se o acesso à câmera está permitido para o Secretary nos ajustes do celular, ou escolha uma foto.',
   'scan.err_read': 'Não foi possível ler o cartão.',
+  'scan.left': "{n} escaneamentos restantes neste mês",
   'scan.err_limit_pro': "Você usou os {limit} escaneamentos de cartões deste mês. Eles são renovados no início do próximo mês.",
 
   'consent.title': 'Antes de começar',
@@ -334,6 +336,7 @@ export default {
   'paywall.reason_disposable': "O tempo de gravação gratuito não está disponível para endereços de e-mail temporários. Assine o Pro ou entre com um endereço de e-mail comum.",
   'paywall.reason_unverified': "Confirme seu endereço de e-mail para usar seu tempo de gravação gratuito.",
   'usage.title': "Plano e uso",
+  'usage.scans': "Escaneamentos de cartões: {used} de {limit} usados neste mês",
   'usage.free': "Plano Gratuito",
   'usage.pro': "Plano Pro",
   'usage.unlimited': "Acesso ilimitado",

@@ -47,6 +47,9 @@ export default function AccountPage() {
           <h2>{t('usage.title')}</h2>
           <p className="plan-name-line">{usage.unlimited ? t('usage.unlimited') : usage.plan === 'pro' ? t('usage.pro') : t('usage.free')}{usage.renews_at && ` · ${t('usage.renews', { date: formatDate(usage.renews_at) })}`}</p>
           <UsageMeter usage={usage} />
+          {!usage.unlimited && usage.card_scans && (
+            <p className="usage-text">{t('usage.scans', { used: usage.card_scans.used, limit: usage.card_scans.limit })}</p>
+          )}
           {!usage.unlimited && (
             <button type="button" className="save-btn" onClick={() => navigate('/paywall')}>
               {usage.plan === 'pro' ? t('paywall.manage') : t('usage.upgrade')}

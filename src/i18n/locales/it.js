@@ -79,6 +79,7 @@ export default {
   'record.err_stop': 'Impossibile salvare la registrazione perché non c\'è connessione. La registrazione è al sicuro su questo telefono. Controlla internet e riprova.',
   'record.retry_save': 'Riprova',
   'record.saving': 'Salvataggio…',
+  'record.left': "Rimasto questo mese: {time}",
   "record.paused_short": "In pausa",
   "record.reconnecting_short": "Riconnessione",
   "record.view_transcript": "Trascrizione",
@@ -271,6 +272,7 @@ export default {
   'scan.err_nocam': 'La fotocamera non è disponibile qui. Puoi scegliere una foto.',
   'scan.err_cam': "Impossibile aprire la fotocamera. Controlla che l'accesso alla fotocamera sia consentito a Secretary nelle impostazioni del telefono, oppure scegli una foto.",
   'scan.err_read': 'Impossibile leggere il biglietto.',
+  'scan.left': "{n} scansioni rimaste questo mese",
   'scan.err_limit_pro': "Hai usato tutte le {limit} scansioni di biglietti da visita di questo mese. Si azzerano all’inizio del mese prossimo.",
 
   'consent.title': 'Prima di iniziare',
@@ -334,6 +336,7 @@ export default {
   'paywall.reason_disposable': "Il tempo di registrazione gratuito non è disponibile per gli indirizzi email temporanei. Abbonati a Pro oppure accedi con un indirizzo email normale.",
   'paywall.reason_unverified': "Verifica il tuo indirizzo email per usare il tuo tempo di registrazione gratuito.",
   'usage.title': "Piano e utilizzo",
+  'usage.scans': "Scansioni di biglietti: {used} su {limit} usate questo mese",
   'usage.free': "Piano gratuito",
   'usage.pro': "Piano Pro",
   'usage.unlimited': "Accesso illimitato",

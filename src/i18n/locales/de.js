@@ -85,6 +85,7 @@ export default {
   'record.err_stop': 'Die Aufnahme konnte nicht gespeichert werden, weil keine Verbindung besteht. Ihre Aufnahme ist sicher auf diesem Telefon. Prüfen Sie Ihr Internet und versuchen Sie es erneut.',
   'record.retry_save': 'Erneut versuchen',
   'record.saving': 'Wird gespeichert…',
+  'record.left': "Noch übrig diesen Monat: {time}",
   "record.paused_short": "Pausiert",
   "record.reconnecting_short": "Verbinde neu",
   "record.view_transcript": "Transkript",
@@ -283,6 +284,7 @@ export default {
   'scan.err_nocam': 'Die Kamera ist hier nicht verfügbar. Sie können stattdessen ein Foto auswählen.',
   'scan.err_cam': 'Die Kamera konnte nicht geöffnet werden. Prüfen Sie, ob Secretary in den Einstellungen Ihres Telefons auf die Kamera zugreifen darf, oder wählen Sie ein Foto aus.',
   'scan.err_read': 'Die Karte konnte nicht gelesen werden.',
+  'scan.left': "Noch {n} Scans diesen Monat",
   'scan.err_limit_pro': "Du hast alle {limit} Visitenkarten-Scans für diesen Monat verbraucht. Sie werden am Anfang des nächsten Monats zurückgesetzt.",
 
   // ---- AI data-sharing permission
@@ -348,6 +350,7 @@ export default {
   'paywall.reason_disposable': "Kostenlose Aufnahmezeit ist für temporäre E-Mail-Adressen nicht verfügbar. Abonnieren Sie Pro oder melden Sie sich mit einer regulären E-Mail-Adresse an.",
   'paywall.reason_unverified': "Bitte bestätigen Sie Ihre E-Mail-Adresse, um Ihre kostenlose Aufnahmezeit zu nutzen.",
   'usage.title': "Tarif und Nutzung",
+  'usage.scans': "Visitenkarten-Scans: {used} von {limit} diesen Monat genutzt",
   'usage.free': "Kostenloser Tarif",
   'usage.pro': "Pro-Tarif",
   'usage.unlimited': "Unbegrenzter Zugang",

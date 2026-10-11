@@ -9,10 +9,18 @@ function fmt(seconds) {
   return h > 0 ? `${h}:${m}:${s}` : `${m}:${s}`;
 }
 
+// "2h 05m", "42m" or "4:30" (under 5 minutes it counts down in seconds).
+function fmtLeft(seconds, t) {
+  if (seconds < 300) return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  return h > 0 ? t('duration.hm', { h, m }) : t('duration.m', { m });
+}
+
 // Full-screen recording view: a small floating status pill, the transcript with the newest sentence
 // large (older ones smaller above it, scrolling by itself), and a see-through Pause / Stop bar.
 export default function LiveView({
-  t, elapsed, maxSeconds, paused, reconnecting, nearingCap, error, text, interim, translatedLabel,
+  t, elapsed, maxSeconds, leftSeconds, paused, reconnecting, nearingCap, error, text, interim, translatedLabel,
   view, onView, insight, onGenerate, onPause, onResume, onStop,
 }) {
   const scroller = useRef(null);
@@ -49,6 +57,9 @@ export default function LiveView({
         {state === 'reconnecting' && <span className="live-state">{t('record.reconnecting_short')}</span>}
         {translatedLabel && <span className="live-state">{translatedLabel}</span>}
       </div>
+      {leftSeconds !== null && leftSeconds !== undefined && (
+        <p className={`live-left ${leftSeconds < 300 ? 'low' : ''}`}>{t('record.left', { time: fmtLeft(leftSeconds, t) })}</p>
+      )}
       {nearingCap && !paused && <p className="live-note warning">{t('record.cap_warning')}</p>}
       {reconnecting && <p className="live-note warning">{t('record.reconnecting')}</p>}
       {error && <p className="live-note error">{error}</p>}

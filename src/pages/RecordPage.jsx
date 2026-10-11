@@ -32,6 +32,8 @@ export default function RecordPage() {
   const [insight, setInsight] = useState({ status: 'idle', data: null, at: null, used: 0, limit: null, error: '' });
   const [error, setError] = useState('');
   const [reconnecting, setReconnecting] = useState(false);
+  const [monthLeft, setMonthLeft] = useState(null);   // seconds left this month when the recording started (null = unlimited / unknown)
+  useEffect(() => { api.getUsage().then((u) => { if (u && !u.unlimited) setMonthLeft(u.remaining_seconds); }).catch(() => {}); }, []);
   const [saveState, setSaveState] = useState('idle'); // 'idle' | 'saving' | 'failed' (saving the finished recording)
 
   const sessionIdRef = useRef(null);
@@ -358,6 +360,7 @@ export default function RecordPage() {
           t={t}
           elapsed={elapsed}
           maxSeconds={MAX_DURATION_SECONDS}
+          leftSeconds={monthLeft === null ? null : Math.max(0, monthLeft - elapsed)}
           paused={isPaused}
           reconnecting={reconnecting}
           nearingCap={nearingCap}

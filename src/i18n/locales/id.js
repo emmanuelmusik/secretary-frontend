@@ -79,6 +79,7 @@ export default {
   'record.err_stop': 'Rekaman tidak dapat disimpan karena tidak ada koneksi. Rekaman Anda aman di ponsel ini. Periksa internet, lalu coba lagi.',
   'record.retry_save': 'Coba lagi',
   'record.saving': 'Menyimpan…',
+  'record.left': "Sisa bulan ini: {time}",
   "record.paused_short": "Dijeda",
   "record.reconnecting_short": "Menyambung ulang",
   "record.view_transcript": "Transkrip",
@@ -271,6 +272,7 @@ export default {
   'scan.err_nocam': 'Kamera tidak tersedia di sini. Anda dapat memilih foto sebagai gantinya.',
   'scan.err_cam': 'Tidak dapat membuka kamera. Pastikan akses kamera untuk Secretary diizinkan di pengaturan ponsel Anda, atau pilih foto sebagai gantinya.',
   'scan.err_read': 'Tidak dapat membaca kartu.',
+  'scan.left': "Sisa {n} pindaian bulan ini",
   'scan.err_limit_pro': "Anda telah memakai semua {limit} pindaian kartu bulan ini. Kuota diatur ulang di awal bulan depan.",
 
   'consent.title': 'Sebelum Anda mulai',
@@ -336,6 +338,7 @@ export default {
   'paywall.reason_disposable': "Waktu rekaman gratis tidak tersedia untuk alamat email sementara. Berlangganan Pro, atau masuk dengan alamat email biasa.",
   'paywall.reason_unverified': "Harap verifikasi alamat email Anda untuk menggunakan waktu rekaman gratis.",
   'usage.title': "Paket dan penggunaan",
+  'usage.scans': "Pindaian kartu: {used} dari {limit} terpakai bulan ini",
   'usage.free': "Paket Gratis",
   'usage.pro': "Paket Pro",
   'usage.unlimited': "Akses tanpa batas",

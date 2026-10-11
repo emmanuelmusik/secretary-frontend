@@ -79,6 +79,7 @@ export default {
   'record.err_stop': '연결이 없어 녹음을 저장하지 못했어요. 녹음은 이 휴대폰에 안전하게 있어요. 인터넷을 확인하고 다시 시도해 주세요.',
   'record.retry_save': '다시 시도',
   'record.saving': '저장 중…',
+  'record.left': "이번 달 남은 시간: {time}",
   "record.paused_short": "일시정지됨",
   "record.reconnecting_short": "다시 연결 중",
   "record.view_transcript": "대본",
@@ -271,6 +272,7 @@ export default {
   'scan.err_nocam': '여기서는 카메라를 사용할 수 없어요. 대신 사진을 선택할 수 있어요.',
   'scan.err_cam': '카메라를 열 수 없어요. 휴대폰 설정에서 Secretary의 카메라 접근이 허용되어 있는지 확인하거나, 대신 사진을 선택하세요.',
   'scan.err_read': '명함을 읽을 수 없어요.',
+  'scan.left': "이번 달 스캔 {n}회 남음",
   'scan.err_limit_pro': "이번 달 명함 스캔 {limit}회를 모두 사용했습니다. 다음 달 초에 초기화됩니다.",
 
   'consent.title': '시작하기 전에',
@@ -336,6 +338,7 @@ export default {
   'paywall.reason_disposable': "임시 이메일 주소에는 무료 녹음 시간이 제공되지 않아요. Pro를 구독하거나 일반 이메일 주소로 로그인해 주세요.",
   'paywall.reason_unverified': "무료 녹음 시간을 사용하려면 이메일 주소를 인증해 주세요.",
   'usage.title': "요금제 및 사용량",
+  'usage.scans': "명함 스캔: 이번 달 {limit}회 중 {used}회 사용",
   'usage.free': "무료 요금제",
   'usage.pro': "Pro 요금제",
   'usage.unlimited': "무제한 이용",

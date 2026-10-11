@@ -724,3 +724,7 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 }
 .ftree-chevron, .ftree-link, .folders-icon-btn, .folders-create-btn { -webkit-tap-highlight-color: transparent; }
 .ftree-chevron:focus, .ftree-chevron:active { background: transparent; outline: none; }
+
+.live-left { text-align: center; margin: 6px 0 0; font-size: 0.78rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.live-left.low { color: #fbbf24; }
+.scan-left { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin: 10px 0 0; }
