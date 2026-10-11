@@ -758,3 +758,8 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .move-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 999px; padding: 10px 16px; max-width: 100%; }
 .move-btn-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52vw; }
 .move-list .ftree-icon { color: var(--accent); }
+
+.speaker-chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:4px 0 10px}
+.speaker-hint{flex-basis:100%;font-size:12px;opacity:.65}
+.speaker-chip{border:1px solid var(--border,#d0d0d5);background:transparent;color:inherit;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+.speaker-input{border:1px solid var(--border,#d0d0d5);border-radius:999px;padding:5px 12px;font-size:14px;width:150px;background:transparent;color:inherit}

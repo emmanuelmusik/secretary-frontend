@@ -139,6 +139,7 @@ export default {
   'insight.generating': 'Na-emepụta…',
   'insight.regenerate': 'Mepụtaghachi',
   'insight.regenerating': 'Na-emepụtaghachi…',
+  'speakers.hint': 'Pịa aha iji gbanwee aha onye na-ekwu n\'ebe niile.',
   'insight.summary': 'Nchịkọta',
   'insight.key_points': 'Isi Ihe',
   'insight.action_items': 'Ihe Ime',

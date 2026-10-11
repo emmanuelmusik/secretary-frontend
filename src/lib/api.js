@@ -50,6 +50,7 @@ export const api = {
   getSession: (id) => authedFetch(`/sessions/${id}`),
   createSession: (payload) => authedFetch('/sessions', { method: 'POST', body: JSON.stringify(payload) }),
   stopSession: (id, payload) => authedFetch(`/sessions/${id}/stop`, { method: 'PATCH', body: JSON.stringify(payload) }),
+  renameSpeaker: (id, from, to) => authedFetch(`/sessions/${id}/speakers`, { method: 'PATCH', body: JSON.stringify({ from, to }) }),
   saveSession: (id, payload) => authedFetch(`/sessions/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   deleteSession: (id) => authedFetch(`/sessions/${id}`, { method: 'DELETE' }),
   uploadAudio: (id, file, durationSeconds) => {

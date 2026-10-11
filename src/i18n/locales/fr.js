@@ -140,6 +140,7 @@ export default {
   'insight.generating': 'Génération…',
   'insight.regenerate': 'Régénérer',
   'insight.regenerating': 'Régénération…',
+  'speakers.hint': 'Touchez un nom pour renommer un interlocuteur partout.',
   'insight.summary': 'Résumé',
   'insight.key_points': 'Points clés',
   'insight.action_items': 'Actions à mener',

@@ -131,6 +131,7 @@ export default {
   'insight.generating': 'बन रहा है…',
   'insight.regenerate': 'फिर से बनाएँ',
   'insight.regenerating': 'फिर से बन रहा है…',
+  'speakers.hint': 'किसी नाम पर टैप करके वक्ता का नाम हर जगह बदलें।',
   'insight.summary': 'सारांश',
   'insight.key_points': 'मुख्य बिंदु',
   'insight.action_items': 'एक्शन आइटम',

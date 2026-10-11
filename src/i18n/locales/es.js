@@ -140,6 +140,7 @@ export default {
   'insight.generating': 'Generando…',
   'insight.regenerate': 'Regenerar',
   'insight.regenerating': 'Regenerando…',
+  'speakers.hint': 'Toca un nombre para renombrar a un hablante en todo el texto.',
   'insight.summary': 'Resumen',
   'insight.key_points': 'Puntos clave',
   'insight.action_items': 'Tareas pendientes',

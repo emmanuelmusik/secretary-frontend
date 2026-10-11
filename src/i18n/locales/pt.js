@@ -131,6 +131,7 @@ export default {
   'insight.generating': 'Gerando…',
   'insight.regenerate': 'Gerar de Novo',
   'insight.regenerating': 'Gerando de novo…',
+  'speakers.hint': 'Toque num nome para renomear um falante em todo o texto.',
   'insight.summary': 'Resumo',
   'insight.key_points': 'Pontos-Chave',
   'insight.action_items': 'Itens de Ação',

@@ -131,6 +131,7 @@ export default {
   'insight.generating': 'جارٍ الإنشاء…',
   'insight.regenerate': 'إعادة الإنشاء',
   'insight.regenerating': 'جارٍ إعادة الإنشاء…',
+  'speakers.hint': 'اضغط على اسم لإعادة تسمية المتحدث في كل مكان.',
   'insight.summary': 'الملخص',
   'insight.key_points': 'النقاط الرئيسية',
   'insight.action_items': 'المهام المطلوبة',

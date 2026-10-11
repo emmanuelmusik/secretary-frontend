@@ -131,6 +131,7 @@ export default {
   'insight.generating': 'Membuat…',
   'insight.regenerate': 'Buat Ulang',
   'insight.regenerating': 'Membuat ulang…',
+  'speakers.hint': 'Ketuk nama untuk mengganti nama pembicara di mana saja.',
   'insight.summary': 'Ringkasan',
   'insight.key_points': 'Poin Penting',
   'insight.action_items': 'Tindakan',

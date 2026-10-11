@@ -140,6 +140,7 @@ export default {
   'insight.generating': 'Wird erstellt…',
   'insight.regenerate': 'Neu erstellen',
   'insight.regenerating': 'Wird neu erstellt…',
+  'speakers.hint': 'Tippe auf einen Namen, um einen Sprecher überall umzubenennen.',
   'insight.summary': 'Zusammenfassung',
   'insight.key_points': 'Kernpunkte',
   'insight.action_items': 'Aufgaben',

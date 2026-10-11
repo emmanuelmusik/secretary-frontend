@@ -131,6 +131,7 @@ export default {
   'insight.generating': '생성 중…',
   'insight.regenerate': '다시 생성',
   'insight.regenerating': '다시 생성 중…',
+  'speakers.hint': '이름을 탭하면 화자 이름을 모두 변경할 수 있습니다.',
   'insight.summary': '요약',
   'insight.key_points': '핵심 포인트',
   'insight.action_items': '할 일',

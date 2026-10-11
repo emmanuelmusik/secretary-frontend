@@ -131,6 +131,7 @@ export default {
   'insight.generating': '生成中…',
   'insight.regenerate': '再生成',
   'insight.regenerating': '再生成中…',
+  'speakers.hint': '名前をタップすると、話者名をすべて変更できます。',
   'insight.summary': '要約',
   'insight.key_points': '要点',
   'insight.action_items': 'アクション項目',

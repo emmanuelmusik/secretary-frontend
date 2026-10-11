@@ -131,6 +131,7 @@ export default {
   'insight.generating': 'Создание…',
   'insight.regenerate': 'Создать заново',
   'insight.regenerating': 'Создание заново…',
+  'speakers.hint': 'Нажмите на имя, чтобы переименовать говорящего везде.',
   'insight.summary': 'Краткое содержание',
   'insight.key_points': 'Ключевые моменты',
   'insight.action_items': 'Задачи',

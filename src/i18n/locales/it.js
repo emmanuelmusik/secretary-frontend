@@ -131,6 +131,7 @@ export default {
   'insight.generating': 'Generazione…',
   'insight.regenerate': 'Rigenera',
   'insight.regenerating': 'Rigenerazione…',
+  'speakers.hint': 'Tocca un nome per rinominare un parlante ovunque.',
   'insight.summary': 'Riepilogo',
   'insight.key_points': 'Punti Chiave',
   'insight.action_items': 'Azioni da Fare',

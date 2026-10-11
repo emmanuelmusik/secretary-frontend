@@ -20,6 +20,7 @@ export default function SessionDetailPage() {
   const [moveOpen, setMoveOpen] = useState(false);
   const [folders, setFolders] = useState([]);
   const [analyzingHistory, setAnalyzingHistory] = useState(false);
+  const [editingSpeaker, setEditingSpeaker] = useState(null); // { from, value }
 
   const [generatingInsight, setGeneratingInsight] = useState(false);
 
@@ -91,6 +92,19 @@ export default function SessionDetailPage() {
     }
   }
 
+  async function submitSpeaker() {
+    const { from, value } = editingSpeaker;
+    const to = value.trim();
+    setEditingSpeaker(null);
+    if (!to || to === from) return;
+    try {
+      const updated = await api.renameSpeaker(id, from, to);
+      setSession(updated);
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
   async function handleGenerateInsight() {
     setGeneratingInsight(true);
     try {
@@ -123,6 +137,8 @@ export default function SessionDetailPage() {
     await api.deleteSession(id);
     navigate('/');
   }
+
+  const speakers = session ? parseSpeakers(session.raw_transcript) : [];
 
   if (!session) return <div className="loading-screen">{t('common.loading')}</div>;
 
@@ -160,6 +176,29 @@ export default function SessionDetailPage() {
           <div className="copy-row">
             <CopyButton text={session.raw_transcript} label={t('copy.transcript')} />
           </div>
+          {speakers.length > 0 && (
+            <div className="speaker-chips">
+              <span className="speaker-hint">{t('speakers.hint')}</span>
+              {speakers.map((sp) => (
+                editingSpeaker?.from === sp ? (
+                  <input
+                    key={sp}
+                    className="speaker-input"
+                    autoFocus
+                    maxLength={40}
+                    value={editingSpeaker.value}
+                    onChange={(e) => setEditingSpeaker({ from: sp, value: e.target.value })}
+                    onBlur={submitSpeaker}
+                    onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingSpeaker(null); }}
+                  />
+                ) : (
+                  <button key={sp} type="button" className="speaker-chip" onClick={() => setEditingSpeaker({ from: sp, value: sp })}>
+                    {sp} <span aria-hidden="true">✎</span>
+                  </button>
+                )
+              ))}
+            </div>
+          )}
           <pre className="transcript">{session.raw_transcript}</pre>
         </div>
       )}
@@ -294,6 +333,12 @@ export default function SessionDetailPage() {
       )}
     </div>
   );
+}
+
+function parseSpeakers(text) {
+  const out = [];
+  for (const m of String(text || '').matchAll(/(?:^|\n)([^\n:]{1,40}): /g)) if (!out.includes(m[1])) out.push(m[1]);
+  return out;
 }
 
 function historyToText(h, t) {

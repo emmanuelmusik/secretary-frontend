@@ -141,6 +141,7 @@ export default {
   'insight.generating': 'Generating…',
   'insight.regenerate': 'Regenerate',
   'insight.regenerating': 'Regenerating…',
+  'speakers.hint': 'Tap a name to rename a speaker everywhere.',
   'insight.summary': 'Summary',
   'insight.key_points': 'Key Points',
   'insight.action_items': 'Action Items',
