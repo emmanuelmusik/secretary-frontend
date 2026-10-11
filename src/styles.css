@@ -763,3 +763,11 @@ button.active { background: var(--accent-dim); color: var(--accent); }
 .speaker-hint{flex-basis:100%;font-size:12px;opacity:.65}
 .speaker-chip{border:1px solid var(--border,#d0d0d5);background:transparent;color:inherit;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
 .speaker-input{border:1px solid var(--border,#d0d0d5);border-radius:999px;padding:5px 12px;font-size:14px;width:150px;background:transparent;color:inherit}
+
+.ask-box{margin-top:18px}
+.ask-turn{margin-bottom:12px}
+.ask-q{font-weight:600;margin:0 0 4px}
+.ask-a{margin:0;white-space:pre-wrap}
+.ask-form{display:flex;gap:8px;margin-top:10px}
+.ask-form input{flex:1;min-width:0;border:1px solid var(--border,#d0d0d5);border-radius:12px;padding:10px 12px;font-size:16px;background:transparent;color:inherit}
+.ask-form button{border-radius:12px;padding:10px 16px}

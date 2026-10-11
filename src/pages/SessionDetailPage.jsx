@@ -4,6 +4,7 @@ import { api } from '../lib/api.js';
 import { getLocalAudioUrl, shareLocalAudio } from '../lib/localAudio.js';
 import { insightToText } from '../lib/clipboard.js';
 import CopyButton from '../components/CopyButton.jsx';
+import AskBox from '../components/AskBox.jsx';
 import AnalyzeSheet from '../components/AnalyzeSheet.jsx';
 import MoveDialog from '../components/MoveDialog.jsx';
 import { folderPath } from '../lib/folders.js';
@@ -166,6 +167,7 @@ export default function SessionDetailPage() {
       <div className="tabs">
         <button className={tab === 'transcript' ? 'active' : ''} onClick={() => setTab('transcript')}>{t('tab.transcript')}</button>
         <button className={tab === 'insight' ? 'active' : ''} onClick={() => setTab('insight')}>{t('tab.insight')}</button>
+        <button className={tab === 'ask' ? 'active' : ''} onClick={() => setTab('ask')}>{t('tab.ask')}</button>
         <button className={tab === 'translation' ? 'active' : ''} onClick={() => setTab('translation')}>{t('tab.translation')}</button>
         {session.history_analysis && <button className={tab === 'history' ? 'active' : ''} onClick={() => setTab('history')}>{t('tab.history')}</button>}
         <button className={tab === 'audio' ? 'active' : ''} onClick={openAudioTab}>{t('tab.audio')}</button>
@@ -271,6 +273,8 @@ export default function SessionDetailPage() {
           )}
         </div>
       )}
+
+      {tab === 'ask' && <AskBox t={t} sessionId={id} />}
 
       {tab === 'translation' && (
         <div>

@@ -63,6 +63,7 @@ export const api = {
     authedFetch(`/sessions/${id}/analyze-with-history`, { method: 'POST', body: JSON.stringify(sessionIds ? { session_ids: sessionIds } : { range }) }),
   translateSession: (id, targetLanguage) =>
     authedFetch(`/sessions/${id}/translate`, { method: 'POST', body: JSON.stringify({ target_language: targetLanguage }) }),
+  askAboutRecording: (id, question, history, transcript) => authedFetch(`/sessions/${id}/ask`, { method: 'POST', body: JSON.stringify({ question, history, transcript }) }),
   liveInsight: (id, transcript) => authedFetch(`/sessions/${id}/live-insight`, { method: 'POST', body: JSON.stringify({ transcript }) }),
   generateInsight: (id) => authedFetch(`/sessions/${id}/insight`, { method: 'POST' }),
 

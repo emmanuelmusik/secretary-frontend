@@ -372,6 +372,8 @@ export default function RecordPage() {
           onView={setView}
           insight={insight}
           onGenerate={generateInsight}
+          sessionId={sessionIdRef.current}
+          getTranscript={() => (liveTranscript + ' ' + interim).trim()}
           onPause={pauseRecording}
           onResume={resumeRecording}
           onStop={stopRecording}

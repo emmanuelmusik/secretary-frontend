@@ -1,3 +1,4 @@
+import AskBox from './AskBox.jsx';
 import { useLayoutEffect, useMemo, useRef } from 'react';
 
 const SENTENCE = /[^.!?。！？؟]+[.!?。！？؟]*\s*/g;
@@ -21,7 +22,7 @@ function fmtLeft(seconds, t) {
 // large (older ones smaller above it, scrolling by itself), and a see-through Pause / Stop bar.
 export default function LiveView({
   t, elapsed, maxSeconds, leftSeconds, paused, reconnecting, nearingCap, error, text, interim, translatedLabel,
-  view, onView, insight, onGenerate, onPause, onResume, onStop,
+  view, onView, insight, onGenerate, sessionId, getTranscript, onPause, onResume, onStop,
 }) {
   const scroller = useRef(null);
   const endRef = useRef(null);
@@ -97,6 +98,7 @@ export default function LiveView({
               {insight.status === 'loading' ? t('record.insight_generating') : a ? t('record.insight_refresh') : t('record.insight_generate')}
             </button>
           )}
+          {sessionId && <AskBox t={t} sessionId={sessionId} getTranscript={getTranscript} />}
         </div>
       )}
 
