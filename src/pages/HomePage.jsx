@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { searchSessions } from '../lib/search.js';
+import RowMenu from '../components/RowMenu.jsx';
 import Highlight from '../components/Highlight.jsx';
 
 export default function HomePage() {
@@ -19,9 +20,7 @@ export default function HomePage() {
     api.getSessions().then(setSessions).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  async function handleDelete(e, sessionId) {
-    e.preventDefault();
-    e.stopPropagation();
+  async function handleDelete(sessionId) {
     if (!confirm(t('session.delete_confirm'))) return;
     await api.deleteSession(sessionId);
     setSessions((prev) => prev.filter((s) => s.id !== sessionId));
@@ -70,13 +69,10 @@ export default function HomePage() {
           <Link key={s.id} to={`/sessions/${s.id}`} className="session-row">
             <span className="session-row-main">
               <strong><Highlight text={s.name} query={query} /></strong>
-              {s.duration_seconds > 0 && <small className="session-duration">⏱ {formatSeconds(t, s.duration_seconds)}</small>}
+              <small className="session-duration">{formatDate(s.created_at)}{s.duration_seconds > 0 ? ` · ⏱ ${formatSeconds(t, s.duration_seconds)}` : ''}</small>
               {snippet && <small className="session-snippet"><Highlight text={snippet} query={query} /></small>}
             </span>
-            <span className="session-row-right">
-              {formatDate(s.created_at)}
-              <button className="danger-btn-sm" onClick={(e) => handleDelete(e, s.id)}>{t('common.delete')}</button>
-            </span>
+            <RowMenu label={t('folders.menu')} items={[{ label: t('common.delete'), danger: true, onClick: () => handleDelete(s.id) }]} />
           </Link>
         ))}
       </section>

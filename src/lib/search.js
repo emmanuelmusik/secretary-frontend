@@ -103,7 +103,7 @@ function snippetFor(raw, words) {
   for (const w of words) { at = n.indexOf(w); if (at !== -1) break; }
   if (at < 0) return null;
   const idx = map[at];
-  const start = Math.max(0, idx - 30);
-  const end = Math.min(text.length, idx + 70);
+  const start = Math.max(0, idx - 20);
+  const end = Math.min(text.length, idx + 50);
   return `${start > 0 ? '…' : ''}${text.slice(start, end)}${end < text.length ? '…' : ''}`;
 }

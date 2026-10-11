@@ -4,6 +4,7 @@ import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { MAX_FOLDER_DEPTH, folderPath } from '../lib/folders.js';
 import FolderMenu from '../components/FolderMenu.jsx';
+import RowMenu from '../components/RowMenu.jsx';
 import MoveDialog from '../components/MoveDialog.jsx';
 import { formatSeconds } from '../lib/format.js';
 import FolderTree from '../components/FolderTree.jsx';
@@ -55,10 +56,20 @@ export default function FolderPage() {
     } catch (err) { setError(err.message); }
   }
 
-  const moveBtn = (kind, item) => (
-    <button type="button" className="row-move-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMoving({ kind, item }); }}>
-      {t('move.to')}
-    </button>
+  async function doDeleteItem(kind, item) {
+    if (!confirm(t(kind === 'session' ? 'session.delete_confirm' : 'notes.delete_confirm'))) return;
+    try {
+      if (kind === 'session') await api.deleteSession(item.id);
+      else await api.deleteNote(item.id);
+      load();
+    } catch (err) { setError(err.message); }
+  }
+
+  const rowMenu = (kind, item) => (
+    <RowMenu label={t('folders.menu')} items={[
+      { label: t('move.to'), onClick: () => setMoving({ kind, item }) },
+      { label: t('common.delete'), danger: true, onClick: () => doDeleteItem(kind, item) },
+    ]} />
   );
 
   if (!loading && !folder) {
@@ -103,7 +114,7 @@ export default function FolderPage() {
             <strong>{s.name}</strong>
             {s.duration_seconds > 0 && <small className="session-duration">⏱ {formatSeconds(t, s.duration_seconds)}</small>}
           </span>
-          <span className="session-row-right row-right-stack">{formatDate(s.created_at)}{moveBtn('session', s)}</span>
+          <span className="session-row-right">{formatDate(s.created_at)}{rowMenu('session', s)}</span>
         </Link>
       ))}
 
@@ -111,7 +122,7 @@ export default function FolderPage() {
       {notes.map((n) => (
         <Link key={n.id} to={`/notes/${n.id}`} className="note-row">
           <strong>{n.title}</strong>
-          <span className="row-right-stack">{formatDate(n.updated_at)}{moveBtn('note', n)}</span>
+          <span className="session-row-right">{formatDate(n.updated_at)}{rowMenu('note', n)}</span>
         </Link>
       ))}
 
