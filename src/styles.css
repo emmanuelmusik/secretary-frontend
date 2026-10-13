@@ -805,3 +805,8 @@ html, body { overflow-x: hidden; max-width: 100%; }
 
 .title-edit-btn{background:transparent;border:none;color:var(--text-muted);font-size:1.2rem;padding:6px 8px;align-self:flex-start}
 .session-detail-header h1{flex:1;min-width:0}
+
+/* Folders: neutral rows (no green tint). Only the Create button keeps its accent colour. */
+.ftree-new, .ftree-row { background: var(--surface); border: 1px solid var(--border); }
+.ftree-new { color: var(--text); }
+.ftree-icon, .ftree-chevron, .move-list .ftree-icon { color: var(--text-muted); }
