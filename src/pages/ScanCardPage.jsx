@@ -13,8 +13,8 @@ const MAX_DIM = 1600;
 const FULL = { x: 0, y: 0, w: 1, h: 1 };
 const AUTO_KEY = 'secretary_scan_auto_v1';
 const SAMPLE_W = 160;       // width of the small picture used to look for the card
-const SAMPLE_EVERY_MS = 130;
-const STEADY_SAMPLES = 4;  // fitting and still for this many samples in a row (about half a second) takes the photo
+const SAMPLE_EVERY_MS = 110;
+const STEADY_SAMPLES = 3;  // fitting and still for this many looks (about a third of a second) takes the photo
 function loadAuto() { try { return localStorage.getItem(AUTO_KEY) !== 'off'; } catch { return true; } }
 
 // The framing rectangle, centred in the camera area (in CSS pixels).
