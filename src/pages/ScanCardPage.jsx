@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { resizeImage, shrinkDataUrl, cropDataUrl } from '../lib/image.js';
+import { analyzeGray, createAutoShutter } from '../lib/cardDetect.js';
 import CropBox from '../components/CropBox.jsx';
 import { useAiConsent } from '../components/AiConsent.jsx';
 import { useI18n } from '../i18n/index.jsx';
@@ -10,6 +11,10 @@ const GUIDE_RATIO = 1.65;   // card width / height
 const CROP_MARGIN = 1.06;   // keep a little around the guide so edges are never cut off
 const MAX_DIM = 1600;
 const FULL = { x: 0, y: 0, w: 1, h: 1 };
+const AUTO_KEY = 'secretary_scan_auto_v1';
+const SAMPLE_W = 160;       // width of the small picture used to look for the card
+const SAMPLE_EVERY_MS = 170;
+function loadAuto() { try { return localStorage.getItem(AUTO_KEY) !== 'off'; } catch { return true; } }
 
 // The framing rectangle, centred in the camera area (in CSS pixels).
 function guideRect(cw, ch, portrait) {
@@ -43,6 +48,9 @@ export default function ScanCardPage() {
   const [scansLeft, setScansLeft] = useState(null);
   useEffect(() => { api.getUsage().then((u) => { if (u?.card_scans && !u.card_scans.unlimited) setScansLeft(u.card_scans.remaining); }).catch(() => {}); }, []);
 
+  const [auto, setAuto] = useState(loadAuto);
+  const [lock, setLock] = useState({ fits: false, progress: 0 }); // auto-capture state for the guide
+  const captureRef = useRef(null);
   const videoRef = useRef(null);
   const stageRef = useRef(null);
   const streamRef = useRef(null);
@@ -130,6 +138,43 @@ export default function ScanCardPage() {
     setStep('confirm');
   }
 
+  captureRef.current = capture;
+
+  // Auto-capture: look at the camera several times a second; when a card fills the frame and is held still, take the photo.
+  useEffect(() => {
+    if (!allowed || step !== 'capture' || !auto || cameraError || stage.w === 0) return undefined;
+    const shutter = createAutoShutter(7);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    let busy = false;
+    const timer = setInterval(() => {
+      const v = videoRef.current;
+      if (busy || !v || !v.videoWidth || v.readyState < 2) return;
+      busy = true;
+      try {
+        const cw = stage.w, ch = stage.h;
+        const scale = Math.max(cw / v.videoWidth, ch / v.videoHeight);
+        const offX = (v.videoWidth * scale - cw) / 2, offY = (v.videoHeight * scale - ch) / 2;
+        const W = SAMPLE_W, H = Math.max(1, Math.round((SAMPLE_W * ch) / cw));
+        canvas.width = W; canvas.height = H;
+        ctx.drawImage(v, offX / scale, offY / scale, cw / scale, ch / scale, 0, 0, W, H);
+        const px = ctx.getImageData(0, 0, W, H).data;
+        const gray = new Uint8Array(W * H);
+        for (let i = 0, j = 0; i < gray.length; i++, j += 4) gray[i] = (px[j] * 77 + px[j + 1] * 150 + px[j + 2] * 29) >> 8;
+        const gr = guideRect(cw, ch, portrait), k = W / cw;
+        const out = shutter.push(analyzeGray(gray, W, H, { x: gr.x * k, y: gr.y * k, w: gr.w * k, h: gr.h * k }));
+        setLock((old) => (old.fits === out.fits && Math.abs(old.progress - out.progress) < 0.01 ? old : { fits: out.fits, progress: out.progress }));
+        if (out.fire) { shutter.reset(); setLock({ fits: false, progress: 0 }); captureRef.current?.(); }
+      } catch { /* a frame that cannot be read is simply skipped */ }
+      busy = false;
+    }, SAMPLE_EVERY_MS);
+    return () => { clearInterval(timer); setLock({ fits: false, progress: 0 }); };
+  }, [allowed, step, auto, cameraError, stage.w, stage.h, portrait]);
+
+  function toggleAuto() {
+    setAuto((a) => { try { localStorage.setItem(AUTO_KEY, a ? 'off' : 'on'); } catch { /* storage can be unavailable */ } return !a; });
+  }
+
   async function handleFile(e) {
     const file = e.target.files?.[0];
     e.target.value = '';
@@ -204,19 +249,20 @@ export default function ScanCardPage() {
           <div className="scan-stage" ref={stageRef}>
             <video ref={videoRef} playsInline muted autoPlay className="scan-video" />
             {!cameraError && stage.w > 0 && (
-              <div className="scan-guide" style={{ left: g.x, top: g.y, width: g.w, height: g.h }}>
+              <div className={`scan-guide ${lock.fits ? 'fit' : ''}`} style={{ left: g.x, top: g.y, width: g.w, height: g.h, '--p': lock.progress }}>
                 <i className="c tl" /><i className="c tr" /><i className="c bl" /><i className="c br" />
+                {auto && lock.fits && <span className="scan-lock-bar"><b style={{ width: `${Math.round(lock.progress * 100)}%` }} /></span>}
               </div>
             )}
             {cameraError
               ? <p className="scan-hint scan-hint-error">{cameraError}</p>
-              : <p className="scan-hint">{t('scan.hint')}</p>}
+              : <p className="scan-hint">{auto && lock.fits ? t('scan.hold') : t('scan.hint')}</p>}
           </div>
 
           <div className="scan-bottom">
             <button type="button" className="scan-side-btn" onClick={() => fileRef.current?.click()}>{t('scan.photos')}</button>
             <button type="button" className="scan-shutter" onClick={capture} disabled={!!cameraError} aria-label={t('scan.take')} />
-            <span className="scan-side-btn scan-spacer" />
+            <button type="button" className={`scan-side-btn scan-auto ${auto ? 'on' : ''}`} aria-pressed={auto} onClick={toggleAuto}>{t('scan.auto')}: {auto ? t('scan.on') : t('scan.off')}</button>
           </div>
         </>
       )}
