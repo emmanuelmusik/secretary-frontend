@@ -57,7 +57,7 @@ export default function CropBox({ src, alt, crop, onChange }) {
           onPointerUp={end}
           onPointerCancel={end}
         >
-          {['tl', 'tr', 'bl', 'br'].map((h) => (
+          {['t', 'b', 'l', 'r', 'tl', 'tr', 'bl', 'br'].map((h) => (
             <span
               key={h}
               className={`crop-handle ${h}`}
