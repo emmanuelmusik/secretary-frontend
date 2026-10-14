@@ -39,8 +39,7 @@ function nearEdge(g, W, H, x, y, dx, dy, reach) {
  * Returns { fits, sides: [top,right,bottom,left], inner, patch } where `patch` is a tiny copy of the inside, used to
  * compare with the next sample for steadiness.
  */
-export function analyzeGray(gray, W, H, rect) {
-  const g = gradient(gray, W, H);
+export function analyzeGray(gray, W, H, rect, g = gradient(gray, W, H)) {
   const reach = Math.max(2, Math.round(Math.min(rect.w, rect.h) * 0.04));
   const trim = 0.12; // ignore the rounded corners
   // nx, ny point from the frame line towards the inside of the card.
@@ -115,4 +114,26 @@ export function createAutoShutter(needed = 7) {
       return { progress: Math.min(1, streak / needed), fits: result.fits, fire: streak >= needed };
     },
   };
+}
+
+/**
+ * When the card does not fit the frame, say what to do about it. The same four-sides test is tried on copies of the
+ * frame that are smaller (card is small in the picture: move closer) and larger (card is big: move farther), and
+ * on the frame turned on its side (card is the other way round).
+ * Returns 'closer' | 'farther' | 'rotate' | null.
+ */
+export function adviseFrame(gray, W, H, rect) {
+  const g = gradient(gray, W, H);
+  if (analyzeGray(gray, W, H, rect, g).fits) return null;
+  const cx = rect.x + rect.w / 2, cy = rect.y + rect.h / 2;
+  const at = (k, flip = false) => {
+    const w = (flip ? rect.h : rect.w) * k, h = (flip ? rect.w : rect.h) * k;
+    return { x: cx - w / 2, y: cy - h / 2, w, h };
+  };
+  const inside = (r) => r.x > 3 && r.y > 3 && r.x + r.w < W - 3 && r.y + r.h < H - 3;
+  const fitsAt = (r) => inside(r) && r.w > 12 && r.h > 8 && analyzeGray(gray, W, H, r, g).fits;
+  for (const k of [0.88, 0.8, 0.72, 0.64, 0.56, 0.48]) if (fitsAt(at(k))) return 'closer';
+  for (const k of [1.1, 1.2, 1.32, 1.45]) if (fitsAt(at(k))) return 'farther';
+  for (const k of [1, 0.85, 0.7]) if (fitsAt(at(k, true))) return 'rotate';
+  return null;
 }

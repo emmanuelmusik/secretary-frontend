@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { resizeImage, shrinkDataUrl, cropDataUrl } from '../lib/image.js';
-import { analyzeGray, createAutoShutter } from '../lib/cardDetect.js';
+import { analyzeGray, adviseFrame, createAutoShutter } from '../lib/cardDetect.js';
 import CropBox from '../components/CropBox.jsx';
 import { useAiConsent } from '../components/AiConsent.jsx';
 import { useI18n } from '../i18n/index.jsx';
@@ -13,7 +13,8 @@ const MAX_DIM = 1600;
 const FULL = { x: 0, y: 0, w: 1, h: 1 };
 const AUTO_KEY = 'secretary_scan_auto_v1';
 const SAMPLE_W = 160;       // width of the small picture used to look for the card
-const SAMPLE_EVERY_MS = 170;
+const SAMPLE_EVERY_MS = 130;
+const STEADY_SAMPLES = 4;  // fitting and still for this many samples in a row (about half a second) takes the photo
 function loadAuto() { try { return localStorage.getItem(AUTO_KEY) !== 'off'; } catch { return true; } }
 
 // The framing rectangle, centred in the camera area (in CSS pixels).
@@ -50,6 +51,7 @@ export default function ScanCardPage() {
 
   const [auto, setAuto] = useState(loadAuto);
   const [lock, setLock] = useState({ fits: false, progress: 0 }); // auto-capture state for the guide
+  const [advice, setAdvice] = useState(null);                       // 'closer' | 'farther' | 'rotate' | null
   const captureRef = useRef(null);
   const videoRef = useRef(null);
   const stageRef = useRef(null);
@@ -143,10 +145,11 @@ export default function ScanCardPage() {
   // Auto-capture: look at the camera several times a second; when a card fills the frame and is held still, take the photo.
   useEffect(() => {
     if (!allowed || step !== 'capture' || !auto || cameraError || stage.w === 0) return undefined;
-    const shutter = createAutoShutter(7);
+    const shutter = createAutoShutter(STEADY_SAMPLES);
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     let busy = false;
+    const tips = [];
     const timer = setInterval(() => {
       const v = videoRef.current;
       if (busy || !v || !v.videoWidth || v.readyState < 2) return;
@@ -162,13 +165,18 @@ export default function ScanCardPage() {
         const gray = new Uint8Array(W * H);
         for (let i = 0, j = 0; i < gray.length; i++, j += 4) gray[i] = (px[j] * 77 + px[j + 1] * 150 + px[j + 2] * 29) >> 8;
         const gr = guideRect(cw, ch, portrait), k = W / cw;
-        const out = shutter.push(analyzeGray(gray, W, H, { x: gr.x * k, y: gr.y * k, w: gr.w * k, h: gr.h * k }));
+        const rect = { x: gr.x * k, y: gr.y * k, w: gr.w * k, h: gr.h * k };
+        const out = shutter.push(analyzeGray(gray, W, H, rect));
+        // Only show a tip once it has been the same for three looks in a row, so the words do not flicker.
+        const tip = out.fits ? null : adviseFrame(gray, W, H, rect);
+        tips.push(tip); if (tips.length > 3) tips.shift();
+        setAdvice(tips.length === 3 && tips.every((x) => x && x === tips[0]) ? tips[0] : null);
         setLock((old) => (old.fits === out.fits && Math.abs(old.progress - out.progress) < 0.01 ? old : { fits: out.fits, progress: out.progress }));
         if (out.fire) { shutter.reset(); setLock({ fits: false, progress: 0 }); captureRef.current?.(); }
       } catch { /* a frame that cannot be read is simply skipped */ }
       busy = false;
     }, SAMPLE_EVERY_MS);
-    return () => { clearInterval(timer); setLock({ fits: false, progress: 0 }); };
+    return () => { clearInterval(timer); setLock({ fits: false, progress: 0 }); setAdvice(null); };
   }, [allowed, step, auto, cameraError, stage.w, stage.h, portrait]);
 
   function toggleAuto() {
@@ -256,7 +264,7 @@ export default function ScanCardPage() {
             )}
             {cameraError
               ? <p className="scan-hint scan-hint-error">{cameraError}</p>
-              : <p className="scan-hint">{auto && lock.fits ? t('scan.hold') : t('scan.hint')}</p>}
+              : <p className="scan-hint">{auto && lock.fits ? t('scan.hold') : auto && advice ? t(`scan.tip_${advice}`) : t('scan.hint')}</p>}
           </div>
 
           <div className="scan-bottom">
