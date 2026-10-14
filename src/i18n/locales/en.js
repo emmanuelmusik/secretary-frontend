@@ -220,6 +220,7 @@ export default {
   "folders.menu": "Folder options",
   "folders.rename": "Rename",
   'folders.note_tag': "Note",
+  'notes.rename_title': "Rename note",
   'folders.empty_short': "Empty",
   "folders.rename_title": "Rename folder",
   "folders.export_pdf": "Export as PDF",

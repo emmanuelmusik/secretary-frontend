@@ -4,6 +4,7 @@ import FolderMenu from './FolderMenu.jsx';
 import Highlight from './Highlight.jsx';
 import { useI18n } from '../i18n/index.jsx';
 import { api } from '../lib/api.js';
+import { useItemActions } from './ItemActions.jsx';
 import { formatSeconds } from '../lib/format.js';
 import { norm } from '../lib/search.js';
 
@@ -29,6 +30,7 @@ export default function FolderTree({ folders, rootId = null, query = '', onChang
   const { t, formatDate } = useI18n();
   const [open, setOpen] = useState(loadOpen);
   const [contents, setContents] = useState({}); // folderId -> { sessions, notes } | 'loading' | 'error'
+  const { menu: itemMenu, dialogs: itemDialogs } = useItemActions({ folders, onDone: () => { setContents({}); onChanged?.(); } });
 
   // Recordings and notes of an opened folder are fetched when it opens (and again if the folder list changes).
   useEffect(() => { setContents({}); }, [folders]);
@@ -111,6 +113,7 @@ export default function FolderTree({ folders, rootId = null, query = '', onChang
                     <div key={s.id} className="ftree-item">
                       <Link to={`/sessions/${s.id}`} className="ftree-leaf">
                         <span className="ftree-leaf-main"><strong>{s.name}</strong><small>{formatDate(s.created_at)}{s.duration_seconds > 0 ? ` · ⏱ ${formatSeconds(t, s.duration_seconds)}` : ''}</small></span>
+                        {itemMenu('session', s)}
                       </Link>
                     </div>
                   ))}
@@ -118,6 +121,7 @@ export default function FolderTree({ folders, rootId = null, query = '', onChang
                     <div key={n.id} className="ftree-item">
                       <Link to={`/notes/${n.id}`} className="ftree-leaf">
                         <span className="ftree-leaf-main"><strong>{n.title || t('notes.untitled')}</strong><small>{t('folders.note_tag')} · {formatDate(n.updated_at)}</small></span>
+                        {itemMenu('note', n)}
                       </Link>
                     </div>
                   ))}
@@ -133,5 +137,5 @@ export default function FolderTree({ folders, rootId = null, query = '', onChang
 
   const rows = renderLevel(rootId);
   if (q && rows.length === 0) return <p className="folder-hint">{t('folders.no_match')}</p>;
-  return <div className="ftree">{rows}</div>;
+  return <div className="ftree">{rows}{itemDialogs}</div>;
 }

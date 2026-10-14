@@ -209,6 +209,7 @@ export default {
   "folders.menu": "फ़ोल्डर विकल्प",
   "folders.rename": "नाम बदलें",
   'folders.note_tag': "नोट",
+  'notes.rename_title': "नोट का नाम बदलें",
   'folders.empty_short': "खाली",
   "folders.rename_title": "फ़ोल्डर का नाम बदलें",
   "folders.export_pdf": "PDF के रूप में निर्यात करें",

@@ -219,6 +219,7 @@ export default {
   "folders.menu": "Options du dossier",
   "folders.rename": "Renommer",
   'folders.note_tag': "Note",
+  'notes.rename_title': "Renommer la note",
   'folders.empty_short': "Vide",
   "folders.rename_title": "Renommer le dossier",
   "folders.export_pdf": "Exporter en PDF",

@@ -218,6 +218,7 @@ export default {
   "folders.menu": "Nhọrọ folda",
   "folders.rename": "Gbanwee aha",
   'folders.note_tag': "Ndetu",
+  'notes.rename_title': "Gbanwee aha ndetu",
   'folders.empty_short': "Efu",
   "folders.rename_title": "Gbanwee aha folda",
   "folders.export_pdf": "Wepụ dị ka PDF",

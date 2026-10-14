@@ -209,6 +209,7 @@ export default {
   "folders.menu": "Параметры папки",
   "folders.rename": "Переименовать",
   'folders.note_tag': "Заметка",
+  'notes.rename_title': "Переименовать заметку",
   'folders.empty_short': "Пусто",
   "folders.rename_title": "Переименовать папку",
   "folders.export_pdf": "Экспорт в PDF",

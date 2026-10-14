@@ -209,6 +209,7 @@ export default {
   "folders.menu": "Opções da pasta",
   "folders.rename": "Renomear",
   'folders.note_tag': "Nota",
+  'notes.rename_title': "Renomear nota",
   'folders.empty_short': "Vazia",
   "folders.rename_title": "Renomear pasta",
   "folders.export_pdf": "Exportar como PDF",

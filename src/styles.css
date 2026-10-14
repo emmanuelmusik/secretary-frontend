@@ -816,3 +816,6 @@ html, body { overflow-x: hidden; max-width: 100%; }
 .ftree-leaf-main strong{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ftree-leaf-main small{color:var(--text-muted);font-size:.78rem}
 .ftree-note{color:var(--text-muted);font-size:.85rem;margin:6px 0 6px 4px}
+
+.ftree-leaf{display:flex;align-items:center;gap:6px;padding:4px 4px 4px 14px}
+.ftree-leaf-main{flex:1}

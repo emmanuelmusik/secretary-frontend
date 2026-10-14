@@ -209,6 +209,7 @@ export default {
   "folders.menu": "폴더 옵션",
   "folders.rename": "이름 바꾸기",
   'folders.note_tag': "메모",
+  'notes.rename_title': "메모 이름 변경",
   'folders.empty_short': "비어 있음",
   "folders.rename_title": "폴더 이름 바꾸기",
   "folders.export_pdf": "PDF로 내보내기",

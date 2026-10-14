@@ -209,6 +209,7 @@ export default {
   "folders.menu": "خيارات المجلد",
   "folders.rename": "إعادة تسمية",
   'folders.note_tag': "ملاحظة",
+  'notes.rename_title': "إعادة تسمية الملاحظة",
   'folders.empty_short': "فارغ",
   "folders.rename_title": "إعادة تسمية المجلد",
   "folders.export_pdf": "تصدير بصيغة PDF",

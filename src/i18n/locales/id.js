@@ -209,6 +209,7 @@ export default {
   "folders.menu": "Opsi folder",
   "folders.rename": "Ganti nama",
   'folders.note_tag': "Catatan",
+  'notes.rename_title': "Ganti nama catatan",
   'folders.empty_short': "Kosong",
   "folders.rename_title": "Ganti nama folder",
   "folders.export_pdf": "Ekspor sebagai PDF",

@@ -209,6 +209,7 @@ export default {
   "folders.menu": "Opzioni della cartella",
   "folders.rename": "Rinomina",
   'folders.note_tag': "Nota",
+  'notes.rename_title': "Rinomina nota",
   'folders.empty_short': "Vuota",
   "folders.rename_title": "Rinomina cartella",
   "folders.export_pdf": "Esporta come PDF",

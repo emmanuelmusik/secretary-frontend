@@ -219,6 +219,7 @@ export default {
   "folders.menu": "Ordneroptionen",
   "folders.rename": "Umbenennen",
   'folders.note_tag': "Notiz",
+  'notes.rename_title': "Notiz umbenennen",
   'folders.empty_short': "Leer",
   "folders.rename_title": "Ordner umbenennen",
   "folders.export_pdf": "Als PDF exportieren",

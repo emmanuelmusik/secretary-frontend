@@ -209,6 +209,7 @@ export default {
   "folders.menu": "フォルダのオプション",
   "folders.rename": "名前を変更",
   'folders.note_tag': "ノート",
+  'notes.rename_title': "ノート名を変更",
   'folders.empty_short': "空",
   "folders.rename_title": "フォルダ名を変更",
   "folders.export_pdf": "PDFとして書き出す",

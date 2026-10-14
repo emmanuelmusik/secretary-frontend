@@ -219,6 +219,7 @@ export default {
   "folders.menu": "Opciones de la carpeta",
   "folders.rename": "Renombrar",
   'folders.note_tag': "Nota",
+  'notes.rename_title': "Renombrar nota",
   'folders.empty_short': "Vacía",
   "folders.rename_title": "Renombrar carpeta",
   "folders.export_pdf": "Exportar como PDF",
