@@ -208,6 +208,8 @@ export default {
   "folders.no_match": "Tidak ada folder yang cocok dengan pencarian Anda.",
   "folders.menu": "Opsi folder",
   "folders.rename": "Ganti nama",
+  'folders.note_tag': "Catatan",
+  'folders.empty_short': "Kosong",
   "folders.rename_title": "Ganti nama folder",
   "folders.export_pdf": "Ekspor sebagai PDF",
   "folders.exporting": "Menyiapkan PDF…",

@@ -208,6 +208,8 @@ export default {
   "folders.no_match": "Нет папок, подходящих под запрос.",
   "folders.menu": "Параметры папки",
   "folders.rename": "Переименовать",
+  'folders.note_tag': "Заметка",
+  'folders.empty_short': "Пусто",
   "folders.rename_title": "Переименовать папку",
   "folders.export_pdf": "Экспорт в PDF",
   "folders.exporting": "Подготовка PDF…",

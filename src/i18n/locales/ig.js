@@ -217,6 +217,8 @@ export default {
   "folders.no_match": "Enweghị folda dabara n’ọchụchọ gị.",
   "folders.menu": "Nhọrọ folda",
   "folders.rename": "Gbanwee aha",
+  'folders.note_tag': "Ndetu",
+  'folders.empty_short': "Efu",
   "folders.rename_title": "Gbanwee aha folda",
   "folders.export_pdf": "Wepụ dị ka PDF",
   "folders.exporting": "Na-akwado PDF…",

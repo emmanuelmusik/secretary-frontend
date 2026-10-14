@@ -810,3 +810,9 @@ html, body { overflow-x: hidden; max-width: 100%; }
 .ftree-new, .ftree-row { background: var(--surface); border: 1px solid var(--border); }
 .ftree-new { color: var(--text); }
 .ftree-icon, .ftree-chevron, .move-list .ftree-icon { color: var(--text-muted); }
+
+.ftree-leaf{display:block;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:10px 14px}
+.ftree-leaf-main{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ftree-leaf-main strong{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ftree-leaf-main small{color:var(--text-muted);font-size:.78rem}
+.ftree-note{color:var(--text-muted);font-size:.85rem;margin:6px 0 6px 4px}

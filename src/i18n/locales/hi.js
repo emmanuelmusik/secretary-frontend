@@ -208,6 +208,8 @@ export default {
   "folders.no_match": "आपकी खोज से कोई फ़ोल्डर मेल नहीं खाता।",
   "folders.menu": "फ़ोल्डर विकल्प",
   "folders.rename": "नाम बदलें",
+  'folders.note_tag': "नोट",
+  'folders.empty_short': "खाली",
   "folders.rename_title": "फ़ोल्डर का नाम बदलें",
   "folders.export_pdf": "PDF के रूप में निर्यात करें",
   "folders.exporting": "PDF तैयार हो रही है…",

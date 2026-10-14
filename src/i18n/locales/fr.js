@@ -218,6 +218,8 @@ export default {
   "folders.no_match": "Aucun dossier ne correspond à votre recherche.",
   "folders.menu": "Options du dossier",
   "folders.rename": "Renommer",
+  'folders.note_tag': "Note",
+  'folders.empty_short': "Vide",
   "folders.rename_title": "Renommer le dossier",
   "folders.export_pdf": "Exporter en PDF",
   "folders.exporting": "Préparation du PDF…",

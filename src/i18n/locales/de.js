@@ -218,6 +218,8 @@ export default {
   "folders.no_match": "Kein Ordner passt zu deiner Suche.",
   "folders.menu": "Ordneroptionen",
   "folders.rename": "Umbenennen",
+  'folders.note_tag': "Notiz",
+  'folders.empty_short': "Leer",
   "folders.rename_title": "Ordner umbenennen",
   "folders.export_pdf": "Als PDF exportieren",
   "folders.exporting": "PDF wird erstellt…",

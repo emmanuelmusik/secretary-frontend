@@ -208,6 +208,8 @@ export default {
   "folders.no_match": "Nenhuma pasta corresponde à sua pesquisa.",
   "folders.menu": "Opções da pasta",
   "folders.rename": "Renomear",
+  'folders.note_tag': "Nota",
+  'folders.empty_short': "Vazia",
   "folders.rename_title": "Renomear pasta",
   "folders.export_pdf": "Exportar como PDF",
   "folders.exporting": "Preparando o PDF…",

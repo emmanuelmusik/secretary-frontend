@@ -208,6 +208,8 @@ export default {
   "folders.no_match": "Nessuna cartella corrisponde alla ricerca.",
   "folders.menu": "Opzioni della cartella",
   "folders.rename": "Rinomina",
+  'folders.note_tag': "Nota",
+  'folders.empty_short': "Vuota",
   "folders.rename_title": "Rinomina cartella",
   "folders.export_pdf": "Esporta come PDF",
   "folders.exporting": "Preparazione del PDF…",

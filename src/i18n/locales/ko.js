@@ -208,6 +208,8 @@ export default {
   "folders.no_match": "검색과 일치하는 폴더가 없습니다.",
   "folders.menu": "폴더 옵션",
   "folders.rename": "이름 바꾸기",
+  'folders.note_tag': "메모",
+  'folders.empty_short': "비어 있음",
   "folders.rename_title": "폴더 이름 바꾸기",
   "folders.export_pdf": "PDF로 내보내기",
   "folders.exporting": "PDF 준비 중…",

@@ -219,6 +219,8 @@ export default {
   "folders.no_match": "No folders match your search.",
   "folders.menu": "Folder options",
   "folders.rename": "Rename",
+  'folders.note_tag': "Note",
+  'folders.empty_short': "Empty",
   "folders.rename_title": "Rename folder",
   "folders.export_pdf": "Export as PDF",
   "folders.exporting": "Preparing PDF…",

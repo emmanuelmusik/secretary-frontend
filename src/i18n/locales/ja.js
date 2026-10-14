@@ -208,6 +208,8 @@ export default {
   "folders.no_match": "検索に一致するフォルダはありません。",
   "folders.menu": "フォルダのオプション",
   "folders.rename": "名前を変更",
+  'folders.note_tag': "ノート",
+  'folders.empty_short': "空",
   "folders.rename_title": "フォルダ名を変更",
   "folders.export_pdf": "PDFとして書き出す",
   "folders.exporting": "PDFを準備中…",

@@ -218,6 +218,8 @@ export default {
   "folders.no_match": "Ninguna carpeta coincide con tu búsqueda.",
   "folders.menu": "Opciones de la carpeta",
   "folders.rename": "Renombrar",
+  'folders.note_tag': "Nota",
+  'folders.empty_short': "Vacía",
   "folders.rename_title": "Renombrar carpeta",
   "folders.export_pdf": "Exportar como PDF",
   "folders.exporting": "Preparando PDF…",
