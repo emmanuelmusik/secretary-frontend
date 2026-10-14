@@ -122,12 +122,21 @@ export default function CardEditorPage() {
 
       {(thumb || thumbBack) && (
         <div className="card-photos">
-          <img className="card-photo" src={(showBack && thumbBack) || thumb || thumbBack} alt={showBack && thumbBack ? t('card.back') : t('card.front')} />
-          {thumb && thumbBack && (
-            <button type="button" className="card-flip" onClick={() => setShowBack((b) => !b)}>
-              <FlipIcon />
-              <span>{t('card.flip')} · {showBack ? t('card.front_short') : t('card.back_short')}</span>
+          {thumb && thumbBack ? (
+            <button
+              type="button"
+              className={`card-flipper ${showBack ? 'back' : ''}`}
+              onClick={() => setShowBack((b) => !b)}
+              aria-label={`${t('card.flip')} · ${showBack ? t('card.front_short') : t('card.back_short')}`}
+            >
+              <span className="card-flipper-inner">
+                <img className="card-face card-photo" src={thumb} alt={t('card.front')} />
+                <img className="card-face card-face-back card-photo" src={thumbBack} alt={t('card.back')} />
+              </span>
+              <span className="card-flip-badge" aria-hidden="true"><FlipIcon /></span>
             </button>
+          ) : (
+            <img className="card-photo" src={thumb || thumbBack} alt={thumb ? t('card.front') : t('card.back')} />
           )}
         </div>
       )}

@@ -819,3 +819,12 @@ html, body { overflow-x: hidden; max-width: 100%; }
 
 .ftree-leaf{display:flex;align-items:center;gap:6px;padding:4px 4px 4px 14px}
 .ftree-leaf-main{flex:1}
+
+/* Card photo: tap the card (or the flip icon in its corner) to turn it over */
+.card-flipper{position:relative;display:block;width:100%;padding:0;margin:0;background:none;border:none;perspective:1200px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.card-flipper-inner{display:grid;width:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,.2,.2,1)}
+.card-flipper.back .card-flipper-inner{transform:rotateY(180deg)}
+.card-flipper .card-face{grid-area:1/1;width:100%;height:100%;object-fit:contain;backface-visibility:hidden;-webkit-backface-visibility:hidden;margin:0}
+.card-flipper .card-face-back{transform:rotateY(180deg)}
+.card-flip-badge{position:absolute;inset-inline-end:10px;bottom:10px;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(15,15,18,.72);color:#fff;border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:none}
+@media (prefers-reduced-motion:reduce){.card-flipper-inner{transition:none}}
