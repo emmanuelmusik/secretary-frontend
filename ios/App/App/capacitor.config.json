@@ -20,5 +20,8 @@
 		"CAPBrowserPlugin",
 		"FilesystemPlugin",
 		"SharePlugin"
-	]
+	],
+	"ios": {
+		"limitsNavigationsToAppBoundDomains": true
+	}
 }

@@ -13,5 +13,8 @@
       "dotaawqwptjrhjofdcpd.supabase.co",
       "appleid.apple.com"
     ]
+  },
+  "ios": {
+    "limitsNavigationsToAppBoundDomains": true
   }
 }
