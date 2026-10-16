@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth.jsx';
 import { useI18n } from '../i18n/index.jsx';
 import LanguageMenu from './LanguageMenu.jsx';
 import { api } from '../lib/api.js';
+import { warmCache } from '../lib/warmCache.js';
 
 export default function AppShell({ children }) {
   const navigate = useNavigate();
@@ -11,6 +12,28 @@ export default function AppShell({ children }) {
   const { user, signOut } = useAuth();
   const { t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [offlineToast, setOfflineToast] = useState('');
+  useEffect(() => {
+    // Any change attempted without a connection is refused by the network layer; say so instead of failing silently.
+    const onReject = (e) => {
+      if (!e.reason?.offline) return;
+      e.preventDefault();
+      setOfflineToast(e.reason.message);
+      clearTimeout(onReject.t);
+      onReject.t = setTimeout(() => setOfflineToast(''), 3500);
+    };
+    window.addEventListener('unhandledrejection', onReject);
+    return () => window.removeEventListener('unhandledrejection', onReject);
+  }, []);
+  const [online, setOnline] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
+  useEffect(() => {
+    const on = () => { setOnline(true); warmCache(); };
+    const off = () => setOnline(false);
+    window.addEventListener('online', on);
+    window.addEventListener('offline', off);
+    if (user) setTimeout(warmCache, 1500); // after the first screen has loaded
+    return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); };
+  }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const closeRef = useRef(null);
   const openerRef = useRef(null);
 
@@ -113,6 +136,8 @@ export default function AppShell({ children }) {
         </NavLink>
         <LanguageMenu />
       </header>
+      {offlineToast && <div className="offline-toast" role="alert">{offlineToast}</div>}
+      {!online && <div className="offline-banner" role="status">{t('offline.banner')}</div>}
 
       <div className={`menu-overlay ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(false)} aria-hidden="true" />
       <aside

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { SignInWithApple } from '@capacitor-community/apple-sign-in';
 import { supabase } from '../lib/supabase.js';
+import { clearCache } from '../lib/offlineCache.js';
 
 const AuthContext = createContext(null);
 
@@ -61,7 +62,7 @@ export function AuthProvider({ children }) {
     signIn: (email, password) => supabase.auth.signInWithPassword({ email, password }),
     signInWithGoogle: () => supabase.auth.signInWithOAuth({ provider: 'google' }),
     signInWithApple,
-    signOut: () => supabase.auth.signOut(),
+    signOut: async () => { await clearCache(); return supabase.auth.signOut(); },
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

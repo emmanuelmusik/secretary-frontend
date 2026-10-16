@@ -1,21 +1,51 @@
 import { supabase } from './supabase.js';
 import { getInstallId } from './install.js';
+import { cacheable, cacheGet, cacheSet } from './offlineCache.js';
+import { tNow } from '../i18n/index.jsx';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+
+async function offlineError(message) {
+  const e = new Error(message);
+  e.offline = true;
+  return e;
+}
 
 async function authedFetch(path, options = {}) {
   const { data: { session } } = await supabase.auth.getSession();
   const token = session?.access_token;
+  const userId = session?.user?.id;
+  const isRead = !options.method || options.method === 'GET';
+  const useCache = isRead && userId && cacheable(path);
 
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: {
-      ...(options.body && !(options.body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(getInstallId() ? { 'X-Install-Id': getInstallId() } : {}),
-      ...options.headers,
-    },
-  });
+  // Without a connection, reads come from what the phone kept; changes are refused with a clear message.
+  const serveOffline = async () => {
+    if (useCache) {
+      const kept = await cacheGet(userId, path);
+      if (kept !== null) return { hit: kept };
+    }
+    throw await offlineError(await tNow('offline.needs_connection'));
+  };
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    if (isRead) return (await serveOffline()).hit;
+    throw await offlineError(await tNow('offline.needs_connection'));
+  }
+
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers: {
+        ...(options.body && !(options.body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(getInstallId() ? { 'X-Install-Id': getInstallId() } : {}),
+        ...options.headers,
+      },
+    });
+  } catch (netErr) {
+    if (isRead) { try { return (await serveOffline()).hit; } catch { throw netErr; } }
+    throw netErr;
+  }
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
@@ -27,7 +57,9 @@ async function authedFetch(path, options = {}) {
   }
 
   if (res.status === 204) return null;
-  return res.json();
+  const body = await res.json();
+  if (useCache) cacheSet(userId, path, body);
+  return body;
 }
 
 export const api = {

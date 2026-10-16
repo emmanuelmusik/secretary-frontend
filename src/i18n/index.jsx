@@ -46,6 +46,12 @@ function fill(text, vars) {
   return text.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m));
 }
 
+// A translated line for code that runs outside React (for example the network layer).
+export async function tNow(key) {
+  const dict = await loadDictionary(readStored() || detectLanguage());
+  return dict[key] || en[key] || key;
+}
+
 const I18nContext = createContext(null);
 
 export function LanguageProvider({ children }) {

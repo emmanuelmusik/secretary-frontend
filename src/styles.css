@@ -857,3 +857,7 @@ html, body { overflow-x: hidden; max-width: 100%; }
 .pending-row { display: flex; align-items: center; gap: 8px; border-style: dashed; }
 .pending-btn { flex: none; padding: 6px 10px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border, #ccc); background: transparent; color: inherit; }
 .offline-note { text-align: center; padding: 8px 16px; }
+
+.offline-banner { background: #3a3a3c; color: #fff; text-align: center; font-size: 13px; padding: 6px 12px; }
+
+.offline-toast { position: fixed; left: 16px; right: 16px; bottom: calc(24px + env(safe-area-inset-bottom)); z-index: 60; background: #1c1c1e; color: #fff; padding: 12px 14px; border-radius: 12px; font-size: 14px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,.35); }

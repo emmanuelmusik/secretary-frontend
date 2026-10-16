@@ -29,7 +29,7 @@ export function listPending(userId) {
 }
 
 export function isNetworkError(err) {
-  return !err?.status && (err instanceof TypeError || /network|failed to fetch|load failed/i.test(err?.message || ''));
+  return !err?.status && (err?.offline || err instanceof TypeError || /network|failed to fetch|load failed/i.test(err?.message || ''));
 }
 
 function blobToBase64(blob) {
