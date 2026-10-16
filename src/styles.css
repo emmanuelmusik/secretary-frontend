@@ -851,3 +851,9 @@ html, body { overflow-x: hidden; max-width: 100%; }
 .scan-review .scan-hint { display: flex; align-items: center; justify-content: center; gap: 8px; color: #fde68a; font-weight: 600; }
 .scan-review .scan-hint::before { content: '✂'; font-size: 1.1rem; color: #fbbf24; }
 @media (prefers-reduced-motion: reduce) { .crop-frame { animation: none; } }
+
+/* Offline: recordings waiting to upload */
+.pending-sessions { margin-top: 16px; }
+.pending-row { display: flex; align-items: center; gap: 8px; border-style: dashed; }
+.pending-btn { flex: none; padding: 6px 10px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border, #ccc); background: transparent; color: inherit; }
+.offline-note { text-align: center; padding: 8px 16px; }

@@ -7,6 +7,8 @@ import { searchSessions } from '../lib/search.js';
 import RenameDialog from '../components/RenameDialog.jsx';
 import RowMenu from '../components/RowMenu.jsx';
 import Highlight from '../components/Highlight.jsx';
+import { useAuth } from '../hooks/useAuth.jsx';
+import { listPending, onQueueChange, removePending, retryPending } from '../lib/offlineQueue.js';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -16,11 +18,21 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [renaming, setRenaming] = useState(null);
+  const { user } = useAuth();
+  const [pending, setPending] = useState(() => listPending(user?.id));
   const results = useMemo(() => searchSessions(sessions, query, lang), [sessions, query, lang]);
 
   useEffect(() => {
-    api.getSessions().then(setSessions).catch(console.error).finally(() => setLoading(false));
-  }, []);
+    const load = () => api.getSessions().then(setSessions).catch(console.error).finally(() => setLoading(false));
+    load();
+    let count = listPending(user?.id).length;
+    return onQueueChange(() => {
+      const list = listPending(user?.id);
+      setPending(list);
+      if (list.length < count) load(); // one finished uploading: it is now in the list
+      count = list.length;
+    });
+  }, [user?.id]);
 
   async function handleDelete(sessionId) {
     if (!confirm(t('session.delete_confirm'))) return;
@@ -50,6 +62,26 @@ export default function HomePage() {
       <button className="upload-btn" onClick={() => navigate('/upload', { state: { mode } })}>
         {t('home.upload')}
       </button>
+
+      {pending.length > 0 && (
+        <section className="pending-sessions">
+          <h2>{t('offline.pending_title')}</h2>
+          {pending.map((p) => (
+            <div key={p.id} className="session-row pending-row">
+              <span className="session-row-main">
+                <strong>{formatDate(p.created_at)}{p.duration > 0 ? ` · ⏱ ${formatSeconds(t, p.duration)}` : ''}</strong>
+                <small className="session-duration">
+                  {p.state === 'sending' ? t('offline.sending')
+                    : p.state === 'error' ? (p.error === 'not_enough_time' || p.error === 'limit_reached' || p.error === '402' ? t('offline.err_time') : p.error === 'too_long' || p.error === '413' ? t('offline.err_long') : t('offline.err_generic'))
+                    : t('offline.waiting')}
+                </small>
+              </span>
+              {p.state === 'error' && <button type="button" className="pending-btn" onClick={() => retryPending(p.id)}>{t('offline.retry')}</button>}
+              {p.state === 'error' && <button type="button" className="pending-btn" onClick={() => { if (confirm(t('offline.remove_confirm'))) removePending(p.id); }}>{t('offline.remove')}</button>}
+            </div>
+          ))}
+        </section>
+      )}
 
       <section className="recent-sessions">
         <h2>{t('home.recent')}</h2>

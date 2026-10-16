@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useAuth } from '../hooks/useAuth.jsx';
+import { enqueueRecording, enqueueStop, isNetworkError } from '../lib/offlineQueue.js';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { supabase } from '../lib/supabase.js';
@@ -15,6 +17,8 @@ const WS_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:3000').repla
 export default function RecordPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [offlineRec, setOfflineRec] = useState(false); // recording without a connection: the audio is queued and sent later
   const { ensureConsent } = useAiConsent();
   const { t, langName } = useI18n();
   const mode = state?.mode || 'conversation';
@@ -132,19 +136,29 @@ export default function RecordPage() {
     };
   }
 
+  function sessionSettings() {
+    return {
+      mode,
+      diarization_enabled: mode !== 'quick_capture',
+      source_language_mode: sourceLanguageMode,
+      source_language: sourceLanguage || null,
+      target_language: targetLanguage,
+    };
+  }
+
   async function startRecording() {
     if (!(await ensureConsent())) return;
     setError('');
     try {
       // 1. Create the session row first
-      const session = await api.createSession({
-        mode,
-        diarization_enabled: mode !== 'quick_capture',
-        source_language_mode: sourceLanguageMode,
-        source_language: sourceLanguage || null,
-        target_language: targetLanguage,
-      });
-      sessionIdRef.current = session.id;
+      let session = null;
+      if (navigator.onLine) {
+        try { session = await api.createSession(sessionSettings()); }
+        catch (err) { if (!isNetworkError(err)) throw err; }
+      }
+      // No connection: record anyway. The audio stays on the phone and is sent when the signal is back.
+      sessionIdRef.current = session ? session.id : null;
+      setOfflineRec(!session);
 
       // 2. Get mic access, start local recording (this is the durable copy)
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -159,7 +173,7 @@ export default function RecordPage() {
       sentUpToRef.current = -1;
       reconnectAttemptRef.current = 0;
       setReconnecting(false);
-      openSocket();
+      if (session) openSocket();
 
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) {
@@ -234,6 +248,19 @@ export default function RecordPage() {
     // Save audio locally on-device (Capacitor Filesystem). Audio never
     // leaves the device — only the transcript goes to Supabase.
     const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+    if (!sessionIdRef.current) {
+      // Recorded offline: queue it. It uploads and transcribes by itself once there is a connection.
+      setSaveState('saving');
+      try {
+        await enqueueRecording({ blob, userId: user?.id, settings: sessionSettings(), duration: durationRef.current || elapsedRef.current });
+        setSaveState('queued');
+      } catch (err) {
+        console.error('[record] could not queue the recording', err);
+        setError(t('record.err_save_audio'));
+        setSaveState('idle');
+      }
+      return;
+    }
     const fileName = `session-${sessionIdRef.current}.webm`;
     savedFileRef.current = fileName;
 
@@ -266,6 +293,12 @@ export default function RecordPage() {
         console.error('[record] stop failed, retrying', err);
         await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
       }
+    }
+    if (!navigator.onLine) {
+      // No signal at the moment of Stop: the audio is already on the phone, so just remember to finish later.
+      enqueueStop({ sessionId: sessionIdRef.current, userId: user?.id, duration: durationRef.current, localAudioPath: savedFileRef.current });
+      setSaveState('queued');
+      return;
     }
     setSaveState('failed');
   }
@@ -339,6 +372,12 @@ export default function RecordPage() {
       {saveState !== 'idle' && (
         <div className="save-status">
           {saveState === 'saving' && <p className="meta">{t('record.saving')}</p>}
+          {saveState === 'queued' && (
+            <>
+              <p className="meta">{t('offline.queued')}</p>
+              <button className="record-btn" onClick={() => navigate('/')}>{t('offline.go_home')}</button>
+            </>
+          )}
           {saveState === 'failed' && (
             <>
               <p className="error">{t('record.err_stop')}</p>
@@ -354,6 +393,8 @@ export default function RecordPage() {
           {saveState === 'idle' && <button className="record-btn" onClick={startRecording}>{t('record.start')}</button>}
         </>
       )}
+
+      {isRecording && offlineRec && <p className="meta offline-note">{t('offline.recording_note')}</p>}
 
       {isRecording && (
         <LiveView

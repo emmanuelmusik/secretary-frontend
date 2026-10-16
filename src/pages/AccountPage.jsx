@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
+import { clearPending } from '../lib/offlineQueue.js';
 import { api } from '../lib/api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { getKeepAwakePref, setKeepAwakePref } from '../lib/keepAwake.js';
@@ -24,6 +25,7 @@ export default function AccountPage() {
     setError('');
     try {
       await api.deleteAccount();
+      await clearPending(user?.id);
       await signOut();
       navigate('/auth');
     } catch (err) {
