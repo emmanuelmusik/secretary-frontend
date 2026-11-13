@@ -8,3 +8,12 @@ android/.gradle/
 android/app/build/
 *.log
 .DS_Store
+*.jks
+*.keystore
+android/.gradle/
+android/build/
+android/app/build/
+android/app/release/
+android/local.properties
+android/keystore.properties
+android/capacitor-cordova-android-plugins/
