@@ -14,7 +14,29 @@ const VERIFIED_URL = 'https://secretary-frontend.vercel.app/verified';
  * the actual Face ID system sheet, not a browser page.
  * In a browser, falls back to the standard web OAuth redirect.
  */
+// Android: Google refuses to show its login page inside an app's own web view, so the sign-in opens in
+// Chrome and returns to the app through a link of its own (handled in AuthProvider below).
+const ANDROID_REDIRECT = 'com.johmacos.secretary://auth-callback';
+const isAndroid = () => Capacitor.getPlatform() === 'android';
+
+async function oauthInBrowser(provider) {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo: ANDROID_REDIRECT, skipBrowserRedirect: true },
+  });
+  if (error) return { error };
+  const { Browser } = await import('@capacitor/browser');
+  await Browser.open({ url: data.url });
+  return { error: null };
+}
+
+async function signInWithGoogle() {
+  if (isAndroid()) return oauthInBrowser('google');
+  return supabase.auth.signInWithOAuth({ provider: 'google' });
+}
+
 async function signInWithApple() {
+  if (isAndroid()) return oauthInBrowser('apple'); // no native Apple sign-in on Android: uses the web flow
   if (!Capacitor.isNativePlatform()) {
     return supabase.auth.signInWithOAuth({ provider: 'apple' });
   }
@@ -45,11 +67,31 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session));
 
+    // Android: the browser sign-in comes back to the app as a link; finish the sign-in here.
+    let removeLink = () => {};
+    if (isAndroid()) {
+      (async () => {
+        const [{ App }, { Browser }] = await Promise.all([import('@capacitor/app'), import('@capacitor/browser')]);
+        const handle = await App.addListener('appUrlOpen', async ({ url }) => {
+          if (!url || !url.startsWith(ANDROID_REDIRECT)) return;
+          try { await Browser.close(); } catch { /* already closed */ }
+          const query = new URLSearchParams(url.split('#')[0].split('?')[1] || '');
+          const hash = new URLSearchParams(url.split('#')[1] || '');
+          if (query.get('code')) {
+            await supabase.auth.exchangeCodeForSession(query.get('code'));
+          } else if (hash.get('access_token') && hash.get('refresh_token')) {
+            await supabase.auth.setSession({ access_token: hash.get('access_token'), refresh_token: hash.get('refresh_token') });
+          }
+        });
+        removeLink = () => handle.remove();
+      })().catch(() => {});
+    }
+
     const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
     });
 
-    return () => sub.subscription.unsubscribe();
+    return () => { sub.subscription.unsubscribe(); removeLink(); };
   }, []);
 
   const value = {
@@ -60,7 +102,7 @@ export function AuthProvider({ children }) {
     signUp: (email, password) => supabase.auth.signUp({ email, password, options: { emailRedirectTo: VERIFIED_URL } }),
     resendVerification: (email) => supabase.auth.resend({ type: 'signup', email, options: { emailRedirectTo: VERIFIED_URL } }),
     signIn: (email, password) => supabase.auth.signInWithPassword({ email, password }),
-    signInWithGoogle: () => supabase.auth.signInWithOAuth({ provider: 'google' }),
+    signInWithGoogle,
     signInWithApple,
     signOut: async () => { await clearCache(); return supabase.auth.signOut(); },
   };

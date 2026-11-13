@@ -1,15 +1,20 @@
 import { Capacitor } from '@capacitor/core';
 
-// The RevenueCat *public* iOS key (safe to ship in the app). Set VITE_REVENUECAT_IOS_KEY in Vercel.
-const API_KEY = import.meta.env.VITE_REVENUECAT_IOS_KEY || '';
+// The RevenueCat *public* keys (safe to ship in the app). Set VITE_REVENUECAT_IOS_KEY and
+// VITE_REVENUECAT_ANDROID_KEY in Vercel. Each phone uses the key of its own store.
+const KEYS = {
+  ios: import.meta.env.VITE_REVENUECAT_IOS_KEY || '',
+  android: import.meta.env.VITE_REVENUECAT_ANDROID_KEY || '',
+};
+const apiKey = () => KEYS[Capacitor.getPlatform()] || '';
 
 const ORDER = ['month', 'quarter', 'year'];
 let plugin = null;      // the native plugin, loaded only when needed
 let configured = false;
 
-/** True only inside the iPhone app, with a key set and the native part present in this build. */
+/** True only inside the iPhone or Android app, with a key set and the native part present in this build. */
 export function purchasesAvailable() {
-  return !!API_KEY && Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios'
+  return !!apiKey() && Capacitor.isNativePlatform() && ['ios', 'android'].includes(Capacitor.getPlatform())
     && Capacitor.isPluginAvailable('Purchases');
 }
 
@@ -29,7 +34,7 @@ export async function initPurchases(userId) {
   const Purchases = plugin;
   if (!configured) {
     try { await Purchases.setLogLevel({ level: 'DEBUG' }); } catch { /* older native build */ }
-    await Purchases.configure({ apiKey: API_KEY, appUserID: userId });
+    await Purchases.configure({ apiKey: apiKey(), appUserID: userId });
     configured = true;
   } else {
     await Purchases.logIn({ appUserID: userId });
@@ -37,7 +42,7 @@ export async function initPurchases(userId) {
   return true;
 }
 
-/** The plans to show, with the real prices from the App Store. */
+/** The plans to show, with the real prices from the store. */
 export async function loadPlans() {
   await ensure();
   const Purchases = plugin;
@@ -95,7 +100,7 @@ export async function runDiagnostics(onLine, userId) {
   let P;
   await step('1 plugin loads', async () => { await ensure(); P = plugin; return Capacitor.getPlatform(); }, 8000);
   if (!P) return;
-  await step('2 RevenueCat configured', async () => { await initPurchases(userId); return `key ${API_KEY.slice(0, 5)}…${API_KEY.slice(-4)}`; });
+  await step('2 RevenueCat configured', async () => { await initPurchases(userId); return `key ${apiKey().slice(0, 5)}…${apiKey().slice(-4)}`; });
   await step('3 RevenueCat servers', async () => { const r = await P.getCustomerInfo(); return `user ${String(r.customerInfo?.originalAppUserId || '').slice(0, 8)}`; });
   await step('4 Apple products', async () => {
     const r = await P.getProducts({ productIdentifiers: ['com.johmacos.secretary.pro.monthly', 'com.johmacos.secretary.pro.quarterly'], type: 'SUBS' });
